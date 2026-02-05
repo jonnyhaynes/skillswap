@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router';
 import { useSkills } from '@/hooks/useSkills';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
+import { useSwaps } from '@/hooks/useSwaps';
 import { SkillBadge } from '@/components/skills/SkillBadge';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
@@ -10,7 +11,10 @@ import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { Modal } from '@/components/ui/Modal';
+import { SwapProposalForm } from '@/components/swaps/SwapProposalForm';
 import { formatDate } from '@/utils/formatDate';
+import { generateId } from '@/utils/generateId';
 import { cn } from '@/utils/cn';
 
 export function SkillDetailPage() {
@@ -19,8 +23,10 @@ export function SkillDetailPage() {
   const { getListingById, deleteListing } = useSkills();
   const { currentUser, getUserById } = useAuth();
   const { addToast } = useToast();
+  const { createProposal } = useSwaps();
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showSwapModal, setShowSwapModal] = useState(false);
 
   const listing = skillId ? getListingById(skillId) : undefined;
   const listingUser = listing ? getUserById(listing.userId) : undefined;
@@ -57,7 +63,21 @@ export function SkillDetailPage() {
   };
 
   const handleProposeSwap = () => {
-    addToast('Swap proposals coming soon!', 'info');
+    setShowSwapModal(true);
+  };
+
+  const handleSwapSubmit = (data: { offeredSkillId: string; requestedSkillId: string; message: string }) => {
+    if (!currentUser || !listing) return;
+    createProposal({
+      proposerId: currentUser.id,
+      recipientId: listing.userId,
+      offeredSkillId: data.offeredSkillId,
+      requestedSkillId: data.requestedSkillId,
+      message: data.message,
+      conversationId: generateId(),
+    });
+    addToast('Swap proposal sent successfully!', 'success');
+    setShowSwapModal(false);
   };
 
   return (
@@ -215,6 +235,21 @@ export function SkillDetailPage() {
         onConfirm={handleDelete}
         onCancel={() => setShowDeleteDialog(false)}
       />
+
+      {!isOwner && listing && (
+        <Modal
+          isOpen={showSwapModal}
+          onClose={() => setShowSwapModal(false)}
+          title="Propose a Swap"
+          size="md"
+        >
+          <SwapProposalForm
+            recipientId={listing.userId}
+            onSubmit={handleSwapSubmit}
+            onCancel={() => setShowSwapModal(false)}
+          />
+        </Modal>
+      )}
     </div>
   );
 }

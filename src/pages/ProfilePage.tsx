@@ -1,12 +1,20 @@
 import { useParams } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
+import { useSkills } from '@/hooks/useSkills'
+import { useReviews } from '@/hooks/useReviews'
 import { ProfileHeader } from '@/components/profile/ProfileHeader'
 import { Card } from '@/components/ui/Card'
+import { Badge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { ReviewSummary } from '@/components/reviews/ReviewSummary'
+import { ReviewList } from '@/components/reviews/ReviewList'
+import { getCategoryInfo } from '@/data/categories'
 
 export function ProfilePage() {
   const { userId } = useParams()
   const { getUserById, currentUser } = useAuth()
+  const { getListingsByUser } = useSkills()
+  const { getReviewsForUser, getAverageRating, getTotalReviews } = useReviews()
 
   const user = userId ? getUserById(userId) : undefined
 
@@ -20,13 +28,20 @@ export function ProfilePage() {
   }
 
   const isOwnProfile = currentUser?.id === user.id
+  const averageRating = getAverageRating(user.id)
+  const totalReviews = getTotalReviews(user.id)
+  const userReviews = getReviewsForUser(user.id)
+  const userListings = getListingsByUser(user.id)
+
+  const offeredListings = userListings.filter((l) => l.listingType === 'offered')
+  const wantedListings = userListings.filter((l) => l.listingType === 'wanted')
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <ProfileHeader
         user={user}
-        averageRating={0}
-        totalReviews={0}
+        averageRating={averageRating}
+        totalReviews={totalReviews}
         totalSwapsCompleted={0}
         isOwnProfile={isOwnProfile}
       />
@@ -43,17 +58,22 @@ export function ProfilePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="p-6">
           <h2 className="text-lg font-semibold text-slate-900 mb-3">Skills Offered</h2>
-          {user.skillsOffered.length > 0 ? (
+          {offeredListings.length > 0 ? (
             <ul className="space-y-2">
-              {user.skillsOffered.map((skillId) => (
-                <li
-                  key={skillId}
-                  className="text-sm text-slate-600 flex items-center gap-2"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0" />
-                  {skillId}
-                </li>
-              ))}
+              {offeredListings.map((listing) => {
+                const categoryInfo = getCategoryInfo(listing.category)
+                return (
+                  <li
+                    key={listing.id}
+                    className="text-sm text-slate-600 flex items-center gap-2"
+                  >
+                    <Badge className={`${categoryInfo.bgColor} ${categoryInfo.textColor}`}>
+                      {categoryInfo.emoji} {categoryInfo.label}
+                    </Badge>
+                    <span>{listing.title}</span>
+                  </li>
+                )
+              })}
             </ul>
           ) : (
             <EmptyState
@@ -65,17 +85,22 @@ export function ProfilePage() {
 
         <Card className="p-6">
           <h2 className="text-lg font-semibold text-slate-900 mb-3">Skills Wanted</h2>
-          {user.skillsWanted.length > 0 ? (
+          {wantedListings.length > 0 ? (
             <ul className="space-y-2">
-              {user.skillsWanted.map((skillId) => (
-                <li
-                  key={skillId}
-                  className="text-sm text-slate-600 flex items-center gap-2"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
-                  {skillId}
-                </li>
-              ))}
+              {wantedListings.map((listing) => {
+                const categoryInfo = getCategoryInfo(listing.category)
+                return (
+                  <li
+                    key={listing.id}
+                    className="text-sm text-slate-600 flex items-center gap-2"
+                  >
+                    <Badge className={`${categoryInfo.bgColor} ${categoryInfo.textColor}`}>
+                      {categoryInfo.emoji} {categoryInfo.label}
+                    </Badge>
+                    <span>{listing.title}</span>
+                  </li>
+                )
+              })}
             </ul>
           ) : (
             <EmptyState
@@ -85,6 +110,15 @@ export function ProfilePage() {
           )}
         </Card>
       </div>
+
+      {/* Reviews Section */}
+      <Card className="p-6">
+        <h2 className="text-lg font-semibold text-slate-900 mb-4">Reviews</h2>
+        <ReviewSummary reviews={userReviews} />
+        <div className="mt-6 pt-6 border-t border-slate-200">
+          <ReviewList reviews={userReviews} />
+        </div>
+      </Card>
     </div>
   )
 }
