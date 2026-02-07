@@ -2,7 +2,6 @@ import { Outlet } from 'react-router'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { MobileNav } from './MobileNav'
-import { UserSwitcher } from '@/components/profile/UserSwitcher'
 
 export function RootLayout() {
   return (
@@ -15,7 +14,6 @@ export function RootLayout() {
       </main>
       <Footer />
       <MobileNav />
-      <UserSwitcher />
     </div>
   )
 }

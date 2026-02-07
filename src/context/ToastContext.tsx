@@ -6,6 +6,7 @@ interface ToastContextType {
   addToast: (message: string, type: 'success' | 'error' | 'info') => void;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 let toastIdCounter = 0;

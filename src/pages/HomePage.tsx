@@ -6,8 +6,8 @@ import { SkillGrid } from '@/components/skills/SkillGrid'
 import { Card } from '@/components/ui/Card'
 
 export function HomePage() {
-  const { currentUser, allUsers } = useAuth()
-  const { listings } = useSkills()
+  const { currentUser } = useAuth()
+  const { listings, loading } = useSkills()
 
   const featuredSkills = useMemo(() => {
     return listings
@@ -16,38 +16,60 @@ export function HomePage() {
       .slice(0, 6)
   }, [listings, currentUser])
 
+  const offeredCount = listings.filter((l) => l.listingType === 'offered').length
+  const wantedCount = listings.filter((l) => l.listingType === 'wanted').length
+
   return (
     <div className="space-y-10">
       {/* Hero */}
       <div className="text-center py-8 sm:py-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-slate-900">
-          Welcome back, {currentUser?.firstName}!
+          {currentUser ? `Welcome back, ${currentUser.firstName}!` : 'Welcome to SkillSwap!'}
         </h1>
         <p className="mt-3 text-lg text-slate-600 max-w-2xl mx-auto">
           Swap skills with your neighbours. Teach what you know, learn what you love.
         </p>
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link
-            to="/skills/new"
-            className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-primary-500 px-6 py-3 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
-          >
-            + Post a Skill
-          </Link>
-          <Link
-            to="/browse"
-            className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-          >
-            Browse Skills
-          </Link>
+          {currentUser ? (
+            <>
+              <Link
+                to="/skills/new"
+                className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-primary-500 px-6 py-3 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+              >
+                + Post a Skill
+              </Link>
+              <Link
+                to="/browse"
+                className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                Browse Skills
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/signup"
+                className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-primary-500 px-6 py-3 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+              >
+                Get Started
+              </Link>
+              <Link
+                to="/browse"
+                className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                Browse Skills
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Skills Available', value: listings.filter((l) => l.listingType === 'offered').length, emoji: '🎯' },
-          { label: 'Skills Wanted', value: listings.filter((l) => l.listingType === 'wanted').length, emoji: '🔍' },
-          { label: 'Neighbours', value: allUsers.length, emoji: '👥' },
+          { label: 'Skills Available', value: loading ? '...' : offeredCount, emoji: '🎯' },
+          { label: 'Skills Wanted', value: loading ? '...' : wantedCount, emoji: '🔍' },
+          { label: 'Total Listings', value: loading ? '...' : listings.length, emoji: '📋' },
           { label: 'Categories', value: 12, emoji: '📂' },
         ].map((stat) => (
           <Card key={stat.label} className="p-4 text-center">
@@ -84,7 +106,7 @@ export function HomePage() {
             View all →
           </Link>
         </div>
-        <SkillGrid listings={featuredSkills} users={allUsers} />
+        <SkillGrid listings={featuredSkills} />
       </div>
     </div>
   )

@@ -7,7 +7,11 @@
       "Bash(npx vite build:*)",
       "Bash(ls -la /Users/jonnyhaynes/Projects/claude/skillswap/src/pages/*.tsx)",
       "Bash(ls -la /Users/jonnyhaynes/Projects/claude/skillswap/src/components/skills/*.tsx)",
-      "Bash(ls -la /Users/jonnyhaynes/Projects/claude/skillswap/src/context/*.tsx)"
+      "Bash(ls -la /Users/jonnyhaynes/Projects/claude/skillswap/src/context/*.tsx)",
+      "Bash(npx vite:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }

@@ -1,33 +1,45 @@
-import { useState, useMemo } from 'react';
-import type { SkillCategory, ListingType } from '@/types';
-import { useSkills } from '@/hooks/useSkills';
-import { useAuth } from '@/hooks/useAuth';
-import { useDebounce } from '@/hooks/useDebounce';
-import { filterSkills } from '@/utils/filterSkills';
-import { sortSkills, type SortOption } from '@/utils/sortSkills';
-import { SearchBar } from '@/components/skills/SearchBar';
-import { CategoryFilter } from '@/components/skills/CategoryFilter';
-import { SkillGrid } from '@/components/skills/SkillGrid';
+import { useState, useMemo } from 'react'
+import type { SkillCategory, ListingType } from '@/types'
+import { useSkills } from '@/hooks/useSkills'
+import { useDebounce } from '@/hooks/useDebounce'
+import { filterSkills } from '@/utils/filterSkills'
+import { sortSkills, type SortOption } from '@/utils/sortSkills'
+import { SearchBar } from '@/components/skills/SearchBar'
+import { CategoryFilter } from '@/components/skills/CategoryFilter'
+import { SkillGrid } from '@/components/skills/SkillGrid'
 
 export function BrowseSkillsPage() {
-  const { listings } = useSkills();
-  const { allUsers } = useAuth();
+  const { listings, loading, initialized } = useSkills()
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState<SkillCategory[]>([]);
-  const [listingType, setListingType] = useState<ListingType | 'all'>('all');
-  const [sortBy, setSortBy] = useState<SortOption>('newest');
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategories, setSelectedCategories] = useState<SkillCategory[]>([])
+  const [listingType, setListingType] = useState<ListingType | 'all'>('all')
+  const [sortBy, setSortBy] = useState<SortOption>('newest')
 
-  const debouncedQuery = useDebounce(searchQuery, 300);
+  const debouncedQuery = useDebounce(searchQuery, 300)
 
   const filteredAndSorted = useMemo(() => {
     const filtered = filterSkills(listings, {
       query: debouncedQuery,
       categories: selectedCategories,
       listingType,
-    });
-    return sortSkills(filtered, sortBy);
-  }, [listings, debouncedQuery, selectedCategories, listingType, sortBy]);
+    })
+    return sortSkills(filtered, sortBy)
+  }, [listings, debouncedQuery, selectedCategories, listingType, sortBy])
+
+  if (!initialized || loading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Browse Skills</h1>
+          <p className="text-slate-600 mt-1">Find skills in your neighbourhood</p>
+        </div>
+        <div className="flex justify-center py-12">
+          <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -86,7 +98,7 @@ export function BrowseSkillsPage() {
         </span>
       </div>
 
-      <SkillGrid listings={filteredAndSorted} users={allUsers} />
+      <SkillGrid listings={filteredAndSorted} />
     </div>
-  );
+  )
 }

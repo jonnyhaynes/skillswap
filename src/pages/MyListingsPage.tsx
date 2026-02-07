@@ -7,8 +7,8 @@ import { Tabs } from '@/components/ui/Tabs'
 import { Button } from '@/components/ui/Button'
 
 export function MyListingsPage() {
-  const { getListingsByUser } = useSkills()
-  const { currentUser, allUsers } = useAuth()
+  const { getListingsByUser, loading } = useSkills()
+  const { currentUser } = useAuth()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('offered')
 
@@ -27,6 +27,22 @@ export function MyListingsPage() {
 
   const displayedListings = activeTab === 'offered' ? offered : wanted
 
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">My Listings</h1>
+            <p className="text-slate-600 mt-1">Manage your skill listings</p>
+          </div>
+        </div>
+        <div className="flex justify-center py-12">
+          <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -41,7 +57,7 @@ export function MyListingsPage() {
 
       <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
-      <SkillGrid listings={displayedListings} users={allUsers} />
+      <SkillGrid listings={displayedListings} />
     </div>
   )
 }

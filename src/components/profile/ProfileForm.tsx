@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { User } from '@/types'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
-import { NEIGHBOURHOODS } from '@/data/neighbourhoods'
+import { getNeighbourhoods } from '@/services/neighbourhoods'
 
 interface ProfileFormProps {
   user: User
@@ -12,17 +12,19 @@ interface ProfileFormProps {
   onCancel: () => void
 }
 
-const neighbourhoodOptions = NEIGHBOURHOODS.map((n) => ({
-  value: n,
-  label: n,
-}))
-
 export function ProfileForm({ user, onSubmit, onCancel }: ProfileFormProps) {
   const [firstName, setFirstName] = useState(user.firstName)
   const [lastName, setLastName] = useState(user.lastName)
   const [bio, setBio] = useState(user.bio)
   const [neighbourhood, setNeighbourhood] = useState(user.neighbourhood)
   const [postcode, setPostcode] = useState(user.postcode)
+  const [neighbourhoodOptions, setNeighbourhoodOptions] = useState<{ value: string; label: string }[]>([])
+
+  useEffect(() => {
+    getNeighbourhoods().then((names) =>
+      setNeighbourhoodOptions(names.map((n) => ({ value: n, label: n })))
+    )
+  }, [])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

@@ -1,19 +1,34 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
+import { useMessages } from '@/hooks/useMessages'
 import { Avatar } from '@/components/ui/Avatar'
 
 const NAV_LINKS = [
   { to: '/browse', label: 'Browse' },
-  { to: '/swaps', label: 'My Swaps' },
-  { to: '/messages', label: 'Messages' },
+  { to: '/swaps', label: 'My Swaps', requiresAuth: true },
+  { to: '/messages', label: 'Messages', requiresAuth: true },
 ]
 
 export function Header() {
-  const { currentUser } = useAuth()
+  const { currentUser, signOut, initialized } = useAuth()
+  const { getUnreadCount } = useMessages()
   const location = useLocation()
+  const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  const unreadCount = currentUser ? getUnreadCount(currentUser.id) : 0
+
+  const handleSignOut = async () => {
+    setProfileMenuOpen(false)
+    await signOut()
+    navigate('/')
+  }
+
+  // Filter nav links based on auth state
+  const visibleNavLinks = NAV_LINKS.filter(
+    (link) => !link.requiresAuth || currentUser
+  )
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white">
@@ -28,31 +43,38 @@ export function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1">
-          {NAV_LINKS.map((link) => (
+          {visibleNavLinks.map((link) => (
             <Link
               key={link.to}
               to={link.to}
-              className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 location.pathname.startsWith(link.to)
                   ? 'bg-primary-50 text-primary-700'
                   : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
               {link.label}
+              {link.to === '/messages' && unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                  {unreadCount}
+                </span>
+              )}
             </Link>
           ))}
         </nav>
 
-        {/* Right side: Post + Profile */}
+        {/* Right side: Post + Profile/Auth */}
         <div className="flex items-center gap-3">
-          <Link
-            to="/skills/new"
-            className="hidden sm:inline-flex rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
-          >
-            + Post a Skill
-          </Link>
-
           {currentUser && (
+            <Link
+              to="/skills/new"
+              className="hidden sm:inline-flex rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+            >
+              + Post a Skill
+            </Link>
+          )}
+
+          {initialized && currentUser ? (
             <div className="relative">
               <button
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
@@ -96,10 +118,35 @@ export function Header() {
                     >
                       Edit Profile
                     </Link>
+                    <hr className="my-1 border-slate-200" />
+                    <button
+                      onClick={handleSignOut}
+                      className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+                    >
+                      Sign out
+                    </button>
                   </div>
                 </>
               )}
             </div>
+          ) : initialized ? (
+            <div className="flex items-center gap-2">
+              <Link
+                to="/login"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                Sign in
+              </Link>
+              <Link
+                to="/signup"
+                className="hidden sm:inline-flex rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+              >
+                Sign up
+              </Link>
+            </div>
+          ) : (
+            // Loading placeholder
+            <div className="w-8 h-8 rounded-full bg-slate-200 animate-pulse" />
           )}
 
           {/* Mobile hamburger */}
@@ -121,11 +168,11 @@ export function Header() {
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white px-4 pb-4 pt-2">
-          {NAV_LINKS.map((link) => (
+          {visibleNavLinks.map((link) => (
             <Link
               key={link.to}
               to={link.to}
-              className={`block rounded-lg px-3 py-2 text-sm font-medium ${
+              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${
                 location.pathname.startsWith(link.to)
                   ? 'bg-primary-50 text-primary-700'
                   : 'text-slate-600 hover:bg-slate-50'
@@ -133,15 +180,51 @@ export function Header() {
               onClick={() => setMobileMenuOpen(false)}
             >
               {link.label}
+              {link.to === '/messages' && unreadCount > 0 && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                  {unreadCount}
+                </span>
+              )}
             </Link>
           ))}
-          <Link
-            to="/skills/new"
-            className="mt-2 block rounded-lg bg-primary-500 px-3 py-2 text-center text-sm font-medium text-white hover:bg-primary-600"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            + Post a Skill
-          </Link>
+
+          {currentUser ? (
+            <>
+              <Link
+                to="/skills/new"
+                className="mt-2 block rounded-lg bg-primary-500 px-3 py-2 text-center text-sm font-medium text-white hover:bg-primary-600"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                + Post a Skill
+              </Link>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false)
+                  handleSignOut()
+                }}
+                className="mt-2 w-full rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 text-left"
+              >
+                Sign out
+              </button>
+            </>
+          ) : (
+            <div className="mt-2 flex flex-col gap-2">
+              <Link
+                to="/login"
+                className="block rounded-lg px-3 py-2 text-center text-sm font-medium text-slate-700 border border-slate-300 hover:bg-slate-50"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Sign in
+              </Link>
+              <Link
+                to="/signup"
+                className="block rounded-lg bg-primary-500 px-3 py-2 text-center text-sm font-medium text-white hover:bg-primary-600"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Sign up
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </header>

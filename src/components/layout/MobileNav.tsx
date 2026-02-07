@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
+import { useMessages } from '@/hooks/useMessages'
 import { cn } from '@/utils/cn'
 
 const NAV_ITEMS = [
@@ -55,6 +56,8 @@ const NAV_ITEMS = [
 export function MobileNav() {
   const location = useLocation()
   const { currentUser } = useAuth()
+  const { getUnreadCount } = useMessages()
+  const unreadCount = currentUser ? getUnreadCount(currentUser.id) : 0
 
   const isActive = (to: string, exact?: boolean) => {
     if (exact) return location.pathname === to
@@ -75,13 +78,18 @@ export function MobileNav() {
               key={item.label}
               to={to}
               className={cn(
-                'flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 text-xs transition-colors',
+                'relative flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 text-xs transition-colors',
                 active
                   ? 'text-primary-600'
                   : 'text-slate-400 hover:text-slate-600'
               )}
             >
               {item.icon}
+              {item.to === '/messages' && unreadCount > 0 && (
+                <span className="absolute top-0.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-0.5 text-[10px] font-bold text-white">
+                  {unreadCount}
+                </span>
+              )}
               <span className="font-medium">{item.label}</span>
             </Link>
           )

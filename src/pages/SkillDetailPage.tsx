@@ -15,7 +15,6 @@ import { Modal } from '@/components/ui/Modal';
 import { SwapProposalForm } from '@/components/swaps/SwapProposalForm';
 import { formatDate } from '@/utils/formatDate';
 import { generateId } from '@/utils/generateId';
-import { cn } from '@/utils/cn';
 
 export function SkillDetailPage() {
   const { skillId } = useParams();

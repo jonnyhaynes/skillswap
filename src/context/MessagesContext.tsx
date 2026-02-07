@@ -1,148 +1,319 @@
-import { createContext, useReducer, type ReactNode } from 'react'
+import {
+  createContext,
+  useReducer,
+  useCallback,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from 'react'
 import type { Conversation, Message } from '@/types'
-import { conversations as mockConversations, messages as mockMessages } from '@/data/messages'
-import { generateId } from '@/utils/generateId'
+import type { RealtimeChannel } from '@supabase/supabase-js'
+import { useAuth } from '@/hooks/useAuth'
+import {
+  getConversations as getConversationsService,
+  getMessages as getMessagesService,
+  sendMessage as sendMessageService,
+  markAsRead as markAsReadService,
+  getOrCreateConversation,
+  subscribeToUserConversations,
+  unsubscribe,
+} from '@/services/messages'
 
 interface MessagesState {
   conversations: Conversation[]
-  messages: Message[]
+  messages: Map<string, Message[]> // Map of conversationId -> messages
+  loading: boolean
+  error: string | null
+  initialized: boolean
 }
 
 type MessagesAction =
-  | { type: 'SEND_MESSAGE'; conversationId: string; senderId: string; content: string }
-  | { type: 'CREATE_CONVERSATION'; conversation: Conversation }
+  | { type: 'SET_CONVERSATIONS'; conversations: Conversation[] }
+  | { type: 'ADD_CONVERSATION'; conversation: Conversation }
+  | { type: 'UPDATE_CONVERSATION'; conversation: Conversation }
+  | { type: 'SET_MESSAGES'; conversationId: string; messages: Message[] }
+  | { type: 'ADD_MESSAGE'; message: Message }
   | { type: 'MARK_AS_READ'; conversationId: string; userId: string }
+  | { type: 'SET_LOADING'; loading: boolean }
+  | { type: 'SET_ERROR'; error: string | null }
+  | { type: 'SET_INITIALIZED' }
 
 export interface MessagesContextType {
   conversations: Conversation[]
-  messages: Message[]
-  sendMessage: (conversationId: string, senderId: string, content: string) => void
-  createConversation: (participantIds: [string, string], swapId?: string | null) => string
-  markAsRead: (conversationId: string, userId: string) => void
+  loading: boolean
+  error: string | null
+  initialized: boolean
+  fetchConversations: () => Promise<void>
+  fetchMessages: (conversationId: string) => Promise<Message[]>
+  sendMessage: (conversationId: string, senderId: string, content: string) => Promise<Message | null>
+  createConversation: (participantIds: [string, string], swapId?: string | null) => Promise<string | null>
+  markAsRead: (conversationId: string, userId: string) => Promise<void>
   getConversation: (id: string) => Conversation | undefined
   getMessagesForConversation: (id: string) => Message[]
   getConversationsForUser: (userId: string) => Conversation[]
   getUnreadCount: (userId: string) => number
+  clearError: () => void
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const MessagesContext = createContext<MessagesContextType | null>(null)
 
 function messagesReducer(state: MessagesState, action: MessagesAction): MessagesState {
   switch (action.type) {
-    case 'SEND_MESSAGE': {
-      const now = new Date().toISOString()
-      const newMessage: Message = {
-        id: `msg-${generateId()}`,
-        conversationId: action.conversationId,
-        senderId: action.senderId,
-        content: action.content,
-        sentAt: now,
-        isRead: false,
-      }
-      const updatedConversations = state.conversations.map((conv) =>
-        conv.id === action.conversationId
-          ? {
-              ...conv,
-              lastMessageAt: now,
-              lastMessagePreview: action.content,
-            }
-          : conv
-      )
+    case 'SET_CONVERSATIONS':
       return {
         ...state,
-        messages: [...state.messages, newMessage],
-        conversations: updatedConversations,
+        conversations: action.conversations,
+        loading: false,
+        error: null,
       }
+    case 'ADD_CONVERSATION':
+      // Check if conversation already exists
+      if (state.conversations.find((c) => c.id === action.conversation.id)) {
+        return state
+      }
+      return {
+        ...state,
+        conversations: [action.conversation, ...state.conversations],
+      }
+    case 'UPDATE_CONVERSATION':
+      return {
+        ...state,
+        conversations: state.conversations.map((c) =>
+          c.id === action.conversation.id ? action.conversation : c
+        ),
+      }
+    case 'SET_MESSAGES': {
+      const newMessages = new Map(state.messages)
+      newMessages.set(action.conversationId, action.messages)
+      return { ...state, messages: newMessages }
     }
-    case 'CREATE_CONVERSATION': {
-      return {
-        ...state,
-        conversations: [...state.conversations, action.conversation],
+    case 'ADD_MESSAGE': {
+      const newMessages = new Map(state.messages)
+      const existing = newMessages.get(action.message.conversationId) || []
+      // Check if message already exists
+      if (!existing.find((m) => m.id === action.message.id)) {
+        newMessages.set(action.message.conversationId, [...existing, action.message])
       }
+      return { ...state, messages: newMessages }
     }
     case 'MARK_AS_READ': {
-      const updatedMessages = state.messages.map((msg) =>
-        msg.conversationId === action.conversationId && msg.senderId !== action.userId
-          ? { ...msg, isRead: true }
-          : msg
+      const newMessages = new Map(state.messages)
+      const existing = newMessages.get(action.conversationId) || []
+      const updated = existing.map((msg) =>
+        msg.senderId !== action.userId ? { ...msg, isRead: true } : msg
       )
-      return {
-        ...state,
-        messages: updatedMessages,
-      }
+      newMessages.set(action.conversationId, updated)
+      return { ...state, messages: newMessages }
     }
+    case 'SET_LOADING':
+      return { ...state, loading: action.loading }
+    case 'SET_ERROR':
+      return { ...state, error: action.error, loading: false }
+    case 'SET_INITIALIZED':
+      return { ...state, initialized: true }
     default:
       return state
   }
 }
 
 export function MessagesProvider({ children }: { children: ReactNode }) {
+  const { currentUser } = useAuth()
   const [state, dispatch] = useReducer(messagesReducer, {
-    conversations: [...mockConversations],
-    messages: [...mockMessages],
+    conversations: [],
+    messages: new Map(),
+    loading: false,
+    error: null,
+    initialized: false,
   })
 
-  const sendMessage = (conversationId: string, senderId: string, content: string) => {
-    dispatch({ type: 'SEND_MESSAGE', conversationId, senderId, content })
-  }
+  const subscriptionRef = useRef<RealtimeChannel | null>(null)
 
-  const createConversation = (participantIds: [string, string], swapId?: string | null): string => {
-    const now = new Date().toISOString()
-    const id = `conv-${generateId()}`
-    const conversation: Conversation = {
-      id,
-      participantIds,
-      swapId: swapId ?? null,
-      createdAt: now,
-      lastMessageAt: now,
-      lastMessagePreview: '',
+  // Fetch conversations and set up real-time subscriptions when user changes
+  useEffect(() => {
+    if (!currentUser) {
+      dispatch({ type: 'SET_CONVERSATIONS', conversations: [] })
+      dispatch({ type: 'SET_INITIALIZED' })
+      return
     }
-    dispatch({ type: 'CREATE_CONVERSATION', conversation })
-    return id
-  }
 
-  const markAsRead = (conversationId: string, userId: string) => {
-    dispatch({ type: 'MARK_AS_READ', conversationId, userId })
-  }
+    const loadConversations = async () => {
+      dispatch({ type: 'SET_LOADING', loading: true })
+      try {
+        const conversations = await getConversationsService(currentUser.id)
+        dispatch({ type: 'SET_CONVERSATIONS', conversations })
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to load conversations'
+        dispatch({ type: 'SET_ERROR', error: message })
+      } finally {
+        dispatch({ type: 'SET_INITIALIZED' })
+      }
+    }
 
-  const getConversation = (id: string): Conversation | undefined => {
-    return state.conversations.find((conv) => conv.id === id)
-  }
+    loadConversations()
 
-  const getMessagesForConversation = (id: string): Message[] => {
-    return state.messages
-      .filter((msg) => msg.conversationId === id)
-      .sort((a, b) => new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime())
-  }
-
-  const getConversationsForUser = (userId: string): Conversation[] => {
-    return state.conversations
-      .filter((conv) => conv.participantIds.includes(userId))
-      .sort((a, b) => new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime())
-  }
-
-  const getUnreadCount = (userId: string): number => {
-    const userConversations = state.conversations.filter((conv) =>
-      conv.participantIds.includes(userId)
+    // Set up real-time subscription
+    subscriptionRef.current = subscribeToUserConversations(
+      currentUser.id,
+      (message) => {
+        dispatch({ type: 'ADD_MESSAGE', message })
+      },
+      (conversation) => {
+        dispatch({ type: 'UPDATE_CONVERSATION', conversation })
+      }
     )
-    let count = 0
-    for (const conv of userConversations) {
-      const hasUnread = state.messages.some(
-        (msg) =>
-          msg.conversationId === conv.id &&
-          msg.senderId !== userId &&
-          !msg.isRead
-      )
-      if (hasUnread) count++
+
+    return () => {
+      if (subscriptionRef.current) {
+        unsubscribe(subscriptionRef.current)
+        subscriptionRef.current = null
+      }
     }
-    return count
-  }
+  }, [currentUser])
+
+  const fetchConversations = useCallback(async () => {
+    if (!currentUser) return
+
+    dispatch({ type: 'SET_LOADING', loading: true })
+    try {
+      const conversations = await getConversationsService(currentUser.id)
+      dispatch({ type: 'SET_CONVERSATIONS', conversations })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to load conversations'
+      dispatch({ type: 'SET_ERROR', error: message })
+    }
+  }, [currentUser])
+
+  const fetchMessages = useCallback(
+    async (conversationId: string): Promise<Message[]> => {
+      try {
+        const messages = await getMessagesService(conversationId)
+        dispatch({ type: 'SET_MESSAGES', conversationId, messages })
+        return messages
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to load messages'
+        dispatch({ type: 'SET_ERROR', error: message })
+        return []
+      }
+    },
+    []
+  )
+
+  const sendMessage = useCallback(
+    async (
+      conversationId: string,
+      senderId: string,
+      content: string
+    ): Promise<Message | null> => {
+      dispatch({ type: 'SET_ERROR', error: null })
+      try {
+        const message = await sendMessageService(conversationId, senderId, content)
+        // Optimistic update - add message immediately
+        dispatch({ type: 'ADD_MESSAGE', message })
+        return message
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Failed to send message'
+        dispatch({ type: 'SET_ERROR', error: errorMsg })
+        return null
+      }
+    },
+    []
+  )
+
+  const createConversation = useCallback(
+    async (
+      participantIds: [string, string],
+      swapId?: string | null
+    ): Promise<string | null> => {
+      dispatch({ type: 'SET_ERROR', error: null })
+      try {
+        const conversation = await getOrCreateConversation(
+          participantIds[0],
+          participantIds[1],
+          swapId ?? undefined
+        )
+        dispatch({ type: 'ADD_CONVERSATION', conversation })
+        return conversation.id
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to create conversation'
+        dispatch({ type: 'SET_ERROR', error: message })
+        return null
+      }
+    },
+    []
+  )
+
+  const markAsRead = useCallback(
+    async (conversationId: string, userId: string): Promise<void> => {
+      try {
+        await markAsReadService(conversationId, userId)
+        dispatch({ type: 'MARK_AS_READ', conversationId, userId })
+      } catch {
+        // Silently fail for mark as read
+      }
+    },
+    []
+  )
+
+  const getConversation = useCallback(
+    (id: string): Conversation | undefined => {
+      return state.conversations.find((conv) => conv.id === id)
+    },
+    [state.conversations]
+  )
+
+  const getMessagesForConversation = useCallback(
+    (id: string): Message[] => {
+      return (state.messages.get(id) || []).sort(
+        (a, b) => new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime()
+      )
+    },
+    [state.messages]
+  )
+
+  const getConversationsForUser = useCallback(
+    (userId: string): Conversation[] => {
+      return state.conversations
+        .filter((conv) => conv.participantIds.includes(userId))
+        .sort(
+          (a, b) =>
+            new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime()
+        )
+    },
+    [state.conversations]
+  )
+
+  const getUnreadCount = useCallback(
+    (userId: string): number => {
+      const userConversations = state.conversations.filter((conv) =>
+        conv.participantIds.includes(userId)
+      )
+      let count = 0
+      for (const conv of userConversations) {
+        const messages = state.messages.get(conv.id) || []
+        const hasUnread = messages.some(
+          (msg) => msg.senderId !== userId && !msg.isRead
+        )
+        if (hasUnread) count++
+      }
+      return count
+    },
+    [state.conversations, state.messages]
+  )
+
+  const clearError = useCallback(() => {
+    dispatch({ type: 'SET_ERROR', error: null })
+  }, [])
 
   return (
     <MessagesContext.Provider
       value={{
         conversations: state.conversations,
-        messages: state.messages,
+        loading: state.loading,
+        error: state.error,
+        initialized: state.initialized,
+        fetchConversations,
+        fetchMessages,
         sendMessage,
         createConversation,
         markAsRead,
@@ -150,6 +321,7 @@ export function MessagesProvider({ children }: { children: ReactNode }) {
         getMessagesForConversation,
         getConversationsForUser,
         getUnreadCount,
+        clearError,
       }}
     >
       {children}

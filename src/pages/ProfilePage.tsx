@@ -2,6 +2,7 @@ import { useParams } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useSkills } from '@/hooks/useSkills'
 import { useReviews } from '@/hooks/useReviews'
+import { useSwaps } from '@/hooks/useSwaps'
 import { ProfileHeader } from '@/components/profile/ProfileHeader'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -15,6 +16,7 @@ export function ProfilePage() {
   const { getUserById, currentUser } = useAuth()
   const { getListingsByUser } = useSkills()
   const { getReviewsForUser, getAverageRating, getTotalReviews } = useReviews()
+  const { proposals } = useSwaps()
 
   const user = userId ? getUserById(userId) : undefined
 
@@ -33,6 +35,10 @@ export function ProfilePage() {
   const userReviews = getReviewsForUser(user.id)
   const userListings = getListingsByUser(user.id)
 
+  const completedSwapsCount = proposals.filter(
+    (p) => p.status === 'completed' && (p.proposerId === user.id || p.recipientId === user.id)
+  ).length
+
   const offeredListings = userListings.filter((l) => l.listingType === 'offered')
   const wantedListings = userListings.filter((l) => l.listingType === 'wanted')
 
@@ -42,7 +48,7 @@ export function ProfilePage() {
         user={user}
         averageRating={averageRating}
         totalReviews={totalReviews}
-        totalSwapsCompleted={0}
+        totalSwapsCompleted={completedSwapsCount}
         isOwnProfile={isOwnProfile}
       />
 

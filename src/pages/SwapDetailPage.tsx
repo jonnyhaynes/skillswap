@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useSkills } from '@/hooks/useSkills';
 import { useSwaps } from '@/hooks/useSwaps';
+import { useReviews } from '@/hooks/useReviews';
 import { useToast } from '@/hooks/useToast';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
@@ -10,6 +12,8 @@ import { SkillBadge } from '@/components/skills/SkillBadge';
 import { SwapStatusBadge } from '@/components/swaps/SwapStatusBadge';
 import { SwapTimeline } from '@/components/swaps/SwapTimeline';
 import { SwapActions } from '@/components/swaps/SwapActions';
+import { ReviewForm } from '@/components/reviews/ReviewForm';
+import { ReviewCard } from '@/components/reviews/ReviewCard';
 
 export function SwapDetailPage() {
   const { swapId } = useParams();
@@ -18,6 +22,8 @@ export function SwapDetailPage() {
   const { getListingById } = useSkills();
   const { getSwapById, acceptProposal, declineProposal, startProgress, markComplete, cancelProposal } = useSwaps();
   const { addToast } = useToast();
+  const { addReview, getReviewForSwap } = useReviews();
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const swap = swapId ? getSwapById(swapId) : undefined;
 
@@ -50,6 +56,9 @@ export function SwapDetailPage() {
 
   const offeredListing = getListingById(swap.offeredSkillId);
   const requestedListing = getListingById(swap.requestedSkillId);
+
+  const existingReview = getReviewForSwap(swap.id, currentUser.id);
+  const otherUserReview = otherUser ? getReviewForSwap(swap.id, otherUser.id) : undefined;
 
   const handleAccept = () => {
     acceptProposal(swap.id);
@@ -196,6 +205,68 @@ export function SwapDetailPage() {
           )}
         </div>
       </div>
+
+      {/* Reviews Section - only for completed swaps */}
+      {swap.status === 'completed' && (
+        <div className="lg:col-span-2 space-y-4">
+          <h2 className="text-lg font-semibold text-slate-900">Reviews</h2>
+
+          {/* Show existing review by current user */}
+          {existingReview && (
+            <Card className="p-4">
+              <p className="text-xs font-medium text-slate-500 mb-2">Your Review</p>
+              <ReviewCard review={existingReview} reviewer={currentUser} />
+            </Card>
+          )}
+
+          {/* Show review from other user */}
+          {otherUserReview && otherUser && (
+            <Card className="p-4">
+              <p className="text-xs font-medium text-slate-500 mb-2">Their Review</p>
+              <ReviewCard review={otherUserReview} reviewer={otherUser} />
+            </Card>
+          )}
+
+          {/* Show leave review button or form */}
+          {!existingReview && (
+            <Card className="p-6">
+              {showReviewForm ? (
+                <>
+                  <h3 className="text-sm font-semibold text-slate-900 mb-4">Leave a Review</h3>
+                  <ReviewForm
+                    swapId={swap.id}
+                    revieweeId={otherUserId}
+                    skillCategory={offeredListing?.category ?? 'other'}
+                    onSubmit={(data) => {
+                      addReview({
+                        swapId: swap.id,
+                        reviewerId: currentUser.id,
+                        revieweeId: otherUserId,
+                        rating: data.rating,
+                        comment: data.comment,
+                        skillCategory: offeredListing?.category ?? 'other',
+                      });
+                      addToast('Review submitted successfully!', 'success');
+                      setShowReviewForm(false);
+                    }}
+                    onCancel={() => setShowReviewForm(false)}
+                  />
+                </>
+              ) : (
+                <div className="text-center">
+                  <p className="text-sm text-slate-600 mb-3">How was your swap experience?</p>
+                  <button
+                    onClick={() => setShowReviewForm(true)}
+                    className="inline-flex items-center rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+                  >
+                    Leave a Review
+                  </button>
+                </div>
+              )}
+            </Card>
+          )}
+        </div>
+      )}
     </div>
   );
 }

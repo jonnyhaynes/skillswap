@@ -1,172 +1,269 @@
-import { createContext, useReducer, useCallback, type ReactNode } from 'react';
-import type { SwapProposal } from '@/types';
-import { swaps as mockSwaps } from '@/data/swaps';
-import { generateId } from '@/utils/generateId';
+import {
+  createContext,
+  useReducer,
+  useCallback,
+  useEffect,
+  type ReactNode,
+} from 'react'
+import type { SwapProposal } from '@/types'
+import { useAuth } from '@/hooks/useAuth'
+import {
+  getSwapsForUser as getSwapsForUserService,
+  getSwapById as getSwapByIdService,
+  createProposal as createProposalService,
+  updateSwapStatus,
+  markSwapComplete as markSwapCompleteService,
+} from '@/services/swaps'
 
 interface SwapsState {
-  proposals: SwapProposal[];
+  proposals: SwapProposal[]
+  loading: boolean
+  error: string | null
+  initialized: boolean
 }
 
 type SwapsAction =
-  | { type: 'CREATE_PROPOSAL'; proposal: SwapProposal }
-  | { type: 'ACCEPT_PROPOSAL'; id: string }
-  | { type: 'DECLINE_PROPOSAL'; id: string }
-  | { type: 'START_PROGRESS'; id: string }
-  | { type: 'MARK_COMPLETE'; id: string; userId: string }
-  | { type: 'CANCEL_PROPOSAL'; id: string };
+  | { type: 'SET_PROPOSALS'; proposals: SwapProposal[] }
+  | { type: 'ADD_PROPOSAL'; proposal: SwapProposal }
+  | { type: 'UPDATE_PROPOSAL'; proposal: SwapProposal }
+  | { type: 'SET_LOADING'; loading: boolean }
+  | { type: 'SET_ERROR'; error: string | null }
+  | { type: 'SET_INITIALIZED' }
 
 export interface SwapsContextType {
-  proposals: SwapProposal[];
+  proposals: SwapProposal[]
+  loading: boolean
+  error: string | null
+  initialized: boolean
+  fetchSwaps: () => Promise<void>
   createProposal: (data: {
-    proposerId: string;
-    recipientId: string;
-    offeredSkillId: string;
-    requestedSkillId: string;
-    message: string;
-    conversationId: string;
-  }) => void;
-  acceptProposal: (id: string) => void;
-  declineProposal: (id: string) => void;
-  startProgress: (id: string) => void;
-  markComplete: (id: string, userId: string) => void;
-  cancelProposal: (id: string) => void;
-  getSwapById: (id: string) => SwapProposal | undefined;
-  getSwapsForUser: (userId: string) => SwapProposal[];
-  getIncomingSwaps: (userId: string) => SwapProposal[];
-  getOutgoingSwaps: (userId: string) => SwapProposal[];
-  getActiveSwaps: (userId: string) => SwapProposal[];
-  getCompletedSwaps: (userId: string) => SwapProposal[];
+    proposerId: string
+    recipientId: string
+    offeredSkillId: string
+    requestedSkillId: string
+    message: string
+    conversationId: string
+  }) => Promise<SwapProposal | null>
+  acceptProposal: (id: string) => Promise<boolean>
+  declineProposal: (id: string) => Promise<boolean>
+  startProgress: (id: string) => Promise<boolean>
+  markComplete: (id: string, userId: string) => Promise<boolean>
+  cancelProposal: (id: string) => Promise<boolean>
+  getSwapById: (id: string) => SwapProposal | undefined
+  fetchSwapById: (id: string) => Promise<SwapProposal | null>
+  getSwapsForUser: (userId: string) => SwapProposal[]
+  getIncomingSwaps: (userId: string) => SwapProposal[]
+  getOutgoingSwaps: (userId: string) => SwapProposal[]
+  getActiveSwaps: (userId: string) => SwapProposal[]
+  getCompletedSwaps: (userId: string) => SwapProposal[]
+  clearError: () => void
 }
 
-export const SwapsContext = createContext<SwapsContextType | null>(null);
+// eslint-disable-next-line react-refresh/only-export-components
+export const SwapsContext = createContext<SwapsContextType | null>(null)
 
 function swapsReducer(state: SwapsState, action: SwapsAction): SwapsState {
   switch (action.type) {
-    case 'CREATE_PROPOSAL':
-      return { ...state, proposals: [action.proposal, ...state.proposals] };
-
-    case 'ACCEPT_PROPOSAL':
+    case 'SET_PROPOSALS':
+      return {
+        ...state,
+        proposals: action.proposals,
+        loading: false,
+        error: null,
+      }
+    case 'ADD_PROPOSAL':
+      return {
+        ...state,
+        proposals: [action.proposal, ...state.proposals],
+        loading: false,
+      }
+    case 'UPDATE_PROPOSAL':
       return {
         ...state,
         proposals: state.proposals.map((p) =>
-          p.id === action.id
-            ? { ...p, status: 'accepted' as const, respondedAt: new Date().toISOString() }
-            : p
+          p.id === action.proposal.id ? action.proposal : p
         ),
-      };
-
-    case 'DECLINE_PROPOSAL':
-      return {
-        ...state,
-        proposals: state.proposals.map((p) =>
-          p.id === action.id
-            ? { ...p, status: 'declined' as const, respondedAt: new Date().toISOString() }
-            : p
-        ),
-      };
-
-    case 'START_PROGRESS':
-      return {
-        ...state,
-        proposals: state.proposals.map((p) =>
-          p.id === action.id ? { ...p, status: 'in_progress' as const } : p
-        ),
-      };
-
-    case 'MARK_COMPLETE': {
-      return {
-        ...state,
-        proposals: state.proposals.map((p) => {
-          if (p.id !== action.id) return p;
-
-          const isProposer = action.userId === p.proposerId;
-          const proposerCompleted = isProposer ? true : p.proposerCompleted;
-          const recipientCompleted = isProposer ? p.recipientCompleted : true;
-          const bothComplete = proposerCompleted && recipientCompleted;
-
-          return {
-            ...p,
-            proposerCompleted,
-            recipientCompleted,
-            ...(bothComplete
-              ? { status: 'completed' as const, completedAt: new Date().toISOString() }
-              : {}),
-          };
-        }),
-      };
-    }
-
-    case 'CANCEL_PROPOSAL':
-      return {
-        ...state,
-        proposals: state.proposals.map((p) =>
-          p.id === action.id ? { ...p, status: 'cancelled' as const } : p
-        ),
-      };
-
+        loading: false,
+      }
+    case 'SET_LOADING':
+      return { ...state, loading: action.loading }
+    case 'SET_ERROR':
+      return { ...state, error: action.error, loading: false }
+    case 'SET_INITIALIZED':
+      return { ...state, initialized: true }
     default:
-      return state;
+      return state
   }
 }
 
 export function SwapsProvider({ children }: { children: ReactNode }) {
+  const { currentUser } = useAuth()
   const [state, dispatch] = useReducer(swapsReducer, {
-    proposals: [...mockSwaps],
-  });
+    proposals: [],
+    loading: false,
+    error: null,
+    initialized: false,
+  })
+
+  // Fetch swaps when user changes
+  useEffect(() => {
+    if (!currentUser) {
+      dispatch({ type: 'SET_PROPOSALS', proposals: [] })
+      dispatch({ type: 'SET_INITIALIZED' })
+      return
+    }
+
+    const loadSwaps = async () => {
+      dispatch({ type: 'SET_LOADING', loading: true })
+      try {
+        const swaps = await getSwapsForUserService(currentUser.id)
+        dispatch({ type: 'SET_PROPOSALS', proposals: swaps })
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to load swaps'
+        dispatch({ type: 'SET_ERROR', error: message })
+      } finally {
+        dispatch({ type: 'SET_INITIALIZED' })
+      }
+    }
+
+    loadSwaps()
+  }, [currentUser])
+
+  const fetchSwaps = useCallback(async () => {
+    if (!currentUser) return
+
+    dispatch({ type: 'SET_LOADING', loading: true })
+    try {
+      const swaps = await getSwapsForUserService(currentUser.id)
+      dispatch({ type: 'SET_PROPOSALS', proposals: swaps })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to load swaps'
+      dispatch({ type: 'SET_ERROR', error: message })
+    }
+  }, [currentUser])
 
   const createProposal = useCallback(
-    (data: {
-      proposerId: string;
-      recipientId: string;
-      offeredSkillId: string;
-      requestedSkillId: string;
-      message: string;
-      conversationId: string;
-    }) => {
-      const proposal: SwapProposal = {
-        id: generateId(),
-        proposerId: data.proposerId,
-        recipientId: data.recipientId,
-        offeredSkillId: data.offeredSkillId,
-        requestedSkillId: data.requestedSkillId,
-        message: data.message,
-        status: 'pending',
-        proposedAt: new Date().toISOString(),
-        respondedAt: null,
-        completedAt: null,
-        conversationId: data.conversationId,
-        proposerCompleted: false,
-        recipientCompleted: false,
-      };
-      dispatch({ type: 'CREATE_PROPOSAL', proposal });
+    async (data: {
+      proposerId: string
+      recipientId: string
+      offeredSkillId: string
+      requestedSkillId: string
+      message: string
+      conversationId: string
+    }): Promise<SwapProposal | null> => {
+      dispatch({ type: 'SET_LOADING', loading: true })
+      dispatch({ type: 'SET_ERROR', error: null })
+      try {
+        const proposal = await createProposalService({
+          proposerId: data.proposerId,
+          recipientId: data.recipientId,
+          offeredSkillId: data.offeredSkillId,
+          requestedSkillId: data.requestedSkillId,
+          message: data.message,
+          conversationId: data.conversationId,
+        })
+        dispatch({ type: 'ADD_PROPOSAL', proposal })
+        return proposal
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to create proposal'
+        dispatch({ type: 'SET_ERROR', error: message })
+        return null
+      }
     },
     []
-  );
+  )
 
-  const acceptProposal = useCallback((id: string) => {
-    dispatch({ type: 'ACCEPT_PROPOSAL', id });
-  }, []);
+  const acceptProposal = useCallback(async (id: string): Promise<boolean> => {
+    dispatch({ type: 'SET_LOADING', loading: true })
+    dispatch({ type: 'SET_ERROR', error: null })
+    try {
+      const updated = await updateSwapStatus(id, 'accepted')
+      dispatch({ type: 'UPDATE_PROPOSAL', proposal: updated })
+      return true
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to accept proposal'
+      dispatch({ type: 'SET_ERROR', error: message })
+      return false
+    }
+  }, [])
 
-  const declineProposal = useCallback((id: string) => {
-    dispatch({ type: 'DECLINE_PROPOSAL', id });
-  }, []);
+  const declineProposal = useCallback(async (id: string): Promise<boolean> => {
+    dispatch({ type: 'SET_LOADING', loading: true })
+    dispatch({ type: 'SET_ERROR', error: null })
+    try {
+      const updated = await updateSwapStatus(id, 'declined')
+      dispatch({ type: 'UPDATE_PROPOSAL', proposal: updated })
+      return true
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to decline proposal'
+      dispatch({ type: 'SET_ERROR', error: message })
+      return false
+    }
+  }, [])
 
-  const startProgress = useCallback((id: string) => {
-    dispatch({ type: 'START_PROGRESS', id });
-  }, []);
+  const startProgress = useCallback(async (id: string): Promise<boolean> => {
+    dispatch({ type: 'SET_LOADING', loading: true })
+    dispatch({ type: 'SET_ERROR', error: null })
+    try {
+      const updated = await updateSwapStatus(id, 'in_progress')
+      dispatch({ type: 'UPDATE_PROPOSAL', proposal: updated })
+      return true
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to start swap'
+      dispatch({ type: 'SET_ERROR', error: message })
+      return false
+    }
+  }, [])
 
-  const markComplete = useCallback((id: string, userId: string) => {
-    dispatch({ type: 'MARK_COMPLETE', id, userId });
-  }, []);
+  const markComplete = useCallback(
+    async (id: string, userId: string): Promise<boolean> => {
+      dispatch({ type: 'SET_LOADING', loading: true })
+      dispatch({ type: 'SET_ERROR', error: null })
+      try {
+        const updated = await markSwapCompleteService(id, userId)
+        dispatch({ type: 'UPDATE_PROPOSAL', proposal: updated })
+        return true
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to mark complete'
+        dispatch({ type: 'SET_ERROR', error: message })
+        return false
+      }
+    },
+    []
+  )
 
-  const cancelProposal = useCallback((id: string) => {
-    dispatch({ type: 'CANCEL_PROPOSAL', id });
-  }, []);
+  const cancelProposal = useCallback(async (id: string): Promise<boolean> => {
+    dispatch({ type: 'SET_LOADING', loading: true })
+    dispatch({ type: 'SET_ERROR', error: null })
+    try {
+      const updated = await updateSwapStatus(id, 'cancelled')
+      dispatch({ type: 'UPDATE_PROPOSAL', proposal: updated })
+      return true
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to cancel proposal'
+      dispatch({ type: 'SET_ERROR', error: message })
+      return false
+    }
+  }, [])
 
   const getSwapById = useCallback(
     (id: string) => state.proposals.find((p) => p.id === id),
     [state.proposals]
-  );
+  )
+
+  const fetchSwapById = useCallback(
+    async (id: string): Promise<SwapProposal | null> => {
+      const cached = state.proposals.find((p) => p.id === id)
+      if (cached) return cached
+
+      try {
+        return await getSwapByIdService(id)
+      } catch {
+        return null
+      }
+    },
+    [state.proposals]
+  )
 
   const getSwapsForUser = useCallback(
     (userId: string) =>
@@ -174,7 +271,7 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
         (p) => p.proposerId === userId || p.recipientId === userId
       ),
     [state.proposals]
-  );
+  )
 
   const getIncomingSwaps = useCallback(
     (userId: string) =>
@@ -182,7 +279,7 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
         (p) => p.recipientId === userId && p.status === 'pending'
       ),
     [state.proposals]
-  );
+  )
 
   const getOutgoingSwaps = useCallback(
     (userId: string) =>
@@ -190,7 +287,7 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
         (p) => p.proposerId === userId && p.status === 'pending'
       ),
     [state.proposals]
-  );
+  )
 
   const getActiveSwaps = useCallback(
     (userId: string) =>
@@ -200,7 +297,7 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
           (p.status === 'accepted' || p.status === 'in_progress')
       ),
     [state.proposals]
-  );
+  )
 
   const getCompletedSwaps = useCallback(
     (userId: string) =>
@@ -210,12 +307,20 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
           (p.status === 'completed' || p.status === 'declined' || p.status === 'cancelled')
       ),
     [state.proposals]
-  );
+  )
+
+  const clearError = useCallback(() => {
+    dispatch({ type: 'SET_ERROR', error: null })
+  }, [])
 
   return (
     <SwapsContext.Provider
       value={{
         proposals: state.proposals,
+        loading: state.loading,
+        error: state.error,
+        initialized: state.initialized,
+        fetchSwaps,
         createProposal,
         acceptProposal,
         declineProposal,
@@ -223,14 +328,16 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
         markComplete,
         cancelProposal,
         getSwapById,
+        fetchSwapById,
         getSwapsForUser,
         getIncomingSwaps,
         getOutgoingSwaps,
         getActiveSwaps,
         getCompletedSwaps,
+        clearError,
       }}
     >
       {children}
     </SwapsContext.Provider>
-  );
+  )
 }

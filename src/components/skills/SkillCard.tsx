@@ -35,7 +35,7 @@ export function SkillCard({ listing, user }: SkillCardProps) {
             size="sm"
           />
           <span className="font-medium text-slate-700">
-            {user.firstName} {user.lastName}
+            {user.firstName} {user.lastName.charAt(0)}.
           </span>
           <span className="text-slate-300">|</span>
           <span>{user.neighbourhood}</span>
