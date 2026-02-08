@@ -8,6 +8,7 @@ import {
 } from '@/lib/typeMappers'
 import type { SwapProposal } from '@/types'
 import type { SwapProposalUpdate } from '@/types/database'
+import type { RealtimeChannel } from '@supabase/supabase-js'
 
 export class SwapsServiceError extends Error {
   code?: string
@@ -229,4 +230,58 @@ export async function getOutgoingProposals(
   }
 
   return data.map(mapDbSwapProposal)
+}
+
+/**
+ * Subscribe to swap proposal changes for a user (as proposer or recipient)
+ */
+export function subscribeToSwapProposals(
+  userId: string,
+  onInsert: (proposal: SwapProposal) => void,
+  onUpdate: (proposal: SwapProposal) => void
+): RealtimeChannel {
+  return supabase
+    .channel(`user:${userId}:swaps`)
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'swap_proposals',
+      },
+      (payload) => {
+        const proposal = mapDbSwapProposal(
+          payload.new as Parameters<typeof mapDbSwapProposal>[0]
+        )
+        // Only process if the user is involved
+        if (proposal.proposerId === userId || proposal.recipientId === userId) {
+          onInsert(proposal)
+        }
+      }
+    )
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'swap_proposals',
+      },
+      (payload) => {
+        const proposal = mapDbSwapProposal(
+          payload.new as Parameters<typeof mapDbSwapProposal>[0]
+        )
+        // Only process if the user is involved
+        if (proposal.proposerId === userId || proposal.recipientId === userId) {
+          onUpdate(proposal)
+        }
+      }
+    )
+    .subscribe()
+}
+
+/**
+ * Unsubscribe from a swap proposals channel
+ */
+export function unsubscribeFromSwaps(channel: RealtimeChannel): void {
+  supabase.removeChannel(channel)
 }

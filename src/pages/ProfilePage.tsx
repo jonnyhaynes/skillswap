@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useSkills } from '@/hooks/useSkills'
@@ -13,12 +14,32 @@ import { getCategoryInfo } from '@/data/categories'
 
 export function ProfilePage() {
   const { userId } = useParams()
-  const { getUserById, currentUser } = useAuth()
+  const { getUserById, fetchUserById, currentUser } = useAuth()
   const { getListingsByUser } = useSkills()
   const { getReviewsForUser, getAverageRating, getTotalReviews } = useReviews()
   const { proposals } = useSwaps()
+  const [loading, setLoading] = useState(false)
+  const [fetchAttempted, setFetchAttempted] = useState(false)
 
   const user = userId ? getUserById(userId) : undefined
+
+  useEffect(() => {
+    if (userId && !user && !fetchAttempted) {
+      setLoading(true)
+      fetchUserById(userId).finally(() => {
+        setLoading(false)
+        setFetchAttempted(true)
+      })
+    }
+  }, [userId, user, fetchAttempted, fetchUserById])
+
+  if (loading || (!user && !fetchAttempted)) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent" />
+      </div>
+    )
+  }
 
   if (!user) {
     return (

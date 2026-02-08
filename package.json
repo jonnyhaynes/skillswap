@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@bugsnag/js": "^8.8.1",
+    "@bugsnag/plugin-react": "^8.8.0",
     "@supabase/supabase-js": "^2.95.3",
     "@tailwindcss/vite": "^4.1.18",
     "clsx": "^2.1.1",

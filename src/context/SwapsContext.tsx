@@ -3,9 +3,11 @@ import {
   useReducer,
   useCallback,
   useEffect,
+  useRef,
   type ReactNode,
 } from 'react'
 import type { SwapProposal } from '@/types'
+import type { RealtimeChannel } from '@supabase/supabase-js'
 import { useAuth } from '@/hooks/useAuth'
 import {
   getSwapsForUser as getSwapsForUserService,
@@ -13,6 +15,8 @@ import {
   createProposal as createProposalService,
   updateSwapStatus,
   markSwapComplete as markSwapCompleteService,
+  subscribeToSwapProposals,
+  unsubscribeFromSwaps,
 } from '@/services/swaps'
 
 interface SwapsState {
@@ -105,7 +109,9 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
     initialized: false,
   })
 
-  // Fetch swaps when user changes
+  const subscriptionRef = useRef<RealtimeChannel | null>(null)
+
+  // Fetch swaps and set up real-time subscriptions when user changes
   useEffect(() => {
     if (!currentUser) {
       dispatch({ type: 'SET_PROPOSALS', proposals: [] })
@@ -127,6 +133,24 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
     }
 
     loadSwaps()
+
+    // Set up real-time subscription for swap proposals
+    subscriptionRef.current = subscribeToSwapProposals(
+      currentUser.id,
+      (proposal) => {
+        dispatch({ type: 'ADD_PROPOSAL', proposal })
+      },
+      (proposal) => {
+        dispatch({ type: 'UPDATE_PROPOSAL', proposal })
+      }
+    )
+
+    return () => {
+      if (subscriptionRef.current) {
+        unsubscribeFromSwaps(subscriptionRef.current)
+        subscriptionRef.current = null
+      }
+    }
   }, [currentUser])
 
   const fetchSwaps = useCallback(async () => {

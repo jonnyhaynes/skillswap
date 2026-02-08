@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, useRouteError, Link } from 'react-router'
 import { RootLayout } from '@/components/layout/RootLayout'
 import { AuthGuard } from '@/components/auth/AuthGuard'
 import { HomePage } from '@/pages/HomePage'
@@ -18,10 +18,33 @@ import { SignUpPage } from '@/pages/SignUpPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
+function RouteErrorPage() {
+  const error = useRouteError()
+  console.error('Route error:', error)
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <div className="max-w-md text-center">
+        <h1 className="text-2xl font-bold text-slate-900">Something went wrong</h1>
+        <p className="mt-2 text-slate-600">
+          An unexpected error occurred. Please try again.
+        </p>
+        <Link
+          to="/"
+          className="mt-4 inline-block rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+        >
+          Go to Home
+        </Link>
+      </div>
+    </div>
+  )
+}
+
 export const router = createBrowserRouter([
   {
     path: '/',
     Component: RootLayout,
+    errorElement: <RouteErrorPage />,
     children: [
       // Public routes
       { index: true, Component: HomePage },

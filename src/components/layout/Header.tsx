@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useMessages } from '@/hooks/useMessages'
+import { useSwaps } from '@/hooks/useSwaps'
 import { Avatar } from '@/components/ui/Avatar'
 
 const NAV_LINKS = [
@@ -13,11 +14,13 @@ const NAV_LINKS = [
 export function Header() {
   const { currentUser, signOut, initialized } = useAuth()
   const { getUnreadCount } = useMessages()
+  const { getIncomingSwaps } = useSwaps()
   const location = useLocation()
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const unreadCount = currentUser ? getUnreadCount(currentUser.id) : 0
+  const incomingSwapsCount = currentUser ? getIncomingSwaps(currentUser.id).length : 0
 
   const handleSignOut = async () => {
     setProfileMenuOpen(false)
@@ -54,6 +57,11 @@ export function Header() {
               }`}
             >
               {link.label}
+              {link.to === '/swaps' && incomingSwapsCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                  {incomingSwapsCount}
+                </span>
+              )}
               {link.to === '/messages' && unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
                   {unreadCount}
@@ -180,6 +188,11 @@ export function Header() {
               onClick={() => setMobileMenuOpen(false)}
             >
               {link.label}
+              {link.to === '/swaps' && incomingSwapsCount > 0 && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                  {incomingSwapsCount}
+                </span>
+              )}
               {link.to === '/messages' && unreadCount > 0 && (
                 <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
                   {unreadCount}

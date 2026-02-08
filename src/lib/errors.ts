@@ -1,6 +1,7 @@
 // Error handling utilities for Supabase operations
 
 import type { AuthError, PostgrestError } from '@supabase/supabase-js'
+import Bugsnag from '@bugsnag/js'
 
 /**
  * Base application error class
@@ -36,6 +37,11 @@ export function getPostgrestErrorMessage(error: PostgrestError): string {
     default:
       // Return a generic message but log the actual error
       console.error('Database error:', error)
+      if (Bugsnag.isStarted()) {
+        Bugsnag.notify(new Error(error.message), (event) => {
+          event.addMetadata('supabase', { code: error.code, details: error.details, hint: error.hint })
+        })
+      }
       return error.message || 'An unexpected database error occurred.'
   }
 }

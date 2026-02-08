@@ -11,11 +11,19 @@ export function CreateListingPage() {
   const { currentUser } = useAuth()
   const { addToast } = useToast()
 
-  const handleSubmit = (data: Omit<SkillListing, 'id' | 'createdAt' | 'updatedAt' | 'userId'>) => {
+  const handleSubmit = async (data: Omit<SkillListing, 'id' | 'createdAt' | 'updatedAt' | 'userId'>) => {
     if (!currentUser) return
-    addListing({ ...data, userId: currentUser.id })
-    addToast('Skill listing created!', 'success')
-    navigate('/my-listings')
+    try {
+      const listing = await addListing({ ...data, userId: currentUser.id })
+      if (listing) {
+        addToast('Skill listing created!', 'success')
+        navigate('/my-listings')
+      } else {
+        addToast('Failed to create listing. Please try again.', 'error')
+      }
+    } catch {
+      addToast('Failed to create listing. Please try again.', 'error')
+    }
   }
 
   return (
