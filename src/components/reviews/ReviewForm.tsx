@@ -7,7 +7,7 @@ interface ReviewFormProps {
   swapId: string
   revieweeId: string
   skillCategory: SkillCategory
-  onSubmit: (data: { rating: number; comment: string }) => void
+  onSubmit: (data: { rating: number; comment: string }) => void | Promise<void>
   onCancel: () => void
 }
 
@@ -17,9 +17,10 @@ export function ReviewForm({
 }: ReviewFormProps) {
   const [rating, setRating] = useState(0)
   const [comment, setComment] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const [errors, setErrors] = useState<{ rating?: string; comment?: string }>({})
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
     const newErrors: { rating?: string; comment?: string } = {}
@@ -37,7 +38,12 @@ export function ReviewForm({
       return
     }
 
-    onSubmit({ rating, comment: comment.trim() })
+    setSubmitting(true)
+    try {
+      await onSubmit({ rating, comment: comment.trim() })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -76,11 +82,11 @@ export function ReviewForm({
       </div>
 
       <div className="flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <Button type="button" variant="outline" onClick={onCancel} disabled={submitting}>
           Cancel
         </Button>
-        <Button type="submit" variant="primary">
-          Submit Review
+        <Button type="submit" variant="primary" disabled={submitting}>
+          {submitting ? 'Submitting...' : 'Submit Review'}
         </Button>
       </div>
     </form>

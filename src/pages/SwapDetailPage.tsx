@@ -237,8 +237,8 @@ export function SwapDetailPage() {
                     swapId={swap.id}
                     revieweeId={otherUserId}
                     skillCategory={offeredListing?.category ?? 'other'}
-                    onSubmit={(data) => {
-                      addReview({
+                    onSubmit={async (data) => {
+                      const review = await addReview({
                         swapId: swap.id,
                         reviewerId: currentUser.id,
                         revieweeId: otherUserId,
@@ -246,8 +246,12 @@ export function SwapDetailPage() {
                         comment: data.comment,
                         skillCategory: offeredListing?.category ?? 'other',
                       });
-                      addToast('Review submitted successfully!', 'success');
-                      setShowReviewForm(false);
+                      if (review) {
+                        addToast('Review submitted successfully!', 'success');
+                        setShowReviewForm(false);
+                      } else {
+                        addToast('Failed to submit review. Please try again.', 'error');
+                      }
                     }}
                     onCancel={() => setShowReviewForm(false)}
                   />

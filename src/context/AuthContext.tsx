@@ -122,12 +122,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     // Listen for auth changes
+    // IMPORTANT: The callback must NOT be async to avoid deadlocks with
+    // Supabase's internal navigator lock. Async work is deferred with .then().
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
-        const profile = await getProfile(session.user.id)
-        dispatch({ type: 'SET_SESSION', session, user: profile })
+        getProfile(session.user.id).then((profile) => {
+          dispatch({ type: 'SET_SESSION', session, user: profile })
+        })
       } else if (event === 'SIGNED_OUT') {
         dispatch({ type: 'LOGOUT' })
       } else if (event === 'TOKEN_REFRESHED' && session) {
