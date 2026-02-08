@@ -2,6 +2,7 @@
 
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Nunito', 'Inter', system-ui, sans-serif;
 
   --color-primary-50: #f0fdfa;
   --color-primary-100: #ccfbf1;

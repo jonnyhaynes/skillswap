@@ -30,10 +30,10 @@ export function ForgotPasswordForm() {
   if (success) {
     return (
       <div className="text-center space-y-4">
-        <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+        <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="w-8 h-8 text-emerald-600"
+            className="w-8 h-8 text-primary-600"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -54,14 +54,14 @@ export function ForgotPasswordForm() {
           Didn't receive the email? Check your spam folder or{' '}
           <button
             onClick={() => setSuccess(false)}
-            className="text-emerald-600 hover:text-emerald-700"
+            className="text-primary-600 hover:text-primary-700"
           >
             try again
           </button>
         </p>
         <Link
           to="/login"
-          className="inline-block mt-4 text-emerald-600 hover:text-emerald-700 font-medium"
+          className="inline-block mt-4 text-primary-600 hover:text-primary-700 font-medium"
         >
           Back to sign in
         </Link>
@@ -94,7 +94,7 @@ export function ForgotPasswordForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           placeholder="you@example.com"
         />
       </div>
@@ -105,7 +105,7 @@ export function ForgotPasswordForm() {
 
       <p className="text-center text-sm text-slate-600">
         Remember your password?{' '}
-        <Link to="/login" className="text-emerald-600 hover:text-emerald-700 font-medium">
+        <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">
           Sign in
         </Link>
       </p>

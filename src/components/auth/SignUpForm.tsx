@@ -88,10 +88,10 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
   if (showConfirmation) {
     return (
       <div className="text-center space-y-4">
-        <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+        <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="w-8 h-8 text-emerald-600"
+            className="w-8 h-8 text-primary-600"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -113,7 +113,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           Didn't receive the email? Check your spam folder or{' '}
           <button
             onClick={() => setShowConfirmation(false)}
-            className="text-emerald-600 hover:text-emerald-700"
+            className="text-primary-600 hover:text-primary-700"
           >
             try again
           </button>
@@ -143,7 +143,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
             required
             value={formData.firstName}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           />
         </div>
         <div>
@@ -158,7 +158,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
             required
             value={formData.lastName}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           />
         </div>
       </div>
@@ -175,7 +175,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           required
           value={formData.email}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           placeholder="you@example.com"
         />
       </div>
@@ -190,7 +190,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           required
           value={formData.neighbourhood}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
         >
           <option value="">Select a neighbourhood</option>
           {neighbourhoods.map((n) => (
@@ -211,7 +211,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           type="text"
           value={formData.postcode}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           placeholder="e.g. E8 1AB"
         />
       </div>
@@ -228,7 +228,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           required
           value={formData.password}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           placeholder="At least 6 characters"
         />
       </div>
@@ -245,7 +245,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           required
           value={formData.confirmPassword}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           placeholder="Re-enter your password"
         />
       </div>
@@ -256,7 +256,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 
       <p className="text-center text-sm text-slate-600">
         Already have an account?{' '}
-        <Link to="/login" className="text-emerald-600 hover:text-emerald-700 font-medium">
+        <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">
           Sign in
         </Link>
       </p>

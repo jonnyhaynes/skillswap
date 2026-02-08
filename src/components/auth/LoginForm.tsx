@@ -56,7 +56,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           placeholder="you@example.com"
         />
       </div>
@@ -68,7 +68,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           </label>
           <Link
             to="/forgot-password"
-            className="text-sm text-emerald-600 hover:text-emerald-700"
+            className="text-sm text-primary-600 hover:text-primary-700"
           >
             Forgot password?
           </Link>
@@ -80,7 +80,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           placeholder="Enter your password"
         />
       </div>
@@ -91,7 +91,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
       <p className="text-center text-sm text-slate-600">
         Don't have an account?{' '}
-        <Link to="/signup" className="text-emerald-600 hover:text-emerald-700 font-medium">
+        <Link to="/signup" className="text-primary-600 hover:text-primary-700 font-medium">
           Sign up
         </Link>
       </p>

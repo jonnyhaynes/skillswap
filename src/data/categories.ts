@@ -7,6 +7,7 @@ export interface CategoryInfo {
   bgColor: string;
   textColor: string;
   borderColor: string;
+  barColor: string;
 }
 
 export const CATEGORIES: CategoryInfo[] = [
@@ -17,6 +18,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-blue-100',
     textColor: 'text-blue-700',
     borderColor: 'border-blue-200',
+    barColor: 'bg-blue-400',
   },
   {
     id: 'music',
@@ -25,6 +27,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-purple-100',
     textColor: 'text-purple-700',
     borderColor: 'border-purple-200',
+    barColor: 'bg-purple-400',
   },
   {
     id: 'languages',
@@ -33,6 +36,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-green-100',
     textColor: 'text-green-700',
     borderColor: 'border-green-200',
+    barColor: 'bg-green-400',
   },
   {
     id: 'cooking',
@@ -41,6 +45,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-orange-100',
     textColor: 'text-orange-700',
     borderColor: 'border-orange-200',
+    barColor: 'bg-orange-400',
   },
   {
     id: 'fitness',
@@ -49,6 +54,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-red-100',
     textColor: 'text-red-700',
     borderColor: 'border-red-200',
+    barColor: 'bg-red-400',
   },
   {
     id: 'arts-crafts',
@@ -57,6 +63,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-pink-100',
     textColor: 'text-pink-700',
     borderColor: 'border-pink-200',
+    barColor: 'bg-pink-400',
   },
   {
     id: 'gardening',
@@ -65,6 +72,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-emerald-100',
     textColor: 'text-emerald-700',
     borderColor: 'border-emerald-200',
+    barColor: 'bg-emerald-400',
   },
   {
     id: 'diy-repairs',
@@ -73,6 +81,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-amber-100',
     textColor: 'text-amber-700',
     borderColor: 'border-amber-200',
+    barColor: 'bg-amber-400',
   },
   {
     id: 'tutoring',
@@ -81,6 +90,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-cyan-100',
     textColor: 'text-cyan-700',
     borderColor: 'border-cyan-200',
+    barColor: 'bg-cyan-400',
   },
   {
     id: 'photography',
@@ -89,6 +99,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-violet-100',
     textColor: 'text-violet-700',
     borderColor: 'border-violet-200',
+    barColor: 'bg-violet-400',
   },
   {
     id: 'business',
@@ -97,6 +108,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-slate-100',
     textColor: 'text-slate-700',
     borderColor: 'border-slate-200',
+    barColor: 'bg-slate-400',
   },
   {
     id: 'other',
@@ -105,6 +117,7 @@ export const CATEGORIES: CategoryInfo[] = [
     bgColor: 'bg-gray-100',
     textColor: 'text-gray-700',
     borderColor: 'border-gray-200',
+    barColor: 'bg-gray-400',
   },
 ];
 

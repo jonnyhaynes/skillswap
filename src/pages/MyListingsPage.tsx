@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { SkillGrid } from '@/components/skills/SkillGrid'
 import { Tabs } from '@/components/ui/Tabs'
 import { Button } from '@/components/ui/Button'
+import { SkeletonGrid } from '@/components/ui/Skeleton'
 
 export function MyListingsPage() {
   const { getListingsByUser, loading } = useSkills()
@@ -36,9 +37,7 @@ export function MyListingsPage() {
             <p className="text-slate-600 mt-1">Manage your skill listings</p>
           </div>
         </div>
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
-        </div>
+        <SkeletonGrid count={3} />
       </div>
     )
   }

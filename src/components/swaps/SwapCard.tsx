@@ -27,7 +27,7 @@ export function SwapCard({ swap, currentUserId }: SwapCardProps) {
 
   return (
     <Link to={`/swaps/${swap.id}`}>
-      <Card hover className="p-4">
+      <Card hover className="p-5">
         <div className="flex items-center gap-4">
           <Avatar
             src={otherUser.avatarUrl}
@@ -37,7 +37,7 @@ export function SwapCard({ swap, currentUserId }: SwapCardProps) {
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="text-sm font-semibold text-slate-900 truncate">
+              <h3 className="text-sm font-bold text-slate-900 truncate">
                 {otherUser.firstName} {otherUser.lastName}
               </h3>
               <SwapStatusBadge status={swap.status} />
@@ -48,7 +48,7 @@ export function SwapCard({ swap, currentUserId }: SwapCardProps) {
                 <SkillBadge category={offeredListing.category} size="sm" />
               )}
               <svg
-                className="w-4 h-4 text-slate-400 shrink-0"
+                className="w-4 h-4 text-slate-300 shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

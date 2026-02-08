@@ -16,12 +16,12 @@ export function ReviewCard({ review, reviewer }: ReviewCardProps) {
   const categoryInfo = getCategoryInfo(review.skillCategory)
 
   return (
-    <Card className="p-4">
+    <Card className="p-5">
       <div className="flex items-start gap-3">
         <Avatar src={reviewer.avatarUrl} name={fullName} size="sm" />
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-sm font-medium text-slate-900">{fullName}</p>
+            <p className="text-sm font-bold text-slate-900">{fullName}</p>
             <span className="text-xs text-slate-400 shrink-0">
               {formatRelativeTime(review.createdAt)}
             </span>
@@ -30,7 +30,7 @@ export function ReviewCard({ review, reviewer }: ReviewCardProps) {
             <StarDisplay rating={review.rating} size="sm" />
           </div>
           <p className="mt-2 text-sm text-slate-600 leading-relaxed">{review.comment}</p>
-          <div className="mt-2">
+          <div className="mt-3">
             <Badge className={`${categoryInfo.bgColor} ${categoryInfo.textColor}`}>
               {categoryInfo.emoji} {categoryInfo.label}
             </Badge>

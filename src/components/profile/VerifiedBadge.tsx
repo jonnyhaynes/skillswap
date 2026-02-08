@@ -16,7 +16,7 @@ export function VerifiedBadge({ size = 'md' }: VerifiedBadgeProps) {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
-      className={cn('text-emerald-500 inline-block', sizeStyles[size])}
+      className={cn('text-primary-500 inline-block', sizeStyles[size])}
       role="img"
       aria-label="Verified Neighbour"
     >

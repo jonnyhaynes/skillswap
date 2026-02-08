@@ -7,6 +7,7 @@ import { sortSkills, type SortOption } from '@/utils/sortSkills'
 import { SearchBar } from '@/components/skills/SearchBar'
 import { CategoryFilter } from '@/components/skills/CategoryFilter'
 import { SkillGrid } from '@/components/skills/SkillGrid'
+import { SkeletonGrid } from '@/components/ui/Skeleton'
 
 export function BrowseSkillsPage() {
   const { listings, loading, initialized } = useSkills()
@@ -15,6 +16,7 @@ export function BrowseSkillsPage() {
   const [selectedCategories, setSelectedCategories] = useState<SkillCategory[]>([])
   const [listingType, setListingType] = useState<ListingType | 'all'>('all')
   const [sortBy, setSortBy] = useState<SortOption>('newest')
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const debouncedQuery = useDebounce(searchQuery, 300)
 
@@ -27,78 +29,142 @@ export function BrowseSkillsPage() {
     return sortSkills(filtered, sortBy)
   }, [listings, debouncedQuery, selectedCategories, listingType, sortBy])
 
+  const activeFilterCount = selectedCategories.length + (listingType !== 'all' ? 1 : 0)
+
   if (!initialized || loading) {
     return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Browse Skills</h1>
-          <p className="text-slate-600 mt-1">Find skills in your neighbourhood</p>
+      <div>
+        <div className="mb-6">
+          <h1 className="text-3xl font-extrabold text-slate-900 font-display">Browse Skills</h1>
+          <p className="text-slate-500 mt-1">Find skills in your neighbourhood</p>
         </div>
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+        <div className="lg:grid lg:grid-cols-[260px_1fr] lg:gap-8">
+          {/* Sidebar skeleton */}
+          <aside className="hidden lg:block">
+            <div className="space-y-4">
+              <div className="h-12 bg-slate-100 rounded-xl animate-pulse" />
+              <div className="space-y-2">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="h-9 bg-slate-100 rounded-lg animate-pulse" />
+                ))}
+              </div>
+            </div>
+          </aside>
+          <SkeletonGrid count={6} />
         </div>
       </div>
     )
   }
 
-  return (
+  const filtersSidebar = (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Browse Skills</h1>
-        <p className="text-slate-600 mt-1">Find skills in your neighbourhood</p>
-      </div>
-
       <SearchBar
         value={searchQuery}
         onChange={setSearchQuery}
-        placeholder="Search by skill, topic, or keyword..."
+        placeholder="Search skills..."
       />
 
-      <CategoryFilter
-        selected={selectedCategories}
-        onChange={setSelectedCategories}
-      />
-
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <div className="flex items-center gap-2">
-          <label htmlFor="listing-type" className="text-sm font-medium text-slate-700">
-            Type:
-          </label>
-          <select
-            id="listing-type"
-            value={listingType}
-            onChange={(e) => setListingType(e.target.value as ListingType | 'all')}
-            className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 focus:outline-none"
-          >
-            <option value="all">All</option>
-            <option value="offered">Offered</option>
-            <option value="wanted">Wanted</option>
-          </select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label htmlFor="sort-by" className="text-sm font-medium text-slate-700">
-            Sort:
-          </label>
-          <select
-            id="sort-by"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 focus:outline-none"
-          >
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-            <option value="title-asc">A-Z</option>
-            <option value="title-desc">Z-A</option>
-          </select>
-        </div>
-
-        <span className="text-sm text-slate-500 sm:ml-auto">
-          {filteredAndSorted.length} {filteredAndSorted.length === 1 ? 'result' : 'results'}
-        </span>
+      <div>
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-3">
+          Categories
+        </h3>
+        <CategoryFilter
+          selected={selectedCategories}
+          onChange={setSelectedCategories}
+          layout="vertical"
+        />
       </div>
 
-      <SkillGrid listings={filteredAndSorted} />
+      <div>
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-3">
+          Type
+        </h3>
+        <select
+          id="listing-type"
+          value={listingType}
+          onChange={(e) => setListingType(e.target.value as ListingType | 'all')}
+          className="w-full rounded-xl bg-slate-50 border-0 py-2.5 px-3 text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:outline-none transition-colors"
+        >
+          <option value="all">All types</option>
+          <option value="offered">Offered</option>
+          <option value="wanted">Wanted</option>
+        </select>
+      </div>
+
+      <div>
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-3">
+          Sort by
+        </h3>
+        <select
+          id="sort-by"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as SortOption)}
+          className="w-full rounded-xl bg-slate-50 border-0 py-2.5 px-3 text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:outline-none transition-colors"
+        >
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="title-asc">A–Z</option>
+          <option value="title-desc">Z–A</option>
+        </select>
+      </div>
+    </div>
+  )
+
+  return (
+    <div>
+      {/* Page heading */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-extrabold text-slate-900 font-display">Browse Skills</h1>
+        <p className="text-slate-500 mt-1">Find skills in your neighbourhood</p>
+      </div>
+
+      {/* Mobile filter toggle */}
+      <button
+        onClick={() => setFiltersOpen(!filtersOpen)}
+        className="lg:hidden mb-4 inline-flex items-center gap-2 rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors"
+      >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+        </svg>
+        Filters
+        {activeFilterCount > 0 && (
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-500 px-1.5 text-xs font-bold text-white">
+            {activeFilterCount}
+          </span>
+        )}
+      </button>
+
+      {/* Mobile filter panel */}
+      {filtersOpen && (
+        <div className="lg:hidden mb-6 rounded-2xl bg-white p-5 space-y-5">
+          {filtersSidebar}
+          <button
+            onClick={() => setFiltersOpen(false)}
+            className="w-full rounded-xl bg-primary-500 py-2.5 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+          >
+            Show {filteredAndSorted.length} {filteredAndSorted.length === 1 ? 'result' : 'results'}
+          </button>
+        </div>
+      )}
+
+      <div className="lg:grid lg:grid-cols-[260px_1fr] lg:gap-8">
+        {/* Desktop sidebar */}
+        <aside className="hidden lg:block">
+          <div className="lg:sticky lg:top-[88px] space-y-6">
+            {filtersSidebar}
+          </div>
+        </aside>
+
+        {/* Results */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm text-slate-500">
+              {filteredAndSorted.length} {filteredAndSorted.length === 1 ? 'result' : 'results'}
+            </span>
+          </div>
+          <SkillGrid listings={filteredAndSorted} />
+        </div>
+      </div>
     </div>
   )
 }

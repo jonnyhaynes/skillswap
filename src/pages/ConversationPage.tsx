@@ -6,6 +6,7 @@ import { Avatar } from '@/components/ui/Avatar'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { MessageThread } from '@/components/messages/MessageThread'
 import { MessageInput } from '@/components/messages/MessageInput'
+import { Skeleton } from '@/components/ui/Skeleton'
 
 export function ConversationPage() {
   const { conversationId } = useParams<{ conversationId: string }>()
@@ -49,10 +50,19 @@ export function ConversationPage() {
 
   if (!initialized || loading) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-8 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
-          <p className="text-slate-500 text-sm">Loading conversation...</p>
+      <div className="max-w-3xl mx-auto px-4 py-8 space-y-4">
+        <div className="flex items-center gap-3 pb-4 border-b border-slate-200">
+          <Skeleton className="w-10 h-10 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-3 w-20" />
+          </div>
+        </div>
+        <div className="space-y-3 py-4">
+          <div className="flex justify-end"><Skeleton className="h-10 w-48 rounded-2xl" /></div>
+          <div className="flex justify-start"><Skeleton className="h-10 w-56 rounded-2xl" /></div>
+          <div className="flex justify-end"><Skeleton className="h-10 w-40 rounded-2xl" /></div>
+          <div className="flex justify-start"><Skeleton className="h-10 w-52 rounded-2xl" /></div>
         </div>
       </div>
     )
