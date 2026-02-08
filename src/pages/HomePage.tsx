@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useSkills } from '@/hooks/useSkills'
+import { useCountUp } from '@/hooks/useCountUp'
 import { SkillGrid } from '@/components/skills/SkillGrid'
 
 function TargetIcon({ className = 'w-5 h-5' }: { className?: string }) {
@@ -67,11 +68,27 @@ function SparkleIcon() {
 }
 
 const STATS_CONFIG = [
-  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon, bg: 'bg-primary-50' },
-  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon, bg: 'bg-amber-50' },
-  { label: 'Total Listings', key: 'total' as const, icon: ListIcon, bg: 'bg-blue-50' },
-  { label: 'Categories', key: 'categories' as const, icon: GridIcon, bg: 'bg-purple-50' },
+  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon },
+  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon },
+  { label: 'Total Listings', key: 'total' as const, icon: ListIcon },
+  { label: 'Categories', key: 'categories' as const, icon: GridIcon },
 ]
+
+function AnimatedStat({ value, label, icon: Icon }: { value: number | string; label: string; icon: React.ComponentType<{ className?: string }> }) {
+  const numericValue = typeof value === 'number' ? value : 0
+  const isLoading = typeof value === 'string'
+  const { count, ref } = useCountUp(numericValue)
+
+  return (
+    <div ref={ref} className="py-6 px-4 text-center">
+      <Icon className="w-5 h-5 text-white/50 mx-auto" />
+      <div className="text-4xl sm:text-5xl font-extrabold text-white font-display mt-2 tabular-nums">
+        {isLoading ? '...' : count}
+      </div>
+      <div className="text-xs uppercase tracking-wider text-white/50 mt-2 font-semibold">{label}</div>
+    </div>
+  )
+}
 
 const STEPS = [
   {
@@ -178,20 +195,11 @@ export function HomePage() {
         </div>
 
         {/* Stats bar — glass morphism */}
-        <div className="relative z-10 mx-4 sm:mx-8 mb-6 rounded-xl backdrop-blur-xl bg-white/15 border border-white/20">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/15">
-            {STATS_CONFIG.map((stat) => {
-              const Icon = stat.icon
-              return (
-                <div key={stat.label} className="py-5 px-4 text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <Icon className="w-5 h-5 text-white/70" />
-                    <div className="text-3xl font-extrabold text-white font-display">{statValues[stat.key]}</div>
-                  </div>
-                  <div className="text-sm text-white/60 mt-1 font-medium">{stat.label}</div>
-                </div>
-              )
-            })}
+        <div className="relative z-10 mx-4 sm:mx-8 mb-6 rounded-xl backdrop-blur-xl bg-white/10 border border-white/15">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
+            {STATS_CONFIG.map((stat) => (
+              <AnimatedStat key={stat.label} value={statValues[stat.key]} label={stat.label} icon={stat.icon} />
+            ))}
           </div>
         </div>
       </div>
