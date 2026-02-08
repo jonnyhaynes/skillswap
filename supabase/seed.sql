@@ -32,10 +32,18 @@ INSERT INTO auth.users (
   encrypted_password,
   email_confirmed_at,
   raw_user_meta_data,
+  raw_app_meta_data,
   created_at,
   updated_at,
   confirmation_token,
-  recovery_token
+  recovery_token,
+  email_change,
+  email_change_token_new,
+  email_change_token_current,
+  email_change_confirm_status,
+  phone_change,
+  phone_change_token,
+  reauthentication_token
 ) VALUES
   (
     '00000000-0000-0000-0000-000000000001',
@@ -46,10 +54,10 @@ INSERT INTO auth.users (
     extensions.crypt('password123', extensions.gen_salt('bf')),
     NOW(),
     jsonb_build_object('first_name', 'Alex', 'last_name', 'Chen', 'neighbourhood', 'Wickersley', 'postcode', 'S66 1AA'),
+    jsonb_build_object('provider', 'email', 'providers', ARRAY['email']),
     '2025-11-01T09:00:00Z',
     '2025-11-01T09:00:00Z',
-    '',
-    ''
+    '', '', '', '', '', 0, '', '', ''
   ),
   (
     '00000000-0000-0000-0000-000000000002',
@@ -60,10 +68,10 @@ INSERT INTO auth.users (
     extensions.crypt('password123', extensions.gen_salt('bf')),
     NOW(),
     jsonb_build_object('first_name', 'Maria', 'last_name', 'Santos', 'neighbourhood', 'Wickersley', 'postcode', 'S66 2BB'),
+    jsonb_build_object('provider', 'email', 'providers', ARRAY['email']),
     '2025-11-10T14:30:00Z',
     '2025-11-10T14:30:00Z',
-    '',
-    ''
+    '', '', '', '', '', 0, '', '', ''
   ),
   (
     '00000000-0000-0000-0000-000000000003',
@@ -74,10 +82,10 @@ INSERT INTO auth.users (
     extensions.crypt('password123', extensions.gen_salt('bf')),
     NOW(),
     jsonb_build_object('first_name', 'James', 'last_name', 'O''Brien', 'neighbourhood', 'Maltby', 'postcode', 'S66 7AA'),
+    jsonb_build_object('provider', 'email', 'providers', ARRAY['email']),
     '2025-11-15T11:00:00Z',
     '2025-11-15T11:00:00Z',
-    '',
-    ''
+    '', '', '', '', '', 0, '', '', ''
   ),
   (
     '00000000-0000-0000-0000-000000000004',
@@ -88,10 +96,10 @@ INSERT INTO auth.users (
     extensions.crypt('password123', extensions.gen_salt('bf')),
     NOW(),
     jsonb_build_object('first_name', 'Priya', 'last_name', 'Patel', 'neighbourhood', 'Bramley', 'postcode', 'S66 3CC'),
+    jsonb_build_object('provider', 'email', 'providers', ARRAY['email']),
     '2025-12-01T08:15:00Z',
     '2025-12-01T08:15:00Z',
-    '',
-    ''
+    '', '', '', '', '', 0, '', '', ''
   ),
   (
     '00000000-0000-0000-0000-000000000005',
@@ -102,10 +110,10 @@ INSERT INTO auth.users (
     extensions.crypt('password123', extensions.gen_salt('bf')),
     NOW(),
     jsonb_build_object('first_name', 'Tom', 'last_name', 'Williams', 'neighbourhood', 'Swinton', 'postcode', 'S64 8DD'),
+    jsonb_build_object('provider', 'email', 'providers', ARRAY['email']),
     '2025-12-05T16:45:00Z',
     '2025-12-05T16:45:00Z',
-    '',
-    ''
+    '', '', '', '', '', 0, '', '', ''
   ),
   (
     '00000000-0000-0000-0000-000000000006',
@@ -116,10 +124,10 @@ INSERT INTO auth.users (
     extensions.crypt('password123', extensions.gen_salt('bf')),
     NOW(),
     jsonb_build_object('first_name', 'Lena', 'last_name', 'Fischer', 'neighbourhood', 'Maltby', 'postcode', 'S66 7EE'),
+    jsonb_build_object('provider', 'email', 'providers', ARRAY['email']),
     '2025-12-10T10:00:00Z',
     '2025-12-10T10:00:00Z',
-    '',
-    ''
+    '', '', '', '', '', 0, '', '', ''
   ),
   (
     '00000000-0000-0000-0000-000000000007',
@@ -130,10 +138,10 @@ INSERT INTO auth.users (
     extensions.crypt('password123', extensions.gen_salt('bf')),
     NOW(),
     jsonb_build_object('first_name', 'David', 'last_name', 'Kim', 'neighbourhood', 'Bramley', 'postcode', 'S66 3FF'),
+    jsonb_build_object('provider', 'email', 'providers', ARRAY['email']),
     '2025-12-15T13:20:00Z',
     '2025-12-15T13:20:00Z',
-    '',
-    ''
+    '', '', '', '', '', 0, '', '', ''
   ),
   (
     '00000000-0000-0000-0000-000000000008',
@@ -144,10 +152,10 @@ INSERT INTO auth.users (
     extensions.crypt('password123', extensions.gen_salt('bf')),
     NOW(),
     jsonb_build_object('first_name', 'Sarah', 'last_name', 'Johnson', 'neighbourhood', 'Rawmarsh', 'postcode', 'S62 6GG'),
+    jsonb_build_object('provider', 'email', 'providers', ARRAY['email']),
     '2025-12-20T09:30:00Z',
     '2025-12-20T09:30:00Z',
-    '',
-    ''
+    '', '', '', '', '', 0, '', '', ''
   );
 
 -- Also insert into auth.identities (required by Supabase auth)

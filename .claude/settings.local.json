@@ -15,7 +15,10 @@
       "Bash(supabase:*)",
       "Bash(brew install:*)",
       "Bash(grep:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(psql:*)",
+      "Bash(curl:*)",
+      "Bash(python3:*)"
     ]
   }
 }
