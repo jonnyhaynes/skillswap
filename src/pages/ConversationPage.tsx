@@ -10,13 +10,20 @@ import { MessageInput } from '@/components/messages/MessageInput'
 export function ConversationPage() {
   const { conversationId } = useParams<{ conversationId: string }>()
   const { currentUser, getUserById } = useAuth()
-  const { getConversation, getMessagesForConversation, sendMessage, markAsRead } = useMessages()
+  const { getConversation, getMessagesForConversation, fetchMessages, sendMessage, markAsRead } =
+    useMessages()
 
   const conversation = conversationId ? getConversation(conversationId) : undefined
   const messages = conversationId ? getMessagesForConversation(conversationId) : []
 
   const otherUserId = conversation?.participantIds.find((id) => id !== currentUser?.id)
   const otherUser = otherUserId ? getUserById(otherUserId) : undefined
+
+  useEffect(() => {
+    if (conversationId) {
+      fetchMessages(conversationId)
+    }
+  }, [conversationId, fetchMessages])
 
   useEffect(() => {
     if (conversationId && currentUser) {
