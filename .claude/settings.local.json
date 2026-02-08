@@ -18,7 +18,11 @@
       "Bash(test:*)",
       "Bash(psql:*)",
       "Bash(curl:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(ls:*)",
+      "Bash(npx supabase:*)",
+      "Bash(PGPASSWORD=postgres psql:*)",
+      "Bash(npx eslint:*)"
     ]
   }
 }

@@ -184,48 +184,56 @@ INSERT INTO auth.identities (
 -- The trigger created basic profiles. Now update them with full bios and details.
 
 UPDATE public.profiles SET
+  avatar_url = 'https://i.pravatar.cc/150?u=alex.chen',
   bio = 'Full-stack developer by day, aspiring musician by night. Always looking to pick up new creative skills from the community.',
   is_verified_neighbour = TRUE,
   joined_at = '2025-11-01T09:00:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000001';
 
 UPDATE public.profiles SET
+  avatar_url = 'https://i.pravatar.cc/150?u=maria.santos',
   bio = 'Classically trained guitarist with 15 years of experience. Passionate about flamenco and teaching others to find their rhythm.',
   is_verified_neighbour = TRUE,
   joined_at = '2025-11-10T14:30:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000002';
 
 UPDATE public.profiles SET
+  avatar_url = 'https://i.pravatar.cc/150?u=james.obrien',
   bio = 'Head chef at a local Italian restaurant with a love for sharing recipes. Recently got into food photography and want to level up.',
   is_verified_neighbour = TRUE,
   joined_at = '2025-11-15T11:00:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000003';
 
 UPDATE public.profiles SET
+  avatar_url = 'https://i.pravatar.cc/150?u=priya.patel',
   bio = 'Certified yoga instructor specialising in Vinyasa and mindfulness. Trying to build an online presence and need help with web design.',
   is_verified_neighbour = FALSE,
   joined_at = '2025-12-01T08:15:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000004';
 
 UPDATE public.profiles SET
+  avatar_url = 'https://i.pravatar.cc/150?u=tom.williams',
   bio = 'Carpenter with 20 years of experience in furniture restoration. Planning a trip to Barcelona and want to brush up on my Spanish.',
   is_verified_neighbour = TRUE,
   joined_at = '2025-12-05T16:45:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000005';
 
 UPDATE public.profiles SET
+  avatar_url = 'https://i.pravatar.cc/150?u=lena.fischer',
   bio = 'Born in Berlin, fluent in German and Spanish. I love helping people unlock new languages and want to get fitter this year.',
   is_verified_neighbour = FALSE,
   joined_at = '2025-12-10T10:00:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000006';
 
 UPDATE public.profiles SET
+  avatar_url = 'https://i.pravatar.cc/150?u=david.kim',
   bio = 'Professional photographer with a studio in Bramley. Just moved into a place with a garden and have no idea where to start.',
   is_verified_neighbour = TRUE,
   joined_at = '2025-12-15T13:20:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000007';
 
 UPDATE public.profiles SET
+  avatar_url = 'https://i.pravatar.cc/150?u=sarah.johnson',
   bio = 'Allotment enthusiast and community garden organiser. Keen to learn programming so I can build an app for our gardening co-op.',
   is_verified_neighbour = TRUE,
   joined_at = '2025-12-20T09:30:00Z'

@@ -10,8 +10,15 @@ import { MessageInput } from '@/components/messages/MessageInput'
 export function ConversationPage() {
   const { conversationId } = useParams<{ conversationId: string }>()
   const { currentUser, getUserById } = useAuth()
-  const { getConversation, getMessagesForConversation, fetchMessages, sendMessage, markAsRead } =
-    useMessages()
+  const {
+    getConversation,
+    getMessagesForConversation,
+    fetchMessages,
+    sendMessage,
+    markAsRead,
+    initialized,
+    loading,
+  } = useMessages()
 
   const conversation = conversationId ? getConversation(conversationId) : undefined
   const messages = conversationId ? getMessagesForConversation(conversationId) : []
@@ -26,15 +33,27 @@ export function ConversationPage() {
   }, [conversationId, fetchMessages])
 
   useEffect(() => {
-    if (conversationId && currentUser) {
+    if (conversationId && currentUser && messages.length > 0) {
       markAsRead(conversationId, currentUser.id)
     }
-  }, [conversationId, currentUser, markAsRead, messages.length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversationId, currentUser, markAsRead])
 
   if (!currentUser) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-8">
         <p className="text-slate-500 text-center">Please log in to view this conversation.</p>
+      </div>
+    )
+  }
+
+  if (!initialized || loading) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-8 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+          <p className="text-slate-500 text-sm">Loading conversation...</p>
+        </div>
       </div>
     )
   }

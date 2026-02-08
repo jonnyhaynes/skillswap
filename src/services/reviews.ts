@@ -104,6 +104,7 @@ export async function createReview(
     .single()
 
   if (error) {
+    console.error('Review creation failed:', { message: error.message, code: error.code, details: error.details, hint: error.hint })
     throw new ReviewsServiceError(error.message, error.code)
   }
 

@@ -57,12 +57,14 @@ function reviewsReducer(state: ReviewsState, action: ReviewsAction): ReviewsStat
         loading: false,
         error: null,
       }
-    case 'ADD_REVIEW':
+    case 'ADD_REVIEW': {
+      const exists = state.reviews.some((r) => r.id === action.review.id)
       return {
         ...state,
-        reviews: [action.review, ...state.reviews],
+        reviews: exists ? state.reviews : [action.review, ...state.reviews],
         loading: false,
       }
+    }
     case 'CACHE_USER_REVIEWS': {
       const newCache = new Map(state.userReviewsCache)
       newCache.set(action.userId, action.reviews)
@@ -101,6 +103,7 @@ export function ReviewsProvider({ children }: { children: ReactNode }) {
         dispatch({ type: 'ADD_REVIEW', review })
         return review
       } catch (err) {
+        console.error('addReview error:', err)
         const message = err instanceof Error ? err.message : 'Failed to create review'
         dispatch({ type: 'SET_ERROR', error: message })
         return null
@@ -140,7 +143,11 @@ export function ReviewsProvider({ children }: { children: ReactNode }) {
   const fetchReviewForSwap = useCallback(
     async (swapId: string, reviewerId: string): Promise<Review | null> => {
       try {
-        return await getReviewForSwapService(swapId, reviewerId)
+        const review = await getReviewForSwapService(swapId, reviewerId)
+        if (review) {
+          dispatch({ type: 'ADD_REVIEW', review })
+        }
+        return review
       } catch {
         return null
       }

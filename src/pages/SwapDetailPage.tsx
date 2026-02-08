@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useSkills } from '@/hooks/useSkills';
@@ -22,10 +22,23 @@ export function SwapDetailPage() {
   const { getListingById } = useSkills();
   const { getSwapById, acceptProposal, declineProposal, startProgress, markComplete, cancelProposal } = useSwaps();
   const { addToast } = useToast();
-  const { addReview, getReviewForSwap } = useReviews();
+  const { addReview, getReviewForSwap, fetchReviewForSwap } = useReviews();
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewsLoaded, setReviewsLoaded] = useState(false);
 
   const swap = swapId ? getSwapById(swapId) : undefined;
+
+  // Fetch reviews for completed swaps so we know if a review already exists
+  useEffect(() => {
+    if (swap?.status === 'completed' && currentUser) {
+      setReviewsLoaded(false)
+      const otherUserId = swap.proposerId === currentUser.id ? swap.recipientId : swap.proposerId
+      Promise.all([
+        fetchReviewForSwap(swap.id, currentUser.id),
+        fetchReviewForSwap(swap.id, otherUserId),
+      ]).finally(() => setReviewsLoaded(true))
+    }
+  }, [swap?.id, swap?.status, currentUser?.id, swap?.proposerId, swap?.recipientId, fetchReviewForSwap])
 
   if (!swap || !currentUser) {
     return (
@@ -228,7 +241,7 @@ export function SwapDetailPage() {
           )}
 
           {/* Show leave review button or form */}
-          {!existingReview && (
+          {!existingReview && reviewsLoaded && (
             <Card className="p-6">
               {showReviewForm ? (
                 <>
@@ -238,19 +251,24 @@ export function SwapDetailPage() {
                     revieweeId={otherUserId}
                     skillCategory={offeredListing?.category ?? 'other'}
                     onSubmit={async (data) => {
-                      const review = await addReview({
-                        swapId: swap.id,
-                        reviewerId: currentUser.id,
-                        revieweeId: otherUserId,
-                        rating: data.rating,
-                        comment: data.comment,
-                        skillCategory: offeredListing?.category ?? 'other',
-                      });
-                      if (review) {
-                        addToast('Review submitted successfully!', 'success');
-                        setShowReviewForm(false);
-                      } else {
-                        addToast('Failed to submit review. Please try again.', 'error');
+                      try {
+                        const review = await addReview({
+                          swapId: swap.id,
+                          reviewerId: currentUser.id,
+                          revieweeId: otherUserId,
+                          rating: data.rating,
+                          comment: data.comment,
+                          skillCategory: offeredListing?.category ?? 'other',
+                        });
+                        if (review) {
+                          addToast('Review submitted successfully!', 'success');
+                          setShowReviewForm(false);
+                        } else {
+                          addToast('Failed to submit review. Please try again.', 'error');
+                        }
+                      } catch (err) {
+                        const message = err instanceof Error ? err.message : 'Failed to submit review';
+                        addToast(message, 'error');
                       }
                     }}
                     onCancel={() => setShowReviewForm(false)}

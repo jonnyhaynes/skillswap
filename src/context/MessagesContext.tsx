@@ -262,11 +262,21 @@ export function MessagesProvider({ children }: { children: ReactNode }) {
     [state.conversations]
   )
 
+  const sortedMessagesCache = useRef<Map<string, Message[]>>(new Map())
+
   const getMessagesForConversation = useCallback(
     (id: string): Message[] => {
-      return (state.messages.get(id) || []).sort(
+      const raw = state.messages.get(id)
+      if (!raw || raw.length === 0) return []
+
+      const cached = sortedMessagesCache.current.get(id)
+      if (cached && cached.length === raw.length) return cached
+
+      const sorted = [...raw].sort(
         (a, b) => new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime()
       )
+      sortedMessagesCache.current.set(id, sorted)
+      return sorted
     },
     [state.messages]
   )
