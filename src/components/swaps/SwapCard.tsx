@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
 import { SkillBadge } from '@/components/skills/SkillBadge';
 import { SwapStatusBadge } from './SwapStatusBadge';
+import { VerifiedBadge } from '@/components/profile/VerifiedBadge';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
 
 interface SwapCardProps {
@@ -29,14 +30,21 @@ export function SwapCard({ swap, currentUserId }: SwapCardProps) {
     <Link to={`/swaps/${swap.id}`} className="block group">
       <Card hover className="p-5 group-hover:ring-primary-200/60 transition-all duration-300">
         <div className="flex items-center gap-4">
-          <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
-            <div className="rounded-full p-0.5 bg-white">
-              <Avatar
-                src={otherUser.avatarUrl}
-                name={`${otherUser.firstName} ${otherUser.lastName}`}
-                size="md"
-              />
+          <div className="shrink-0 relative">
+            <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+              <div className="rounded-full p-0.5 bg-white">
+                <Avatar
+                  src={otherUser.avatarUrl}
+                  name={`${otherUser.firstName} ${otherUser.lastName}`}
+                  size="md"
+                />
+              </div>
             </div>
+            {otherUser.isVerifiedNeighbour && (
+              <span className="absolute -bottom-0.5 -right-0.5">
+                <VerifiedBadge />
+              </span>
+            )}
           </div>
 
           <div className="flex-1 min-w-0">

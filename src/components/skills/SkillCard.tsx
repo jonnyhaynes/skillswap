@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
 import { getCategoryInfo } from '@/data/categories';
+import { VerifiedBadge } from '@/components/profile/VerifiedBadge';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
 
 interface SkillCardProps {
@@ -40,14 +41,21 @@ export function SkillCard({ listing, user }: SkillCardProps) {
           </p>
 
           <div className="flex items-center gap-2.5 text-sm text-slate-500 pt-4 border-t border-slate-50">
-            <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
-              <div className="rounded-full p-0.5 bg-white">
-                <Avatar
-                  src={user.avatarUrl}
-                  name={`${user.firstName} ${user.lastName}`}
-                  size="sm"
-                />
+            <div className="shrink-0 relative">
+              <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+                <div className="rounded-full p-0.5 bg-white">
+                  <Avatar
+                    src={user.avatarUrl}
+                    name={`${user.firstName} ${user.lastName}`}
+                    size="sm"
+                  />
+                </div>
               </div>
+              {user.isVerifiedNeighbour && (
+                <span className="absolute -bottom-0.5 -right-0.5">
+                  <VerifiedBadge />
+                </span>
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <span className="font-medium text-slate-600">

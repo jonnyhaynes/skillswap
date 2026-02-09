@@ -14,6 +14,7 @@ import { SwapTimeline } from '@/components/swaps/SwapTimeline';
 import { SwapActions } from '@/components/swaps/SwapActions';
 import { ReviewForm } from '@/components/reviews/ReviewForm';
 import { ReviewCard } from '@/components/reviews/ReviewCard';
+import { VerifiedBadge } from '@/components/profile/VerifiedBadge';
 
 export function SwapDetailPage() {
   const { swapId } = useParams();
@@ -185,14 +186,21 @@ export function SwapDetailPage() {
             <h2 className="text-base font-bold text-slate-900 font-display mb-2">Proposal Message</h2>
             {proposer && (
               <div className="flex items-center gap-2 mb-3">
-                <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
-                  <div className="rounded-full p-0.5 bg-white">
-                    <Avatar
-                      src={proposer.avatarUrl}
-                      name={`${proposer.firstName} ${proposer.lastName}`}
-                      size="sm"
-                    />
+                <div className="shrink-0 relative">
+                  <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+                    <div className="rounded-full p-0.5 bg-white">
+                      <Avatar
+                        src={proposer.avatarUrl}
+                        name={`${proposer.firstName} ${proposer.lastName}`}
+                        size="sm"
+                      />
+                    </div>
                   </div>
+                  {proposer.isVerifiedNeighbour && (
+                    <span className="absolute -bottom-0.5 -right-0.5">
+                      <VerifiedBadge />
+                    </span>
+                  )}
                 </div>
                 <span className="text-sm text-slate-500">
                   {proposer.firstName} {proposer.lastName}
@@ -225,14 +233,21 @@ export function SwapDetailPage() {
           {otherUser && (
             <Card className="p-6">
               <div className="flex flex-col items-center text-center">
-                <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
-                  <div className="rounded-full p-0.5 bg-white">
-                    <Avatar
-                      src={otherUser.avatarUrl}
-                      name={`${otherUser.firstName} ${otherUser.lastName}`}
-                      size="lg"
-                    />
+                <div className="relative inline-block">
+                  <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+                    <div className="rounded-full p-0.5 bg-white">
+                      <Avatar
+                        src={otherUser.avatarUrl}
+                        name={`${otherUser.firstName} ${otherUser.lastName}`}
+                        size="lg"
+                      />
+                    </div>
                   </div>
+                  {otherUser.isVerifiedNeighbour && (
+                    <span className="absolute -bottom-0.5 -right-0.5">
+                      <VerifiedBadge />
+                    </span>
+                  )}
                 </div>
                 <h3 className="mt-3 text-lg font-bold text-slate-900 font-display">
                   {otherUser.firstName} {otherUser.lastName}

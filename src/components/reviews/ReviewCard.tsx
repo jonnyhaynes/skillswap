@@ -2,6 +2,7 @@ import type { Review, User } from '@/types'
 import { Avatar } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
 import { StarDisplay } from './StarDisplay'
+import { VerifiedBadge } from '@/components/profile/VerifiedBadge'
 import { getCategoryInfo } from '@/data/categories'
 import { formatRelativeTime } from '@/utils/formatRelativeTime'
 
@@ -16,10 +17,17 @@ export function ReviewCard({ review, reviewer }: ReviewCardProps) {
 
   return (
     <div className="flex items-start gap-3">
-      <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
-        <div className="rounded-full p-0.5 bg-white">
-          <Avatar src={reviewer.avatarUrl} name={fullName} size="sm" />
+      <div className="shrink-0 relative">
+        <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+          <div className="rounded-full p-0.5 bg-white">
+            <Avatar src={reviewer.avatarUrl} name={fullName} size="sm" />
+          </div>
         </div>
+        {reviewer.isVerifiedNeighbour && (
+          <span className="absolute -bottom-0.5 -right-0.5">
+            <VerifiedBadge />
+          </span>
+        )}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">

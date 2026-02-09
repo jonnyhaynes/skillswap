@@ -8,6 +8,7 @@ import { SkillBadge } from '@/components/skills/SkillBadge';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
+import { VerifiedBadge } from '@/components/profile/VerifiedBadge';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
@@ -170,29 +171,26 @@ export function SkillDetailPage() {
         <div className="space-y-4">
           <Card className="p-6">
             <div className="flex flex-col items-center text-center">
-              <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
-                <div className="rounded-full p-0.5 bg-white">
-                  <Avatar
-                    src={listingUser.avatarUrl}
-                    name={`${listingUser.firstName} ${listingUser.lastName}`}
-                    size="lg"
-                  />
+              <div className="relative inline-block">
+                <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+                  <div className="rounded-full p-0.5 bg-white">
+                    <Avatar
+                      src={listingUser.avatarUrl}
+                      name={`${listingUser.firstName} ${listingUser.lastName}`}
+                      size="lg"
+                    />
+                  </div>
                 </div>
+                {listingUser.isVerifiedNeighbour && (
+                  <span className="absolute -bottom-0.5 -right-0.5">
+                    <VerifiedBadge />
+                  </span>
+                )}
               </div>
               <h3 className="mt-3 text-lg font-semibold text-slate-900">
                 {listingUser.firstName} {listingUser.lastName}
               </h3>
               <p className="text-sm text-slate-500">{listingUser.neighbourhood}</p>
-              {listingUser.isVerifiedNeighbour && (
-                <Badge variant="success" className="mt-2">
-                  <span className="flex items-center gap-1">
-                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    Verified Neighbour
-                  </span>
-                </Badge>
-              )}
             </div>
 
             <div className="mt-6 flex flex-col space-y-3">

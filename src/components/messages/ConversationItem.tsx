@@ -1,6 +1,7 @@
 import { Link } from 'react-router'
 import type { Conversation, User } from '@/types'
 import { Avatar } from '@/components/ui/Avatar'
+import { VerifiedBadge } from '@/components/profile/VerifiedBadge'
 import { cn } from '@/utils/cn'
 import { formatRelativeTime } from '@/utils/formatRelativeTime'
 
@@ -29,14 +30,21 @@ export function ConversationItem({
       aria-current={isActive ? 'page' : undefined}
       aria-label={`Conversation with ${otherUser.firstName} ${otherUser.lastName}${hasUnread ? ', unread messages' : ''}`}
     >
-      <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
-        <div className="rounded-full p-0.5 bg-white">
-          <Avatar
-            src={otherUser.avatarUrl}
-            name={`${otherUser.firstName} ${otherUser.lastName}`}
-            size="md"
-          />
+      <div className="shrink-0 relative">
+        <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+          <div className="rounded-full p-0.5 bg-white">
+            <Avatar
+              src={otherUser.avatarUrl}
+              name={`${otherUser.firstName} ${otherUser.lastName}`}
+              size="md"
+            />
+          </div>
         </div>
+        {otherUser.isVerifiedNeighbour && (
+          <span className="absolute -bottom-0.5 -right-0.5">
+            <VerifiedBadge />
+          </span>
+        )}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">

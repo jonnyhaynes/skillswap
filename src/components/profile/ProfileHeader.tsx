@@ -26,21 +26,25 @@ export function ProfileHeader({
   return (
     <Card className="p-8">
       <div className="flex flex-col sm:flex-row gap-6">
-        <div className="self-start shrink-0 rounded-full p-1 bg-gradient-to-br from-[#43c1a6] to-[#6366f1] shadow-lg shadow-primary-500/15">
-          <div className="rounded-full p-0.5 bg-white">
-            <Avatar
-              src={user.avatarUrl}
-              name={fullName}
-              size="xl"
-            />
+        <div className="self-start shrink-0 relative">
+          <div className="rounded-full p-1 bg-gradient-to-br from-[#43c1a6] to-[#6366f1] shadow-lg shadow-primary-500/15">
+            <div className="rounded-full p-0.5 bg-white">
+              <Avatar
+                src={user.avatarUrl}
+                name={fullName}
+                size="xl"
+              />
+            </div>
           </div>
+          {user.isVerifiedNeighbour && (
+            <span className="absolute -bottom-0.5 -right-0.5">
+              <VerifiedBadge />
+            </span>
+          )}
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">{fullName}</h1>
-            {user.isVerifiedNeighbour && <VerifiedBadge size="md" />}
-          </div>
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">{fullName}</h1>
 
           <p className="text-slate-500 mt-1">{user.neighbourhood}</p>
           <p className="text-sm text-slate-500 mt-1">

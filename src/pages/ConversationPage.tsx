@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useMessages } from '@/hooks/useMessages'
 import { Avatar } from '@/components/ui/Avatar'
+import { VerifiedBadge } from '@/components/profile/VerifiedBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { MessageThread } from '@/components/messages/MessageThread'
 import { MessageInput } from '@/components/messages/MessageInput'
@@ -111,14 +112,21 @@ export function ConversationPage() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </Link>
-        <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
-          <div className="rounded-full p-0.5 bg-white">
-            <Avatar
-              src={otherUser.avatarUrl}
-              name={`${otherUser.firstName} ${otherUser.lastName}`}
-              size="md"
-            />
+        <div className="shrink-0 relative">
+          <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+            <div className="rounded-full p-0.5 bg-white">
+              <Avatar
+                src={otherUser.avatarUrl}
+                name={`${otherUser.firstName} ${otherUser.lastName}`}
+                size="md"
+              />
+            </div>
           </div>
+          {otherUser.isVerifiedNeighbour && (
+            <span className="absolute -bottom-0.5 -right-0.5">
+              <VerifiedBadge />
+            </span>
+          )}
         </div>
         <div className="min-w-0">
           <h1 className="text-sm font-bold text-slate-900 font-display truncate">
