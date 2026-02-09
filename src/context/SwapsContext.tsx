@@ -18,7 +18,7 @@ import {
   subscribeToSwapProposals,
   unsubscribeFromSwaps,
 } from '@/services/swaps'
-import { getOrCreateConversation } from '@/services/messages'
+import { getOrCreateConversation, sendMessage as sendMessageService } from '@/services/messages'
 
 interface SwapsState {
   proposals: SwapProposal[]
@@ -186,6 +186,10 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
           message: data.message,
           conversationId: conversation.id,
         })
+        // Send the proposal message as the first message in the conversation
+        if (data.message) {
+          await sendMessageService(conversation.id, data.proposerId, data.message)
+        }
         dispatch({ type: 'ADD_PROPOSAL', proposal })
         return proposal
       } catch (err) {

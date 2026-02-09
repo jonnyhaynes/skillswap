@@ -11,6 +11,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js'
 import { useAuth } from '@/hooks/useAuth'
 import {
   getConversations as getConversationsService,
+  getConversation as getConversationService,
   getMessages as getMessagesService,
   sendMessage as sendMessageService,
   markAsRead as markAsReadService,
@@ -128,6 +129,12 @@ export function MessagesProvider({ children }: { children: ReactNode }) {
   })
 
   const subscriptionRef = useRef<RealtimeChannel | null>(null)
+  const conversationIdsRef = useRef<Set<string>>(new Set())
+
+  // Keep the ref in sync with state
+  useEffect(() => {
+    conversationIdsRef.current = new Set(state.conversations.map((c) => c.id))
+  }, [state.conversations])
 
   // Fetch conversations and set up real-time subscriptions when user changes
   useEffect(() => {
@@ -155,8 +162,15 @@ export function MessagesProvider({ children }: { children: ReactNode }) {
     // Set up real-time subscription
     subscriptionRef.current = subscribeToUserConversations(
       currentUser.id,
-      (message) => {
+      async (message) => {
         dispatch({ type: 'ADD_MESSAGE', message })
+        // If this message belongs to a conversation we don't have yet, fetch it
+        if (!conversationIdsRef.current.has(message.conversationId)) {
+          const conversation = await getConversationService(message.conversationId)
+          if (conversation) {
+            dispatch({ type: 'ADD_CONVERSATION', conversation })
+          }
+        }
       },
       (conversation) => {
         dispatch({ type: 'UPDATE_CONVERSATION', conversation })
