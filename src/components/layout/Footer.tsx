@@ -28,9 +28,9 @@ export function Footer() {
 
       {/* Footer Content */}
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
-          <div>
+          <div className="md:col-span-2">
             <div className="flex items-center gap-2.5">
               <svg className="h-7 w-7" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="32" height="32" rx="8" fill="#14b8a6" />
@@ -53,18 +53,19 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Tagline */}
+          {/* Legal */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-3">About</h4>
-            <p className="text-sm text-slate-400">
-              SkillSwap is a neighbourhood skill exchange platform. Share your expertise, discover new talents, and build community connections.
-            </p>
+            <h4 className="text-sm font-semibold text-white mb-3">Legal</h4>
+            <nav className="flex flex-col gap-2 text-sm">
+              <Link to="/terms" className="text-slate-400 hover:text-white transition-colors">Terms of Service</Link>
+              <Link to="/privacy" className="text-slate-400 hover:text-white transition-colors">Privacy Policy</Link>
+            </nav>
           </div>
         </div>
 
         <div className="mt-10 border-t border-slate-700 pt-6 text-center">
           <p className="text-xs text-slate-500">
-            Neighbourhood Skill Exchange
+            &copy; {new Date().getFullYear()} SkillSwap. A <a href="https://www.colouringcode.com" target="_blank" rel="noopener noreferrer" className="hover:underline focus:underline">Colouring Code</a> design and build. Made in Rotherham.
           </p>
         </div>
       </div>

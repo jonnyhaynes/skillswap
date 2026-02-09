@@ -68,29 +68,24 @@ function SparkleIcon() {
 }
 
 const STATS_CONFIG = [
-  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon, iconBg: 'bg-teal-50', iconColor: 'text-teal-600', badge: '+12.5%' },
-  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon, iconBg: 'bg-blue-50', iconColor: 'text-blue-600', badge: '+8.3%' },
-  { label: 'Total Listings', key: 'total' as const, icon: ListIcon, iconBg: 'bg-amber-50', iconColor: 'text-amber-600', badge: '+2.1%' },
-  { label: 'Categories', key: 'categories' as const, icon: GridIcon, iconBg: 'bg-purple-50', iconColor: 'text-purple-600', badge: null },
+  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon, iconBg: 'bg-teal-50', iconColor: 'text-teal-600' },
+  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon, iconBg: 'bg-blue-50', iconColor: 'text-blue-600' },
+  { label: 'Total Listings', key: 'total' as const, icon: ListIcon, iconBg: 'bg-amber-50', iconColor: 'text-amber-600' },
+  { label: 'Categories', key: 'categories' as const, icon: GridIcon, iconBg: 'bg-purple-50', iconColor: 'text-purple-600' },
 ]
 
-function AnimatedStat({ value, label, icon: Icon, iconBg, iconColor, badge, isLast }: { value: number | string; label: string; icon: React.ComponentType<{ className?: string }>; iconBg: string; iconColor: string; badge: string | null; isLast: boolean }) {
+function AnimatedStat({ value, label, icon: Icon, iconBg, iconColor, isLast }: { value: number | string; label: string; icon: React.ComponentType<{ className?: string }>; iconBg: string; iconColor: string; isLast: boolean }) {
   const numericValue = typeof value === 'number' ? value : 0
   const isLoading = typeof value === 'string'
   const { count, ref } = useCountUp(numericValue)
 
   return (
     <div ref={ref} className={`px-5 sm:px-6 py-5 ${!isLast ? 'border-r border-slate-100' : ''}`}>
-      {/* Icon row with badge */}
-      <div className="flex items-center gap-2 mb-3">
+      {/* Icon */}
+      <div className="mb-3">
         <div className={`w-9 h-9 rounded-xl ${iconBg} flex items-center justify-center`}>
           <Icon className={`w-4.5 h-4.5 ${iconColor}`} />
         </div>
-        {badge && (
-          <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">
-            {badge}
-          </span>
-        )}
       </div>
       {/* Number */}
       <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display tabular-nums leading-none">
@@ -262,7 +257,7 @@ export function HomePage() {
         <div className="relative z-10 -mt-10 sm:-mt-12 mx-2 sm:mx-6 bg-white rounded-2xl shadow-lg shadow-black/[0.04] ring-1 ring-slate-100">
           <div className="grid grid-cols-2 lg:grid-cols-4">
             {STATS_CONFIG.map((stat, i) => (
-              <AnimatedStat key={stat.label} value={statValues[stat.key]} label={stat.label} icon={stat.icon} iconBg={stat.iconBg} iconColor={stat.iconColor} badge={stat.badge} isLast={i === STATS_CONFIG.length - 1} />
+              <AnimatedStat key={stat.label} value={statValues[stat.key]} label={stat.label} icon={stat.icon} iconBg={stat.iconBg} iconColor={stat.iconColor} isLast={i === STATS_CONFIG.length - 1} />
             ))}
           </div>
         </div>
