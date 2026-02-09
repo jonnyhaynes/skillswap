@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from 'react'
+import { useState, useCallback, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/Button'
+import { Turnstile } from '@/components/ui/Turnstile'
 import { useAuth } from '@/hooks/useAuth'
 
 export function ForgotPasswordForm() {
@@ -8,6 +9,15 @@ export function ForgotPasswordForm() {
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token)
+  }, [])
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null)
+  }, [])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -18,7 +28,12 @@ export function ForgotPasswordForm() {
       return
     }
 
-    const result = await resetPassword(email)
+    if (!turnstileToken) {
+      setError('Please complete the verification check')
+      return
+    }
+
+    const result = await resetPassword(email, turnstileToken!)
 
     if (result.error) {
       setError(result.error)
@@ -99,7 +114,12 @@ export function ForgotPasswordForm() {
         />
       </div>
 
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Turnstile
+        onVerify={handleTurnstileVerify}
+        onExpire={handleTurnstileExpire}
+      />
+
+      <Button type="submit" className="w-full" disabled={loading || !turnstileToken}>
         {loading ? 'Sending...' : 'Send reset link'}
       </Button>
 

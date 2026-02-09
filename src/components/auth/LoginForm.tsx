@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from 'react'
+import { useState, useCallback, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/Button'
+import { Turnstile } from '@/components/ui/Turnstile'
 import { useAuth } from '@/hooks/useAuth'
 
 interface LoginFormProps {
@@ -12,6 +13,15 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [localError, setLocalError] = useState<string | null>(null)
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token)
+  }, [])
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null)
+  }, [])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -28,7 +38,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       return
     }
 
-    const result = await signIn(email, password)
+    if (!turnstileToken) {
+      setLocalError('Please complete the verification check')
+      return
+    }
+
+    const result = await signIn(email, password, turnstileToken!)
 
     if (!result.error) {
       onSuccess?.()
@@ -87,7 +102,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         />
       </div>
 
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Turnstile
+        onVerify={handleTurnstileVerify}
+        onExpire={handleTurnstileExpire}
+      />
+
+      <Button type="submit" className="w-full" disabled={loading || !turnstileToken}>
         {loading ? 'Signing in...' : 'Sign in'}
       </Button>
 

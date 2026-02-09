@@ -1,6 +1,7 @@
-import { useState, useEffect, type FormEvent } from 'react'
+import { useState, useEffect, useCallback, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/Button'
+import { Turnstile } from '@/components/ui/Turnstile'
 import { useAuth } from '@/hooks/useAuth'
 import { getNeighbourhoods } from '@/services/neighbourhoods'
 
@@ -22,9 +23,18 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
   const [localError, setLocalError] = useState<string | null>(null)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [neighbourhoods, setNeighbourhoods] = useState<string[]>([])
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
 
   useEffect(() => {
     getNeighbourhoods().then(setNeighbourhoods)
+  }, [])
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token)
+  }, [])
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null)
   }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -70,12 +80,17 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
       return
     }
 
+    if (!turnstileToken) {
+      setLocalError('Please complete the verification check')
+      return
+    }
+
     const result = await signUp(formData.email, formData.password, {
       firstName: formData.firstName,
       lastName: formData.lastName,
       neighbourhood: formData.neighbourhood,
       postcode: formData.postcode || undefined,
-    })
+    }, turnstileToken)
 
     if (!result.error) {
       setShowConfirmation(true)
@@ -250,7 +265,12 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
         />
       </div>
 
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Turnstile
+        onVerify={handleTurnstileVerify}
+        onExpire={handleTurnstileExpire}
+      />
+
+      <Button type="submit" className="w-full" disabled={loading || !turnstileToken}>
         {loading ? 'Creating account...' : 'Create account'}
       </Button>
 

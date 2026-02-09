@@ -39,11 +39,12 @@ export interface AuthContextType {
   signUp: (
     email: string,
     password: string,
-    metadata: { firstName: string; lastName: string; neighbourhood?: string; postcode?: string }
+    metadata: { firstName: string; lastName: string; neighbourhood?: string; postcode?: string },
+    captchaToken?: string
   ) => Promise<{ error?: string }>
-  signIn: (email: string, password: string) => Promise<{ error?: string }>
+  signIn: (email: string, password: string, captchaToken?: string) => Promise<{ error?: string }>
   signOut: () => Promise<void>
-  resetPassword: (email: string) => Promise<{ error?: string }>
+  resetPassword: (email: string, captchaToken?: string) => Promise<{ error?: string }>
   updateProfile: (data: Partial<AppUser>) => Promise<{ error?: string }>
   getUserById: (userId: string) => AppUser | undefined
   fetchUserById: (userId: string) => Promise<AppUser | null>
@@ -156,7 +157,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (
       email: string,
       password: string,
-      metadata: { firstName: string; lastName: string; neighbourhood?: string; postcode?: string }
+      metadata: { firstName: string; lastName: string; neighbourhood?: string; postcode?: string },
+      captchaToken?: string
     ): Promise<{ error?: string }> => {
       dispatch({ type: 'SET_LOADING', loading: true })
       dispatch({ type: 'SET_ERROR', error: null })
@@ -165,6 +167,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email,
         password,
         options: {
+          captchaToken,
           data: {
             first_name: metadata.firstName,
             last_name: metadata.lastName,
@@ -192,13 +195,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const signIn = useCallback(
-    async (email: string, password: string): Promise<{ error?: string }> => {
+    async (email: string, password: string, captchaToken?: string): Promise<{ error?: string }> => {
       dispatch({ type: 'SET_LOADING', loading: true })
       dispatch({ type: 'SET_ERROR', error: null })
 
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
+        options: { captchaToken },
       })
 
       if (error) {
@@ -220,11 +224,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const resetPassword = useCallback(
-    async (email: string): Promise<{ error?: string }> => {
+    async (email: string, captchaToken?: string): Promise<{ error?: string }> => {
       dispatch({ type: 'SET_LOADING', loading: true })
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
+        captchaToken,
       })
 
       dispatch({ type: 'SET_LOADING', loading: false })
