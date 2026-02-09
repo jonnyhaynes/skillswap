@@ -8,15 +8,13 @@ import { formatRelativeTime } from '@/utils/formatRelativeTime'
 interface ReviewCardProps {
   review: Review
   reviewer: User
-  /** When true, wraps content in a Card container. Default false. */
-  standalone?: boolean
 }
 
-export function ReviewCard({ review, reviewer, standalone = false }: ReviewCardProps) {
+export function ReviewCard({ review, reviewer }: ReviewCardProps) {
   const fullName = `${reviewer.firstName} ${reviewer.lastName}`
   const categoryInfo = getCategoryInfo(review.skillCategory)
 
-  const content = (
+  return (
     <div className="flex items-start gap-3">
       <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
         <div className="rounded-full p-0.5 bg-white">
@@ -42,14 +40,4 @@ export function ReviewCard({ review, reviewer, standalone = false }: ReviewCardP
       </div>
     </div>
   )
-
-  if (standalone) {
-    return (
-      <div className="bg-white rounded-2xl shadow-sm p-5">
-        {content}
-      </div>
-    )
-  }
-
-  return content
 }

@@ -20,11 +20,15 @@ export function ReviewList({ reviews }: ReviewListProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="divide-y divide-slate-100">
       {reviews.map((review) => {
         const reviewer = getUserById(review.reviewerId)
         if (!reviewer) return null
-        return <ReviewCard key={review.id} review={review} reviewer={reviewer} standalone />
+        return (
+          <div key={review.id} className="py-5 first:pt-0 last:pb-0">
+            <ReviewCard review={review} reviewer={reviewer} />
+          </div>
+        )
       })}
     </div>
   )

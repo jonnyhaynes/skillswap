@@ -140,7 +140,7 @@ export function ProfilePage() {
 
       {/* Reviews Section */}
       <Card className="p-6">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">Reviews</h2>
+        <h2 className="text-lg font-semibold text-slate-900 mb-3">Reviews</h2>
         <ReviewSummary reviews={userReviews} />
         <div className="mt-6 pt-6 border-t border-slate-200">
           <ReviewList reviews={userReviews} />
