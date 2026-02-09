@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router'
+import { useParams, useNavigate, Navigate } from 'react-router'
 import { useSkills } from '@/hooks/useSkills'
 import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/hooks/useToast'
@@ -26,8 +26,7 @@ export function EditListingPage() {
   }
 
   if (listing.userId !== currentUser?.id) {
-    navigate(`/skills/${listing.id}`)
-    return null
+    return <Navigate to={`/skills/${listing.id}`} replace />
   }
 
   const handleSubmit = (data: Omit<SkillListing, 'id' | 'createdAt' | 'updatedAt' | 'userId'>) => {
