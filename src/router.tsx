@@ -19,6 +19,7 @@ import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { TermsOfServicePage } from '@/pages/TermsOfServicePage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
+import { ContactPage } from '@/pages/ContactPage'
 
 function RouteErrorPage() {
   const error = useRouteError()
@@ -135,6 +136,7 @@ export const router = createBrowserRouter([
       // Legal pages
       { path: 'terms', Component: TermsOfServicePage },
       { path: 'privacy', Component: PrivacyPolicyPage },
+      { path: 'contact', Component: ContactPage },
 
       // 404
       { path: '*', Component: NotFoundPage },

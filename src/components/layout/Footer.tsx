@@ -65,6 +65,7 @@ export function Footer() {
             <nav className="flex flex-col gap-2 text-sm" aria-label="Legal links">
               <Link to="/terms" className="text-slate-400 hover:text-white transition-colors">Terms of Service</Link>
               <Link to="/privacy" className="text-slate-400 hover:text-white transition-colors">Privacy Policy</Link>
+              <Link to="/contact" className="text-slate-400 hover:text-white transition-colors">Contact Us</Link>
             </nav>
           </div>
         </div>

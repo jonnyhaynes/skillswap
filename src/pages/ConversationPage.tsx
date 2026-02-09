@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useMessages } from '@/hooks/useMessages'
@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 
 export function ConversationPage() {
   const { conversationId } = useParams<{ conversationId: string }>()
-  const { currentUser, getUserById } = useAuth()
+  const { currentUser, getUserById, fetchUserById } = useAuth()
   const {
     getConversation,
     getMessagesForConversation,
@@ -26,12 +26,23 @@ export function ConversationPage() {
 
   const otherUserId = conversation?.participantIds.find((id) => id !== currentUser?.id)
   const otherUser = otherUserId ? getUserById(otherUserId) : undefined
+  const [loadingOtherUser, setLoadingOtherUser] = useState(false)
 
   useEffect(() => {
     if (conversationId) {
       fetchMessages(conversationId)
     }
   }, [conversationId, fetchMessages])
+
+  // Fetch the other participant's profile if not already cached
+  useEffect(() => {
+    if (otherUserId && !otherUser && !loadingOtherUser) {
+      setLoadingOtherUser(true)
+      fetchUserById(otherUserId).finally(() => {
+        setLoadingOtherUser(false)
+      })
+    }
+  }, [otherUserId, otherUser, loadingOtherUser, fetchUserById])
 
   useEffect(() => {
     if (conversationId && currentUser && messages.length > 0) {
@@ -48,7 +59,7 @@ export function ConversationPage() {
     )
   }
 
-  if (!initialized || loading) {
+  if (!initialized || loading || loadingOtherUser) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-8 space-y-4">
         <div className="flex items-center gap-3 pb-4 border-b border-slate-200">
@@ -88,7 +99,7 @@ export function ConversationPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto flex flex-col h-[calc(100vh-4rem-3rem)] md:h-[calc(100vh-4rem-3rem)] pb-16 md:pb-0">
+    <div className="max-w-3xl mx-auto flex flex-col pb-16 md:pb-0">
       {/* Conversation header */}
       <div className="flex items-center gap-3 px-1 pb-4 border-b border-slate-200/80">
         <Link

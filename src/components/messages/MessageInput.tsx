@@ -41,7 +41,7 @@ export function MessageInput({
   }
 
   return (
-    <div className="flex items-end gap-2.5 pt-3 border-t border-slate-200/80">
+    <div className="sticky bottom-0 bg-[#f8fafc] flex items-end gap-2.5 pt-3 pb-3 border-t border-slate-200/80">
       <label htmlFor="message-input" className="sr-only">
         Message
       </label>

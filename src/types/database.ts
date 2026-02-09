@@ -322,6 +322,33 @@ export interface Database {
         }
         Relationships: []
       }
+      contact_enquiries: {
+        Row: {
+          id: string
+          name: string
+          email: string
+          subject: string
+          message: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          email: string
+          subject: string
+          message: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          email?: string
+          subject?: string
+          message?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -367,3 +394,6 @@ export type ReviewInsert = Database['public']['Tables']['reviews']['Insert']
 export type ReviewUpdate = Database['public']['Tables']['reviews']['Update']
 
 export type NeighbourhoodRow = Database['public']['Tables']['neighbourhoods']['Row']
+
+export type ContactEnquiryRow = Database['public']['Tables']['contact_enquiries']['Row']
+export type ContactEnquiryInsert = Database['public']['Tables']['contact_enquiries']['Insert']

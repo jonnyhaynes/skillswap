@@ -3,3 +3,4 @@ export type { SkillCategory, SkillLevel, ListingType, SkillListing } from './ski
 export type { SwapStatus, SwapProposal } from './swap';
 export type { Message, Conversation } from './message';
 export type { Review } from './review';
+export type { ContactEnquiry } from './contact';
