@@ -12,9 +12,9 @@ interface ToastProps extends ToastData {
 }
 
 const typeStyles: Record<ToastData['type'], string> = {
-  success: 'bg-green-50 border border-green-200 text-green-800',
-  error: 'bg-red-50 border border-red-200 text-red-800',
-  info: 'bg-blue-50 border border-blue-200 text-blue-800',
+  success: 'bg-emerald-50 border border-emerald-200/60 text-emerald-800 shadow-lg shadow-emerald-500/10',
+  error: 'bg-red-50 border border-red-200/60 text-red-800 shadow-lg shadow-red-500/10',
+  info: 'bg-blue-50 border border-blue-200/60 text-blue-800 shadow-lg shadow-blue-500/10',
 };
 
 const iconPaths: Record<ToastData['type'], string> = {
@@ -37,7 +37,7 @@ export function Toast({ id, message, type, onDismiss }: ToastProps) {
   return (
     <div
       className={cn(
-        'rounded-lg shadow-lg px-4 py-3 flex items-center gap-3',
+        'rounded-xl px-4 py-3.5 flex items-center gap-3 animate-slide-up',
         typeStyles[type]
       )}
       role="alert"

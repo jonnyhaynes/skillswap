@@ -65,8 +65,8 @@ export function MobileNav() {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/20 bg-white/80 backdrop-blur-xl md:hidden">
-      <div className="flex items-center justify-around px-2 py-1">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200/50 bg-white/80 backdrop-blur-2xl backdrop-saturate-150 md:hidden">
+      <div className="flex items-center justify-around px-2 py-1.5 safe-area-bottom">
         {NAV_ITEMS.map((item) => {
           const to = item.isDynamic && currentUser
             ? `/profile/${currentUser.id}`
@@ -86,7 +86,7 @@ export function MobileNav() {
             >
               {item.icon}
               {item.to === '/messages' && unreadCount > 0 && (
-                <span className="absolute top-0.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-0.5 text-[10px] font-bold text-white">
+                <span className="absolute top-0.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-rose-500 px-0.5 text-[10px] font-bold text-white shadow-sm shadow-red-500/30">
                   {unreadCount}
                 </span>
               )}

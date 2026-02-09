@@ -68,10 +68,10 @@ function SparkleIcon() {
 }
 
 const STATS_CONFIG = [
-  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon, iconBg: 'bg-teal-50', iconColor: 'text-teal-600' },
-  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon, iconBg: 'bg-blue-50', iconColor: 'text-blue-600' },
+  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon, iconBg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
+  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon, iconBg: 'bg-indigo-50', iconColor: 'text-indigo-600' },
   { label: 'Total Listings', key: 'total' as const, icon: ListIcon, iconBg: 'bg-amber-50', iconColor: 'text-amber-600' },
-  { label: 'Categories', key: 'categories' as const, icon: GridIcon, iconBg: 'bg-purple-50', iconColor: 'text-purple-600' },
+  { label: 'Categories', key: 'categories' as const, icon: GridIcon, iconBg: 'bg-violet-50', iconColor: 'text-violet-600' },
 ]
 
 function AnimatedStat({ value, label, icon: Icon, iconBg, iconColor, isLast }: { value: number | string; label: string; icon: React.ComponentType<{ className?: string }>; iconBg: string; iconColor: string; isLast: boolean }) {
@@ -80,19 +80,19 @@ function AnimatedStat({ value, label, icon: Icon, iconBg, iconColor, isLast }: {
   const { count, ref } = useCountUp(numericValue)
 
   return (
-    <div ref={ref} className={`px-5 sm:px-6 py-5 ${!isLast ? 'border-r border-slate-100' : ''}`}>
+    <div ref={ref} className={`px-5 sm:px-8 py-6 ${!isLast ? 'border-r border-slate-100/80' : ''}`}>
       {/* Icon */}
       <div className="mb-3">
-        <div className={`w-9 h-9 rounded-xl ${iconBg} flex items-center justify-center`}>
-          <Icon className={`w-4.5 h-4.5 ${iconColor}`} />
+        <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center`}>
+          <Icon className={`w-5 h-5 ${iconColor}`} />
         </div>
       </div>
       {/* Number */}
-      <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display tabular-nums leading-none">
+      <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display tabular-nums leading-none tracking-tight">
         {isLoading ? '...' : count}
       </div>
       {/* Label */}
-      <div className="text-xs text-slate-400 font-medium mt-1.5">{label}</div>
+      <div className="text-xs text-slate-400 font-medium mt-2 tracking-wide">{label}</div>
     </div>
   )
 }
@@ -103,24 +103,24 @@ const STEPS = [
     title: 'Choose a Skill',
     desc: 'Post what you can teach or browse what others are offering near you.',
     icon: ClipboardIcon,
-    gradient: 'from-[#2DD4BF] to-[#3B82F6]',
-    bg: 'bg-primary-50',
+    gradient: 'from-[#43c1a6] to-[#6366f1]',
+    bg: 'bg-emerald-50/60',
   },
   {
     step: '2',
     title: 'Match with a Person',
     desc: 'Find someone whose skills complement yours and propose a swap.',
     icon: PeopleIcon,
-    gradient: 'from-[#FB7185] to-[#F472B6]',
-    bg: 'bg-amber-50',
+    gradient: 'from-[#f472b6] to-[#fb923c]',
+    bg: 'bg-rose-50/60',
   },
   {
     step: '3',
     title: 'Swap Time, Not Money',
     desc: 'Meet up, learn from each other, and leave reviews when you\'re done.',
     icon: SparkleIcon,
-    gradient: 'from-[#A78BFA] to-[#22D3EE]',
-    bg: 'bg-blue-50',
+    gradient: 'from-[#a78bfa] to-[#38bdf8]',
+    bg: 'bg-violet-50/60',
   },
 ]
 
@@ -157,19 +157,19 @@ export function HomePage() {
   }
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-16">
       {/* Hero + Stats */}
       <div>
         {/* Hero banner */}
-        <div className="hero-mesh relative overflow-hidden rounded-2xl pb-16 sm:pb-20">
+        <div className="hero-mesh relative overflow-hidden rounded-3xl pb-16 sm:pb-20">
           {/* Dot grid pattern */}
           <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
 
           {/* Mesh gradient blobs */}
-          <div className="absolute -top-24 -left-24 w-96 h-96 bg-gradient-to-br from-teal-400/25 to-transparent rounded-full blur-3xl animate-[drift_20s_ease-in-out_infinite]" />
-          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-gradient-to-tl from-cyan-400/20 to-transparent rounded-full blur-3xl animate-[drift_25s_ease-in-out_infinite_reverse]" />
-          <div className="absolute top-1/3 right-[10%] w-48 h-48 bg-gradient-to-br from-emerald-400/15 to-transparent rounded-full blur-2xl" />
-          <div className="absolute top-[15%] left-[20%] w-32 h-32 bg-gradient-to-tr from-sky-400/10 to-transparent rounded-full blur-xl" />
+          <div className="absolute -top-24 -left-24 w-[500px] h-[500px] bg-gradient-to-br from-emerald-400/30 to-transparent rounded-full blur-3xl animate-[drift_20s_ease-in-out_infinite]" />
+          <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-gradient-to-tl from-indigo-400/25 to-transparent rounded-full blur-3xl animate-[drift_25s_ease-in-out_infinite_reverse]" />
+          <div className="absolute top-1/3 right-[10%] w-56 h-56 bg-gradient-to-br from-violet-400/15 to-transparent rounded-full blur-2xl" />
+          <div className="absolute top-[15%] left-[20%] w-40 h-40 bg-gradient-to-tr from-sky-400/10 to-transparent rounded-full blur-xl" />
 
           {/* Accent ring decorations */}
           <div className="absolute top-16 right-[8%] w-24 h-24 rounded-full border border-white/[0.08] hidden sm:block" />
@@ -181,25 +181,25 @@ export function HomePage() {
           <div className="absolute bottom-32 right-[18%] text-white/[0.05] text-2xl font-light hidden lg:block select-none">+</div>
 
           {/* Hero content */}
-          <div className="relative z-10 text-center pt-14 sm:pt-20 px-6 pb-8">
+          <div className="relative z-10 text-center pt-16 sm:pt-24 px-6 pb-8">
             {currentUser ? (
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-[1.1] tracking-tight">
                 Welcome back, {currentUser.firstName}!
               </h1>
             ) : (
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-[1.1] tracking-tight">
                 Learn what you need.
                 <br />
-                <span className="bg-gradient-to-r from-teal-200 to-cyan-200 bg-clip-text text-transparent">Teach what you know.</span>
+                <span className="bg-gradient-to-r from-emerald-200 via-teal-200 to-indigo-200 bg-clip-text text-transparent">Teach what you know.</span>
               </h1>
             )}
-            <p className="mt-5 text-lg text-white/75 max-w-2xl mx-auto leading-relaxed">
+            <p className="mt-6 text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">
               Swap skills with your neighbours — no money, just knowledge.
             </p>
 
             {/* Floating glass search bar */}
-            <form onSubmit={handleHeroSearch} className="mt-8 max-w-xl mx-auto">
-              <div className="glass-dark rounded-2xl flex items-center gap-3 px-5 py-3 ring-1 ring-white/[0.1]">
+            <form onSubmit={handleHeroSearch} className="mt-10 max-w-xl mx-auto">
+              <div className="glass-dark rounded-2xl flex items-center gap-3 px-5 py-3.5 ring-1 ring-white/[0.12] shadow-xl shadow-black/10">
                 <SearchIcon className="w-5 h-5 text-white/40 shrink-0" />
                 <input
                   type="text"
@@ -210,25 +210,25 @@ export function HomePage() {
                 />
                 <button
                   type="submit"
-                  className="shrink-0 rounded-xl bg-white px-5 py-2 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors"
+                  className="shrink-0 rounded-xl bg-white px-5 py-2 text-sm font-bold text-primary-700 hover:bg-white/90 transition-all shadow-sm"
                 >
                   Search
                 </button>
               </div>
             </form>
 
-            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
               {currentUser ? (
                 <>
                   <Link
                     to="/skills/new"
-                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors shadow-lg shadow-black/10"
+                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-bold text-primary-700 hover:bg-white/90 transition-all shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/15"
                   >
                     Offer a Skill
                   </Link>
                   <Link
                     to="/browse"
-                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/25 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/20 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm"
                   >
                     Find a Skill
                   </Link>
@@ -237,13 +237,13 @@ export function HomePage() {
                 <>
                   <Link
                     to="/browse"
-                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors shadow-lg shadow-black/10"
+                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-bold text-primary-700 hover:bg-white/90 transition-all shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/15"
                   >
                     Find a Skill
                   </Link>
                   <Link
                     to="/skills/new"
-                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/25 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/20 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm"
                   >
                     Offer a Skill
                   </Link>
@@ -254,7 +254,7 @@ export function HomePage() {
         </div>
 
         {/* Stats row — floating overlap */}
-        <div className="relative z-10 -mt-10 sm:-mt-12 mx-2 sm:mx-6 bg-white rounded-2xl shadow-lg shadow-black/[0.04] ring-1 ring-slate-100">
+        <div className="relative z-10 -mt-10 sm:-mt-12 mx-2 sm:mx-6 bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.03]">
           <div className="grid grid-cols-2 lg:grid-cols-4">
             {STATS_CONFIG.map((stat, i) => (
               <AnimatedStat key={stat.label} value={statValues[stat.key]} label={stat.label} icon={stat.icon} iconBg={stat.iconBg} iconColor={stat.iconColor} isLast={i === STATS_CONFIG.length - 1} />
@@ -265,25 +265,28 @@ export function HomePage() {
 
       {/* How it works */}
       <div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display mb-6">How SkillSwap Works</h2>
+        <div className="text-center mb-10">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display tracking-tight">How SkillSwap Works</h2>
+          <p className="mt-2 text-slate-500 text-sm">Three simple steps to start swapping skills</p>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
           {/* Connecting line (desktop only) */}
-          <div className="hidden md:block absolute top-16 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-0.5 border-t-2 border-dashed border-primary-200" />
+          <div className="hidden md:block absolute top-16 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-0.5 border-t-2 border-dashed border-slate-200" />
 
           {STEPS.map((item) => {
             const Icon = item.icon
             return (
-              <div key={item.step} className={`${item.bg} rounded-2xl p-8 relative`}>
+              <div key={item.step} className={`${item.bg} rounded-2xl p-8 relative ring-1 ring-black/[0.02]`}>
                 <div className="flex items-center gap-3 mb-5">
-                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${item.gradient} text-white flex items-center justify-center text-base font-bold shrink-0`}>
+                  <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${item.gradient} text-white flex items-center justify-center text-base font-bold shrink-0 shadow-lg shadow-primary-500/15`}>
                     {item.step}
                   </div>
-                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${item.gradient} flex items-center justify-center shadow-sm`}>
+                  <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${item.gradient} flex items-center justify-center shadow-lg shadow-primary-500/15`}>
                     <Icon />
                   </div>
                 </div>
-                <h3 className="text-xl font-extrabold text-slate-900 font-display">{item.title}</h3>
-                <p className="mt-2 text-sm text-slate-600 leading-relaxed">{item.desc}</p>
+                <h3 className="text-lg font-bold text-slate-900 font-display">{item.title}</h3>
+                <p className="mt-2 text-sm text-slate-500 leading-relaxed">{item.desc}</p>
               </div>
             )
           })}
@@ -292,9 +295,9 @@ export function HomePage() {
 
       {/* Featured skills */}
       <div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display">Latest Skills Near You</h2>
-          <Link to="/browse" className="text-sm font-medium text-primary-600 hover:text-primary-700">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display tracking-tight">Latest Skills Near You</h2>
+          <Link to="/browse" className="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">
             View all &rarr;
           </Link>
         </div>

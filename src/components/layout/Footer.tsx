@@ -5,20 +5,20 @@ export function Footer() {
   const { currentUser } = useAuth()
 
   return (
-    <footer className="bg-slate-800 text-slate-300">
+    <footer className="bg-slate-900 text-slate-300">
       {/* CTA Banner */}
       {!currentUser && (
-        <div className="border-b border-slate-700">
-          <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 text-center">
-            <h3 className="text-xl font-bold text-white font-display">
+        <div className="border-b border-slate-800">
+          <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 text-center">
+            <h3 className="text-2xl font-bold text-white font-display">
               Ready to share your skills?
             </h3>
-            <p className="mt-2 text-sm text-slate-400 max-w-md mx-auto">
+            <p className="mt-3 text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
               Join your neighbourhood and start swapping skills with people near you.
             </p>
             <Link
               to="/signup"
-              className="mt-4 inline-flex items-center rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-6 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
+              className="mt-6 inline-flex items-center rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 hover:brightness-105 transition-all duration-200"
             >
               Get Started
             </Link>
@@ -27,13 +27,19 @@ export function Footer() {
       )}
 
       {/* Footer Content */}
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="sm:col-span-2">
             <div className="flex items-center gap-2.5">
               <svg className="h-7 w-7" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="32" height="32" rx="8" fill="#14b8a6" />
+                <defs>
+                  <linearGradient id="footer-logo-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#43c1a6" />
+                    <stop offset="1" stopColor="#6366f1" />
+                  </linearGradient>
+                </defs>
+                <rect width="32" height="32" rx="10" fill="url(#footer-logo-grad)" />
                 <path d="M10 18.5h7m0 0l-3-3m3 3l-3 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M22 13.5h-7m0 0l3-3m-3 3l3 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
               </svg>
@@ -63,7 +69,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-slate-700 pt-6 text-center">
+        <div className="mt-12 border-t border-slate-800 pt-8 text-center">
           <p className="text-xs text-slate-500">
             &copy; {new Date().getFullYear()} SkillSwap. A <a href="https://www.colouringcode.com" target="_blank" rel="noopener noreferrer" className="hover:underline focus:underline">Colouring Code</a> design and build. Made in Rotherham.
           </p>

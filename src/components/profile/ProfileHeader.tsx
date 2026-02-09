@@ -24,9 +24,9 @@ export function ProfileHeader({
   const fullName = `${user.firstName} ${user.lastName}`
 
   return (
-    <Card className="p-6">
+    <Card className="p-8">
       <div className="flex flex-col sm:flex-row gap-6">
-        <div className="self-start shrink-0 rounded-full p-1 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+        <div className="self-start shrink-0 rounded-full p-1 bg-gradient-to-br from-[#43c1a6] to-[#6366f1] shadow-lg shadow-primary-500/15">
           <div className="rounded-full p-0.5 bg-white">
             <Avatar
               src={user.avatarUrl}
@@ -38,7 +38,7 @@ export function ProfileHeader({
 
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-bold text-slate-900">{fullName}</h1>
+            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">{fullName}</h1>
             {user.isVerifiedNeighbour && <VerifiedBadge size="md" />}
           </div>
 
@@ -59,7 +59,7 @@ export function ProfileHeader({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-200">
+      <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-slate-100">
         <div className="text-center">
           <p className="text-2xl font-bold text-slate-900">{totalSwapsCompleted}</p>
           <p className="text-sm text-slate-500">Swaps Completed</p>

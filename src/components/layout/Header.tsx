@@ -34,12 +34,18 @@ export function Header() {
   )
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/20 bg-white/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-slate-200/50 bg-white/75 backdrop-blur-2xl backdrop-saturate-150">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5">
           <svg className="h-8 w-8" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="8" fill="#14b8a6" />
+            <defs>
+              <linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#43c1a6" />
+                <stop offset="1" stopColor="#6366f1" />
+              </linearGradient>
+            </defs>
+            <rect width="32" height="32" rx="10" fill="url(#logo-grad)" />
             <path d="M10 18.5h7m0 0l-3-3m3 3l-3 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M22 13.5h-7m0 0l3-3m-3 3l3 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
           </svg>
@@ -60,12 +66,12 @@ export function Header() {
             >
               {link.label}
               {link.to === '/swaps' && incomingSwapsCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-rose-500 px-1 text-xs font-bold text-white shadow-sm shadow-red-500/30">
                   {incomingSwapsCount}
                 </span>
               )}
               {link.to === '/messages' && unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-rose-500 px-1 text-xs font-bold text-white shadow-sm shadow-red-500/30">
                   {unreadCount}
                 </span>
               )}
@@ -78,7 +84,7 @@ export function Header() {
           {currentUser && (
             <Link
               to="/skills/new"
-              className="hidden sm:inline-flex rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
+              className="hidden sm:inline-flex rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/25 hover:brightness-105 transition-all duration-200"
             >
               + Post a Skill
             </Link>
@@ -90,7 +96,7 @@ export function Header() {
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="flex items-center gap-2 rounded-lg p-1.5 hover:bg-slate-50 transition-colors"
               >
-                <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+                <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
                   <div className="rounded-full p-0.5 bg-white">
                     <Avatar
                       src={currentUser.avatarUrl}
@@ -110,32 +116,32 @@ export function Header() {
                     className="fixed inset-0 z-10"
                     onClick={() => setProfileMenuOpen(false)}
                   />
-                  <div className="absolute right-0 top-full mt-1 z-20 w-48 rounded-xl glass py-1 shadow-lg">
+                  <div className="absolute right-0 top-full mt-2 z-20 w-52 rounded-2xl bg-white/90 backdrop-blur-xl ring-1 ring-black/[0.06] py-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.1)] animate-scale-in">
                     <Link
                       to={`/profile/${currentUser.id}`}
-                      className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                      className="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-lg mx-1.5 transition-colors"
                       onClick={() => setProfileMenuOpen(false)}
                     >
                       My Profile
                     </Link>
                     <Link
                       to="/my-listings"
-                      className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                      className="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-lg mx-1.5 transition-colors"
                       onClick={() => setProfileMenuOpen(false)}
                     >
                       My Listings
                     </Link>
                     <Link
                       to="/profile/edit"
-                      className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                      className="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-lg mx-1.5 transition-colors"
                       onClick={() => setProfileMenuOpen(false)}
                     >
                       Edit Profile
                     </Link>
-                    <hr className="my-1 border-slate-200" />
+                    <hr className="my-1.5 border-slate-100 mx-3" />
                     <button
                       onClick={handleSignOut}
-                      className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+                      className="block w-[calc(100%-0.75rem)] mx-1.5 px-4 py-2.5 text-left text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     >
                       Sign out
                     </button>
@@ -153,7 +159,7 @@ export function Header() {
               </Link>
               <Link
                 to="/signup"
-                className="hidden sm:inline-flex rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
+                className="hidden sm:inline-flex rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/25 hover:brightness-105 transition-all duration-200"
               >
                 Sign up
               </Link>
@@ -181,7 +187,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-white/20 bg-white/80 backdrop-blur-xl px-4 pb-4 pt-2">
+        <div className="md:hidden border-t border-slate-200/50 bg-white/75 backdrop-blur-2xl px-4 pb-4 pt-2 animate-fade-in">
           {visibleNavLinks.map((link) => (
             <Link
               key={link.to}
@@ -195,12 +201,12 @@ export function Header() {
             >
               {link.label}
               {link.to === '/swaps' && incomingSwapsCount > 0 && (
-                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-rose-500 px-1 text-xs font-bold text-white shadow-sm shadow-red-500/30">
                   {incomingSwapsCount}
                 </span>
               )}
               {link.to === '/messages' && unreadCount > 0 && (
-                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-rose-500 px-1 text-xs font-bold text-white shadow-sm shadow-red-500/30">
                   {unreadCount}
                 </span>
               )}
@@ -211,7 +217,7 @@ export function Header() {
             <>
               <Link
                 to="/skills/new"
-                className="mt-2 block rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-3 py-2 text-center text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
+                className="mt-2 block rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-3 py-2.5 text-center text-sm font-semibold text-white shadow-md shadow-primary-500/20 hover:brightness-105 transition-all duration-200"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 + Post a Skill
@@ -237,7 +243,7 @@ export function Header() {
               </Link>
               <Link
                 to="/signup"
-                className="block rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-3 py-2 text-center text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
+                className="block rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-3 py-2.5 text-center text-sm font-semibold text-white shadow-md shadow-primary-500/20 hover:brightness-105 transition-all duration-200"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Sign up

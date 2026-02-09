@@ -140,7 +140,7 @@ export function SwapDetailPage() {
 
               {/* Swap arrow */}
               <div className="hidden sm:flex items-center justify-center self-center">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6] flex items-center justify-center shadow-sm">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#43c1a6] to-[#6366f1] flex items-center justify-center shadow-sm">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                   </svg>
@@ -149,7 +149,7 @@ export function SwapDetailPage() {
 
               {/* Mobile swap arrow */}
               <div className="flex sm:hidden items-center justify-center py-1">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6] flex items-center justify-center shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#43c1a6] to-[#6366f1] flex items-center justify-center shadow-sm">
                   <svg className="w-4 h-4 text-white rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                   </svg>
@@ -185,7 +185,7 @@ export function SwapDetailPage() {
             <h2 className="text-base font-bold text-slate-900 font-display mb-2">Proposal Message</h2>
             {proposer && (
               <div className="flex items-center gap-2 mb-3">
-                <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+                <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
                   <div className="rounded-full p-0.5 bg-white">
                     <Avatar
                       src={proposer.avatarUrl}
@@ -225,7 +225,7 @@ export function SwapDetailPage() {
           {otherUser && (
             <Card className="p-6">
               <div className="flex flex-col items-center text-center">
-                <div className="rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+                <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
                   <div className="rounded-full p-0.5 bg-white">
                     <Avatar
                       src={otherUser.avatarUrl}
@@ -312,7 +312,7 @@ export function SwapDetailPage() {
                   <p className="text-sm text-slate-600 mb-4">How was your swap experience?</p>
                   <button
                     onClick={() => setShowReviewForm(true)}
-                    className="inline-flex items-center rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
+                    className="inline-flex items-center rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
                   >
                     Leave a Review
                   </button>

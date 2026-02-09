@@ -8,13 +8,13 @@ interface TabsProps {
 
 export function Tabs({ tabs, activeTab, onChange }: TabsProps) {
   return (
-    <div className="flex gap-1 border-b border-slate-200/80">
+    <div className="flex gap-1 border-b border-slate-200/60">
       {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => onChange(tab.id)}
           className={cn(
-            'px-4 py-2.5 text-sm font-medium border-b-2 transition-all duration-200',
+            'px-4 py-3 text-sm font-semibold border-b-2 transition-all duration-200',
             activeTab === tab.id
               ? 'border-primary-500 text-primary-700'
               : 'border-transparent text-slate-400 hover:text-slate-600 hover:border-slate-200'

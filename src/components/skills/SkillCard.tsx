@@ -16,9 +16,9 @@ export function SkillCard({ listing, user }: SkillCardProps) {
 
   return (
     <Link to={`/skills/${listing.id}`} className="block group">
-      <Card hover className="h-full flex flex-col overflow-hidden ring-1 ring-slate-100 group-hover:ring-primary-200/50 transition-all duration-200">
+      <Card hover className="h-full flex flex-col overflow-hidden group-hover:ring-primary-200/60 transition-all duration-300">
         {/* Category colour bar */}
-        <div className={`h-1.5 ${category.barColor}`} />
+        <div className={`h-1 ${category.barColor}`} />
 
         <div className="p-6 flex flex-col flex-1">
           {/* Top row: category + badge */}
@@ -31,7 +31,7 @@ export function SkillCard({ listing, user }: SkillCardProps) {
             </Badge>
           </div>
 
-          <h3 className="text-xl font-extrabold text-slate-900 font-display mb-2 group-hover:text-primary-700 transition-colors">
+          <h3 className="text-lg font-bold text-slate-900 font-display mb-2 group-hover:text-primary-700 transition-colors leading-snug">
             {listing.title}
           </h3>
 
@@ -39,8 +39,8 @@ export function SkillCard({ listing, user }: SkillCardProps) {
             {listing.description}
           </p>
 
-          <div className="flex items-center gap-2 text-sm text-slate-400">
-            <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+          <div className="flex items-center gap-2.5 text-sm text-slate-400 pt-4 border-t border-slate-50">
+            <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
               <div className="rounded-full p-0.5 bg-white">
                 <Avatar
                   src={user.avatarUrl}
@@ -49,12 +49,14 @@ export function SkillCard({ listing, user }: SkillCardProps) {
                 />
               </div>
             </div>
-            <span className="font-medium text-slate-600">
-              {user.firstName} {user.lastName.charAt(0)}.
-            </span>
-            <span className="text-slate-300">&middot;</span>
-            <span>{user.neighbourhood}</span>
-            <span className="ml-auto text-xs">{formatRelativeTime(listing.createdAt)}</span>
+            <div className="min-w-0 flex-1">
+              <span className="font-medium text-slate-600">
+                {user.firstName} {user.lastName.charAt(0)}.
+              </span>
+              <span className="text-slate-300 mx-1">&middot;</span>
+              <span className="text-slate-400">{user.neighbourhood}</span>
+            </div>
+            <span className="text-xs text-slate-400 shrink-0">{formatRelativeTime(listing.createdAt)}</span>
           </div>
         </div>
       </Card>

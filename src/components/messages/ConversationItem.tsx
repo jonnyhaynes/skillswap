@@ -27,7 +27,7 @@ export function ConversationItem({
           : 'border-l-2 border-transparent hover:bg-slate-50/80'
       )}
     >
-      <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+      <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
         <div className="rounded-full p-0.5 bg-white">
           <Avatar
             src={otherUser.avatarUrl}
@@ -53,7 +53,7 @@ export function ConversationItem({
             {conversation.lastMessagePreview}
           </p>
           {hasUnread && (
-            <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] shrink-0" />
+            <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#43c1a6] to-[#6366f1] shrink-0" />
           )}
         </div>
       </div>

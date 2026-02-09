@@ -58,7 +58,7 @@ export function MessageInput({
       <button
         onClick={handleSend}
         disabled={disabled || !content.trim()}
-        className="shrink-0 w-10 h-10 rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] flex items-center justify-center text-white hover:opacity-90 active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="shrink-0 w-10 h-10 rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] flex items-center justify-center text-white hover:opacity-90 active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />

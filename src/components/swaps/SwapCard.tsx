@@ -27,9 +27,9 @@ export function SwapCard({ swap, currentUserId }: SwapCardProps) {
 
   return (
     <Link to={`/swaps/${swap.id}`} className="block group">
-      <Card hover className="p-5 ring-1 ring-slate-100 group-hover:ring-primary-200/50 transition-all duration-200">
+      <Card hover className="p-5 group-hover:ring-primary-200/60 transition-all duration-300">
         <div className="flex items-center gap-4">
-          <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+          <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
             <div className="rounded-full p-0.5 bg-white">
               <Avatar
                 src={otherUser.avatarUrl}
@@ -51,7 +51,7 @@ export function SwapCard({ swap, currentUserId }: SwapCardProps) {
               {offeredListing && (
                 <SkillBadge category={offeredListing.category} size="sm" />
               )}
-              <div className="w-5 h-5 rounded-full bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] flex items-center justify-center shrink-0">
+              <div className="w-5 h-5 rounded-full bg-gradient-to-r from-[#43c1a6] to-[#6366f1] flex items-center justify-center shrink-0">
                 <svg
                   className="w-3 h-3 text-white"
                   fill="none"

@@ -142,7 +142,7 @@ export function BrowseSkillsPage() {
           {filtersSidebar}
           <button
             onClick={() => setFiltersOpen(false)}
-            className="w-full block rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-3 py-2 text-center text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
+            className="w-full block rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-3 py-2 text-center text-sm font-semibold text-white hover:brightness-105 transition-all duration-200"
           >
             Show {filteredAndSorted.length} {filteredAndSorted.length === 1 ? 'result' : 'results'}
           </button>

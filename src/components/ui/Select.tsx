@@ -15,7 +15,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       <div className="w-full">
         <label
           htmlFor={selectId}
-          className="block text-sm font-medium text-slate-700 mb-1"
+          className="block text-sm font-semibold text-slate-700 mb-1.5"
         >
           {label}
         </label>
@@ -23,7 +23,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={selectId}
           className={cn(
-            'w-full rounded-xl border border-slate-200 px-3 py-2 text-sm transition-colors focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:outline-none',
+            'w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm transition-all duration-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:outline-none hover:border-slate-300',
             error && 'border-red-500',
             className
           )}

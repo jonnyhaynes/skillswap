@@ -11,8 +11,8 @@ export function Card({ children, className, onClick, hover = false }: CardProps)
   return (
     <div
       className={cn(
-        'bg-white rounded-2xl shadow-sm',
-        hover && 'hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer',
+        'bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.03)] ring-1 ring-black/[0.03]',
+        hover && 'hover:shadow-[0_8px_30px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04)] hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer',
         onClick && 'cursor-pointer',
         className
       )}

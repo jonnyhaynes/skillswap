@@ -16,10 +16,10 @@ export function MessageBubble({ message, isOwn, senderName }: MessageBubbleProps
       )}
       <div
         className={cn(
-          'px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap break-words shadow-sm',
+          'px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap break-words',
           isOwn
-            ? 'bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6] text-white rounded-2xl rounded-br-md'
-            : 'bg-white text-slate-900 rounded-2xl rounded-bl-md ring-1 ring-slate-100'
+            ? 'bg-gradient-to-br from-[#43c1a6] to-[#6366f1] text-white rounded-2xl rounded-br-md shadow-md shadow-primary-500/15'
+            : 'bg-white text-slate-900 rounded-2xl rounded-bl-md ring-1 ring-slate-100 shadow-sm'
         )}
       >
         {message.content}

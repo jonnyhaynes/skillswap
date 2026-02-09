@@ -49,17 +49,17 @@ export function Modal({
       role="dialog"
     >
       <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
       <div
         className={cn(
-          'relative w-full mx-4 glass rounded-2xl shadow-xl transition-opacity',
+          'relative w-full mx-4 bg-white/95 backdrop-blur-2xl rounded-2xl shadow-[0_24px_48px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.05] animate-scale-in',
           sizeStyles[size]
         )}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-          <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
+          <h2 className="text-lg font-bold text-slate-900">{title}</h2>
           <button
             onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors"
@@ -79,7 +79,7 @@ export function Modal({
             </svg>
           </button>
         </div>
-        <div className="px-6 py-4">{children}</div>
+        <div className="px-6 py-5">{children}</div>
       </div>
     </div>
   );
