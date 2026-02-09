@@ -49,12 +49,12 @@ export function Modal({
       role="dialog"
     >
       <div
-        className="fixed inset-0 bg-black/50 transition-opacity"
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
       <div
         className={cn(
-          'relative w-full mx-4 bg-white rounded-xl shadow-xl transition-opacity',
+          'relative w-full mx-4 glass rounded-2xl shadow-xl transition-opacity',
           sizeStyles[size]
         )}
       >

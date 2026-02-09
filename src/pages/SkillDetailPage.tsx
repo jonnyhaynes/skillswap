@@ -206,7 +206,7 @@ export function SkillDetailPage() {
           {isOwner && (
             <Card className="p-6">
               <h3 className="text-sm font-medium text-slate-700 mb-3">Manage Listing</h3>
-              <div className="space-y-3">
+              <div className="flex flex-col space-y-3">
                 <Link to={`/skills/${listing.id}/edit`}>
                   <Button variant="outline" className="w-full">
                     Edit Listing

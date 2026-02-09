@@ -34,7 +34,7 @@ export function Header() {
   )
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white">
+    <header className="sticky top-0 z-40 border-b border-white/20 bg-white/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5">
@@ -78,7 +78,7 @@ export function Header() {
           {currentUser && (
             <Link
               to="/skills/new"
-              className="hidden sm:inline-flex rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+              className="hidden sm:inline-flex rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
             >
               + Post a Skill
             </Link>
@@ -106,7 +106,7 @@ export function Header() {
                     className="fixed inset-0 z-10"
                     onClick={() => setProfileMenuOpen(false)}
                   />
-                  <div className="absolute right-0 top-full mt-1 z-20 w-48 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+                  <div className="absolute right-0 top-full mt-1 z-20 w-48 rounded-xl glass py-1 shadow-lg">
                     <Link
                       to={`/profile/${currentUser.id}`}
                       className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
@@ -149,7 +149,7 @@ export function Header() {
               </Link>
               <Link
                 to="/signup"
-                className="hidden sm:inline-flex rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+                className="hidden sm:inline-flex rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
               >
                 Sign up
               </Link>
@@ -177,7 +177,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 pb-4 pt-2">
+        <div className="md:hidden border-t border-white/20 bg-white/80 backdrop-blur-xl px-4 pb-4 pt-2">
           {visibleNavLinks.map((link) => (
             <Link
               key={link.to}
@@ -207,7 +207,7 @@ export function Header() {
             <>
               <Link
                 to="/skills/new"
-                className="mt-2 block rounded-lg bg-primary-500 px-3 py-2 text-center text-sm font-medium text-white hover:bg-primary-600"
+                className="mt-2 block rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-3 py-2 text-center text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 + Post a Skill
@@ -233,7 +233,7 @@ export function Header() {
               </Link>
               <Link
                 to="/signup"
-                className="block rounded-lg bg-primary-500 px-3 py-2 text-center text-sm font-medium text-white hover:bg-primary-600"
+                className="block rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-3 py-2 text-center text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Sign up

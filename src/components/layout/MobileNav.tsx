@@ -65,7 +65,7 @@ export function MobileNav() {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/20 bg-white/80 backdrop-blur-xl md:hidden">
       <div className="flex items-center justify-around px-2 py-1">
         {NAV_ITEMS.map((item) => {
           const to = item.isDynamic && currentUser

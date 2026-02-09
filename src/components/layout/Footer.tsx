@@ -5,10 +5,10 @@ export function Footer() {
   const { currentUser } = useAuth()
 
   return (
-    <footer className="bg-slate-900 text-slate-300">
+    <footer className="bg-slate-800 text-slate-300">
       {/* CTA Banner */}
       {!currentUser && (
-        <div className="border-b border-slate-800">
+        <div className="border-b border-slate-700">
           <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 text-center">
             <h3 className="text-xl font-bold text-white font-display">
               Ready to share your skills?
@@ -18,7 +18,7 @@ export function Footer() {
             </p>
             <Link
               to="/signup"
-              className="mt-4 inline-flex items-center rounded-lg bg-primary-500 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+              className="mt-4 inline-flex items-center rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-6 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
             >
               Get Started
             </Link>
@@ -62,7 +62,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-slate-800 pt-6 text-center">
+        <div className="mt-10 border-t border-slate-700 pt-6 text-center">
           <p className="text-xs text-slate-500">
             Neighbourhood Skill Exchange
           </p>

@@ -13,7 +13,7 @@ export function SkillBadge({ category, size = 'sm' }: SkillBadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full font-medium',
+        'inline-flex items-center gap-1 rounded-full font-medium transition-transform duration-200 hover:scale-105',
         info.bgColor,
         info.textColor,
         size === 'sm' && 'px-2.5 py-0.5 text-xs',

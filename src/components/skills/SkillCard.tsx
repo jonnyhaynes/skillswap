@@ -16,7 +16,7 @@ export function SkillCard({ listing, user }: SkillCardProps) {
 
   return (
     <Link to={`/skills/${listing.id}`} className="block group">
-      <Card hover className="h-full flex flex-col overflow-hidden">
+      <Card hover className="h-full flex flex-col overflow-hidden ring-1 ring-slate-100 group-hover:ring-primary-200/50 transition-all duration-200">
         {/* Category colour bar */}
         <div className={`h-1.5 ${category.barColor}`} />
 

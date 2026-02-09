@@ -26,11 +26,15 @@ export function ProfileHeader({
   return (
     <Card className="p-6">
       <div className="flex flex-col sm:flex-row gap-6">
-        <Avatar
-          src={user.avatarUrl}
-          name={fullName}
-          size="xl"
-        />
+        <div className="self-start shrink-0 rounded-full p-1 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+          <div className="rounded-full p-0.5 bg-white">
+            <Avatar
+              src={user.avatarUrl}
+              name={fullName}
+              size="xl"
+            />
+          </div>
+        </div>
 
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">

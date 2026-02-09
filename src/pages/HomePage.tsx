@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { Link } from 'react-router'
+import { useMemo, useState } from 'react'
+import { Link, useNavigate } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useSkills } from '@/hooks/useSkills'
 import { useCountUp } from '@/hooks/useCountUp'
@@ -45,7 +45,7 @@ function GridIcon({ className = 'w-5 h-5' }: { className?: string }) {
 
 function ClipboardIcon() {
   return (
-    <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
     </svg>
   )
@@ -53,7 +53,7 @@ function ClipboardIcon() {
 
 function PeopleIcon() {
   return (
-    <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
     </svg>
   )
@@ -61,7 +61,7 @@ function PeopleIcon() {
 
 function SparkleIcon() {
   return (
-    <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
     </svg>
   )
@@ -93,23 +93,26 @@ function AnimatedStat({ value, label, icon: Icon }: { value: number | string; la
 const STEPS = [
   {
     step: '1',
-    title: 'List Your Skills',
-    desc: 'Post what you can teach and what you want to learn.',
+    title: 'Choose a Skill',
+    desc: 'Post what you can teach or browse what others are offering near you.',
     icon: ClipboardIcon,
+    gradient: 'from-[#2DD4BF] to-[#3B82F6]',
     bg: 'bg-primary-50',
   },
   {
     step: '2',
-    title: 'Find a Match',
-    desc: 'Browse listings from neighbours near you and propose a swap.',
+    title: 'Match with a Person',
+    desc: 'Find someone whose skills complement yours and propose a swap.',
     icon: PeopleIcon,
+    gradient: 'from-[#FB7185] to-[#F472B6]',
     bg: 'bg-amber-50',
   },
   {
     step: '3',
-    title: 'Start Swapping',
-    desc: 'Meet up, learn from each other, and leave reviews.',
+    title: 'Swap Time, Not Money',
+    desc: 'Meet up, learn from each other, and leave reviews when you\'re done.',
     icon: SparkleIcon,
+    gradient: 'from-[#A78BFA] to-[#22D3EE]',
     bg: 'bg-blue-50',
   },
 ]
@@ -117,6 +120,8 @@ const STEPS = [
 export function HomePage() {
   const { currentUser } = useAuth()
   const { listings, loading } = useSkills()
+  const navigate = useNavigate()
+  const [heroSearch, setHeroSearch] = useState('')
 
   const featuredSkills = useMemo(() => {
     return listings
@@ -135,6 +140,15 @@ export function HomePage() {
     categories: 12,
   }
 
+  const handleHeroSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (heroSearch.trim()) {
+      navigate(`/browse?search=${encodeURIComponent(heroSearch.trim())}`)
+    } else {
+      navigate('/browse')
+    }
+  }
+
   return (
     <div className="space-y-12">
       {/* Hero + Stats */}
@@ -147,47 +161,70 @@ export function HomePage() {
 
         {/* Hero content */}
         <div className="relative z-10 text-center pt-12 sm:pt-16 px-6 pb-8">
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white font-display">
-            {currentUser ? (
-              <>Welcome back, {currentUser.firstName}!</>
-            ) : (
-              <>Welcome to <span className="text-teal-200">SkillSwap</span></>
-            )}
-          </h1>
-          <p className="mt-4 text-lg text-white/80 max-w-2xl mx-auto">
-            Swap skills with your neighbours.{' '}
-            <span className="text-white font-medium">Teach what you know</span>,{' '}
-            <span className="text-amber-300 font-medium">learn what you love</span>.
+          {currentUser ? (
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-tight">
+              Welcome back, {currentUser.firstName}!
+            </h1>
+          ) : (
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-tight">
+              Learn what you need.
+              <br />
+              <span className="text-teal-200">Teach what you know.</span>
+            </h1>
+          )}
+          <p className="mt-4 text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
+            Swap skills with your neighbours — no money, just knowledge.
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+
+          {/* Floating glass search bar */}
+          <form onSubmit={handleHeroSearch} className="mt-8 max-w-xl mx-auto">
+            <div className="glass-dark rounded-2xl flex items-center gap-3 px-5 py-3">
+              <SearchIcon className="w-5 h-5 text-white/50 shrink-0" />
+              <input
+                type="text"
+                value={heroSearch}
+                onChange={(e) => setHeroSearch(e.target.value)}
+                placeholder="Photography, Excel, Guitar..."
+                className="flex-1 bg-transparent text-white placeholder-white/40 text-sm focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="shrink-0 rounded-xl bg-white px-5 py-2 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
             {currentUser ? (
               <>
                 <Link
                   to="/skills/new"
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-white px-7 py-3 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors shadow-lg shadow-primary-900/20"
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors shadow-lg shadow-primary-900/20"
                 >
-                  + Post a Skill
+                  Offer a Skill
                 </Link>
                 <Link
                   to="/browse"
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg border border-white/30 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/30 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
                 >
-                  Browse Skills
+                  Find a Skill
                 </Link>
               </>
             ) : (
               <>
                 <Link
-                  to="/signup"
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-white px-7 py-3 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors shadow-lg shadow-primary-900/20"
+                  to="/browse"
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors shadow-lg shadow-primary-900/20"
                 >
-                  Get Started
+                  Find a Skill
                 </Link>
                 <Link
-                  to="/browse"
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg border border-white/30 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                  to="/skills/new"
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/30 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
                 >
-                  Browse Skills
+                  Offer a Skill
                 </Link>
               </>
             )}
@@ -195,7 +232,7 @@ export function HomePage() {
         </div>
 
         {/* Stats bar — glass morphism */}
-        <div className="relative z-10 mx-4 sm:mx-8 mb-6 rounded-xl backdrop-blur-xl bg-white/10 border border-white/15">
+        <div className="relative z-10 mx-4 sm:mx-8 mb-6 rounded-xl glass-dark">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
             {STATS_CONFIG.map((stat) => (
               <AnimatedStat key={stat.label} value={statValues[stat.key]} label={stat.label} icon={stat.icon} />
@@ -206,7 +243,7 @@ export function HomePage() {
 
       {/* How it works */}
       <div>
-        <h2 className="text-2xl font-extrabold text-slate-900 font-display mb-6">How SkillSwap Works</h2>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display mb-6">How SkillSwap Works</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
           {/* Connecting line (desktop only) */}
           <div className="hidden md:block absolute top-16 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-0.5 border-t-2 border-dashed border-primary-200" />
@@ -216,10 +253,10 @@ export function HomePage() {
             return (
               <div key={item.step} className={`${item.bg} rounded-2xl p-8 relative`}>
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center text-base font-bold shrink-0">
+                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${item.gradient} text-white flex items-center justify-center text-base font-bold shrink-0`}>
                     {item.step}
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
+                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${item.gradient} flex items-center justify-center shadow-sm`}>
                     <Icon />
                   </div>
                 </div>
@@ -234,7 +271,7 @@ export function HomePage() {
       {/* Featured skills */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-extrabold text-slate-900 font-display">Latest Skills Near You</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display">Latest Skills Near You</h2>
           <Link to="/browse" className="text-sm font-medium text-primary-600 hover:text-primary-700">
             View all &rarr;
           </Link>

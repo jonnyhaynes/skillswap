@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useSearchParams } from 'react-router'
 import type { SkillCategory, ListingType } from '@/types'
 import { useSkills } from '@/hooks/useSkills'
 import { useDebounce } from '@/hooks/useDebounce'
@@ -11,8 +12,9 @@ import { SkeletonGrid } from '@/components/ui/Skeleton'
 
 export function BrowseSkillsPage() {
   const { listings, loading, initialized } = useSkills()
+  const [searchParams] = useSearchParams()
 
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '')
   const [selectedCategories, setSelectedCategories] = useState<SkillCategory[]>([])
   const [listingType, setListingType] = useState<ListingType | 'all'>('all')
   const [sortBy, setSortBy] = useState<SortOption>('newest')
@@ -140,7 +142,7 @@ export function BrowseSkillsPage() {
           {filtersSidebar}
           <button
             onClick={() => setFiltersOpen(false)}
-            className="w-full rounded-xl bg-primary-500 py-2.5 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+            className="w-full block rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-3 py-2 text-center text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
           >
             Show {filteredAndSorted.length} {filteredAndSorted.length === 1 ? 'result' : 'results'}
           </button>

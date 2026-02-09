@@ -52,7 +52,7 @@ export function SwapsPage() {
     }
 
     return (
-      <div className="space-y-3">
+      <div className="flex flex-col space-y-3">
         {swaps.map((swap) => (
           <SwapCard key={swap.id} swap={swap} currentUserId={currentUser.id} />
         ))}

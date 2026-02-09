@@ -9,9 +9,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<NonNullable<ButtonProps['variant']>, string> = {
-  primary: 'bg-primary-500 text-white hover:bg-primary-600',
+  primary: 'bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] text-white hover:opacity-90',
   secondary: 'bg-slate-100 text-slate-700 hover:bg-slate-200',
-  outline: 'border border-slate-300 text-slate-700 hover:bg-slate-50',
+  outline: 'border border-slate-200 text-slate-700 hover:bg-slate-50',
   ghost: 'text-slate-700 hover:bg-slate-100',
   danger: 'bg-red-500 text-white hover:bg-red-600',
 };
@@ -33,7 +33,7 @@ export function Button({
   return (
     <button
       className={cn(
-        'rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+        'rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed',
         variantStyles[variant],
         sizeStyles[size],
         icon && 'inline-flex items-center gap-2',
