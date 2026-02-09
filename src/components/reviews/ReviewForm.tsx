@@ -74,7 +74,7 @@ export function ReviewForm({
           }}
           placeholder="Share your experience..."
           rows={4}
-          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+          className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-400 transition-colors resize-none"
         />
         {errors.comment && (
           <p className="mt-1 text-sm text-red-500">{errors.comment}</p>

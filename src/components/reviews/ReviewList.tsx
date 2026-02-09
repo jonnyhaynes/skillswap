@@ -24,7 +24,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
       {reviews.map((review) => {
         const reviewer = getUserById(review.reviewerId)
         if (!reviewer) return null
-        return <ReviewCard key={review.id} review={review} reviewer={reviewer} />
+        return <ReviewCard key={review.id} review={review} reviewer={reviewer} standalone />
       })}
     </div>
   )

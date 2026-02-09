@@ -167,11 +167,15 @@ export function SkillDetailPage() {
         <div className="space-y-4">
           <Card className="p-6">
             <div className="flex flex-col items-center text-center">
-              <Avatar
-                src={listingUser.avatarUrl}
-                name={`${listingUser.firstName} ${listingUser.lastName}`}
-                size="lg"
-              />
+              <div className="rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+                <div className="rounded-full p-0.5 bg-white">
+                  <Avatar
+                    src={listingUser.avatarUrl}
+                    name={`${listingUser.firstName} ${listingUser.lastName}`}
+                    size="lg"
+                  />
+                </div>
+              </div>
               <h3 className="mt-3 text-lg font-semibold text-slate-900">
                 {listingUser.firstName} {listingUser.lastName}
               </h3>
@@ -188,7 +192,7 @@ export function SkillDetailPage() {
               )}
             </div>
 
-            <div className="mt-6 space-y-3">
+            <div className="mt-6 flex flex-col space-y-3">
               <Link to={`/profile/${listingUser.id}`}>
                 <Button variant="outline" className="w-full">
                   View Profile

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useSwaps } from '@/hooks/useSwaps';
@@ -7,18 +7,47 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { SwapCard } from '@/components/swaps/SwapCard';
 
 export function SwapsPage() {
-  const { currentUser } = useAuth();
+  const { currentUser, fetchUsersByIds, getUserById } = useAuth();
   const { getIncomingSwaps, getOutgoingSwaps, getActiveSwaps, getCompletedSwaps } = useSwaps();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('incoming');
+  const fetchedIdsRef = useRef<Set<string>>(new Set());
+
+  const incoming = useMemo(
+    () => (currentUser ? getIncomingSwaps(currentUser.id) : []),
+    [currentUser, getIncomingSwaps]
+  );
+  const outgoing = useMemo(
+    () => (currentUser ? getOutgoingSwaps(currentUser.id) : []),
+    [currentUser, getOutgoingSwaps]
+  );
+  const active = useMemo(
+    () => (currentUser ? getActiveSwaps(currentUser.id) : []),
+    [currentUser, getActiveSwaps]
+  );
+  const completed = useMemo(
+    () => (currentUser ? getCompletedSwaps(currentUser.id) : []),
+    [currentUser, getCompletedSwaps]
+  );
+
+  const missingUserIds = useMemo(() => {
+    if (!currentUser) return [];
+    const allSwaps = [...incoming, ...outgoing, ...active, ...completed];
+    const ids = new Set(allSwaps.flatMap((s) => [s.proposerId, s.recipientId]));
+    return [...ids].filter(
+      (id) => id !== currentUser.id && !getUserById(id) && !fetchedIdsRef.current.has(id)
+    );
+  }, [incoming, outgoing, active, completed, currentUser, getUserById]);
+
+  useEffect(() => {
+    if (missingUserIds.length > 0) {
+      missingUserIds.forEach((id) => fetchedIdsRef.current.add(id));
+      fetchUsersByIds(missingUserIds);
+    }
+  }, [missingUserIds, fetchUsersByIds]);
 
   if (!currentUser) return null;
-
-  const incoming = getIncomingSwaps(currentUser.id);
-  const outgoing = getOutgoingSwaps(currentUser.id);
-  const active = getActiveSwaps(currentUser.id);
-  const completed = getCompletedSwaps(currentUser.id);
 
   const tabs = [
     { id: 'incoming', label: 'Incoming', count: incoming.length },
@@ -62,7 +91,10 @@ export function SwapsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-slate-900">My Swaps</h1>
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display">My Swaps</h1>
+        <p className="text-slate-500 mt-1">Track your skill exchange proposals and progress</p>
+      </div>
 
       <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 

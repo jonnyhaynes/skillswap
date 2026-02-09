@@ -40,11 +40,15 @@ export function SkillCard({ listing, user }: SkillCardProps) {
           </p>
 
           <div className="flex items-center gap-2 text-sm text-slate-400">
-            <Avatar
-              src={user.avatarUrl}
-              name={`${user.firstName} ${user.lastName}`}
-              size="sm"
-            />
+            <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+              <div className="rounded-full p-0.5 bg-white">
+                <Avatar
+                  src={user.avatarUrl}
+                  name={`${user.firstName} ${user.lastName}`}
+                  size="sm"
+                />
+              </div>
+            </div>
             <span className="font-medium text-slate-600">
               {user.firstName} {user.lastName.charAt(0)}.
             </span>

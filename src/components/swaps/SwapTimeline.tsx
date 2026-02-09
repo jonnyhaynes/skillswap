@@ -90,17 +90,17 @@ export function SwapTimeline({ swap }: SwapTimelineProps) {
             <div className="flex flex-col items-center">
               <div
                 className={cn(
-                  'w-3 h-3 rounded-full border-2 shrink-0',
+                  'w-3 h-3 rounded-full shrink-0',
                   step.reached
-                    ? 'bg-primary-500 border-primary-500'
-                    : 'bg-white border-slate-300'
+                    ? 'bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6] border-0'
+                    : 'bg-white border-2 border-slate-200'
                 )}
               />
               {!isLast && (
                 <div
                   className={cn(
                     'w-0.5 flex-1 min-h-6',
-                    step.reached ? 'bg-primary-500' : 'bg-slate-200'
+                    step.reached ? 'bg-gradient-to-b from-[#2DD4BF] to-[#3B82F6]' : 'bg-slate-200'
                   )}
                 />
               )}

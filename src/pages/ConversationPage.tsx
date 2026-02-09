@@ -110,11 +110,15 @@ export function ConversationPage() {
             <path d="m12 19-7-7 7-7" />
           </svg>
         </Link>
-        <Avatar
-          src={otherUser.avatarUrl}
-          name={`${otherUser.firstName} ${otherUser.lastName}`}
-          size="md"
-        />
+        <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+          <div className="rounded-full p-0.5 bg-white">
+            <Avatar
+              src={otherUser.avatarUrl}
+              name={`${otherUser.firstName} ${otherUser.lastName}`}
+              size="md"
+            />
+          </div>
+        </div>
         <div>
           <h1 className="text-base font-semibold text-slate-900">
             {otherUser.firstName} {otherUser.lastName}

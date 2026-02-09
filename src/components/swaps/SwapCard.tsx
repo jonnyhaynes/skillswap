@@ -26,17 +26,21 @@ export function SwapCard({ swap, currentUserId }: SwapCardProps) {
   if (!otherUser) return null;
 
   return (
-    <Link to={`/swaps/${swap.id}`}>
-      <Card hover className="p-5">
+    <Link to={`/swaps/${swap.id}`} className="block group">
+      <Card hover className="p-5 ring-1 ring-slate-100 group-hover:ring-primary-200/50 transition-all duration-200">
         <div className="flex items-center gap-4">
-          <Avatar
-            src={otherUser.avatarUrl}
-            name={`${otherUser.firstName} ${otherUser.lastName}`}
-            size="md"
-          />
+          <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+            <div className="rounded-full p-0.5 bg-white">
+              <Avatar
+                src={otherUser.avatarUrl}
+                name={`${otherUser.firstName} ${otherUser.lastName}`}
+                size="md"
+              />
+            </div>
+          </div>
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-1.5">
               <h3 className="text-sm font-bold text-slate-900 truncate">
                 {otherUser.firstName} {otherUser.lastName}
               </h3>
@@ -47,19 +51,21 @@ export function SwapCard({ swap, currentUserId }: SwapCardProps) {
               {offeredListing && (
                 <SkillBadge category={offeredListing.category} size="sm" />
               )}
-              <svg
-                className="w-4 h-4 text-slate-300 shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
+              <div className="w-5 h-5 rounded-full bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] flex items-center justify-center shrink-0">
+                <svg
+                  className="w-3 h-3 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                  />
+                </svg>
+              </div>
               {requestedListing && (
                 <SkillBadge category={requestedListing.category} size="sm" />
               )}

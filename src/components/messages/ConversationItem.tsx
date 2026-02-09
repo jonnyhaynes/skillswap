@@ -26,11 +26,15 @@ export function ConversationItem({
         !isActive && 'border-l-2 border-transparent'
       )}
     >
-      <Avatar
-        src={otherUser.avatarUrl}
-        name={`${otherUser.firstName} ${otherUser.lastName}`}
-        size="md"
-      />
+      <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+        <div className="rounded-full p-0.5 bg-white">
+          <Avatar
+            src={otherUser.avatarUrl}
+            name={`${otherUser.firstName} ${otherUser.lastName}`}
+            size="md"
+          />
+        </div>
+      </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
           <span className={cn('text-sm font-semibold text-slate-900 truncate', hasUnread && 'text-slate-900')}>

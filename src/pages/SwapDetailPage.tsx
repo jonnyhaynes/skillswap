@@ -102,7 +102,7 @@ export function SwapDetailPage() {
     <div className="space-y-6">
       <Link
         to="/swaps"
-        className="inline-flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -111,49 +111,61 @@ export function SwapDetailPage() {
       </Link>
 
       <div className="flex items-center gap-3">
-        <h1 className="text-2xl font-bold text-slate-900">Swap Details</h1>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display">Swap Details</h1>
         <SwapStatusBadge status={swap.status} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left section */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Timeline */}
-          <Card className="p-6">
-            <h2 className="text-sm font-semibold text-slate-900 mb-4">Timeline</h2>
-            <SwapTimeline swap={swap} />
-          </Card>
-
           {/* Skill exchange details */}
-          <Card className="p-6">
-            <h2 className="text-sm font-semibold text-slate-900 mb-4">Skill Exchange</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Card className="p-6 overflow-hidden">
+            <h2 className="text-base font-bold text-slate-900 font-display mb-5">Skill Exchange</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-4 items-start">
               {/* Offered skill */}
-              <div className="space-y-2">
-                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                  Offered Skill
+              <div className="rounded-xl bg-primary-50/60 p-4 space-y-2.5">
+                <p className="text-xs font-semibold text-primary-600 uppercase tracking-wide">
+                  Offered
                 </p>
                 {offeredListing ? (
                   <div className="space-y-2">
                     <SkillBadge category={offeredListing.category} size="md" />
-                    <p className="text-sm font-medium text-slate-900">{offeredListing.title}</p>
-                    <p className="text-xs text-slate-500">{offeredListing.description}</p>
+                    <p className="text-sm font-bold text-slate-900">{offeredListing.title}</p>
+                    <p className="text-xs text-slate-500 leading-relaxed">{offeredListing.description}</p>
                   </div>
                 ) : (
                   <p className="text-sm text-slate-400">Skill listing not found</p>
                 )}
               </div>
 
+              {/* Swap arrow */}
+              <div className="hidden sm:flex items-center justify-center self-center">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6] flex items-center justify-center shadow-sm">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Mobile swap arrow */}
+              <div className="flex sm:hidden items-center justify-center py-1">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6] flex items-center justify-center shadow-sm">
+                  <svg className="w-4 h-4 text-white rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  </svg>
+                </div>
+              </div>
+
               {/* Requested skill */}
-              <div className="space-y-2">
-                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                  Requested Skill
+              <div className="rounded-xl bg-amber-50/60 p-4 space-y-2.5">
+                <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">
+                  Requested
                 </p>
                 {requestedListing ? (
                   <div className="space-y-2">
                     <SkillBadge category={requestedListing.category} size="md" />
-                    <p className="text-sm font-medium text-slate-900">{requestedListing.title}</p>
-                    <p className="text-xs text-slate-500">{requestedListing.description}</p>
+                    <p className="text-sm font-bold text-slate-900">{requestedListing.title}</p>
+                    <p className="text-xs text-slate-500 leading-relaxed">{requestedListing.description}</p>
                   </div>
                 ) : (
                   <p className="text-sm text-slate-400">Skill listing not found</p>
@@ -162,15 +174,32 @@ export function SwapDetailPage() {
             </div>
           </Card>
 
+          {/* Timeline */}
+          <Card className="p-6">
+            <h2 className="text-base font-bold text-slate-900 font-display mb-4">Timeline</h2>
+            <SwapTimeline swap={swap} />
+          </Card>
+
           {/* Proposal message */}
           <Card className="p-6">
-            <h2 className="text-sm font-semibold text-slate-900 mb-2">Proposal Message</h2>
+            <h2 className="text-base font-bold text-slate-900 font-display mb-2">Proposal Message</h2>
             {proposer && (
-              <p className="text-xs text-slate-500 mb-3">
-                From {proposer.firstName} {proposer.lastName}
-              </p>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+                  <div className="rounded-full p-0.5 bg-white">
+                    <Avatar
+                      src={proposer.avatarUrl}
+                      name={`${proposer.firstName} ${proposer.lastName}`}
+                      size="sm"
+                    />
+                  </div>
+                </div>
+                <span className="text-sm text-slate-500">
+                  {proposer.firstName} {proposer.lastName}
+                </span>
+              </div>
             )}
-            <p className="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed">
+            <p className="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed bg-slate-50 rounded-xl p-4">
               {swap.message}
             </p>
           </Card>
@@ -180,7 +209,7 @@ export function SwapDetailPage() {
         <div className="space-y-4">
           {/* Actions */}
           <Card className="p-6">
-            <h2 className="text-sm font-semibold text-slate-900 mb-4">Actions</h2>
+            <h2 className="text-base font-bold text-slate-900 font-display mb-4">Actions</h2>
             <SwapActions
               swap={swap}
               currentUserId={currentUser.id}
@@ -196,12 +225,16 @@ export function SwapDetailPage() {
           {otherUser && (
             <Card className="p-6">
               <div className="flex flex-col items-center text-center">
-                <Avatar
-                  src={otherUser.avatarUrl}
-                  name={`${otherUser.firstName} ${otherUser.lastName}`}
-                  size="lg"
-                />
-                <h3 className="mt-3 text-lg font-semibold text-slate-900">
+                <div className="rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+                  <div className="rounded-full p-0.5 bg-white">
+                    <Avatar
+                      src={otherUser.avatarUrl}
+                      name={`${otherUser.firstName} ${otherUser.lastName}`}
+                      size="lg"
+                    />
+                  </div>
+                </div>
+                <h3 className="mt-3 text-lg font-bold text-slate-900 font-display">
                   {otherUser.firstName} {otherUser.lastName}
                 </h3>
                 <p className="text-sm text-slate-500">{otherUser.neighbourhood}</p>
@@ -209,7 +242,7 @@ export function SwapDetailPage() {
 
               <div className="mt-4">
                 <Link to={`/profile/${otherUser.id}`}>
-                  <button className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+                  <button className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all duration-200">
                     View Profile
                   </button>
                 </Link>
@@ -221,21 +254,21 @@ export function SwapDetailPage() {
 
       {/* Reviews Section - only for completed swaps */}
       {swap.status === 'completed' && (
-        <div className="lg:col-span-2 space-y-4">
-          <h2 className="text-lg font-semibold text-slate-900">Reviews</h2>
+        <div className="space-y-4 pt-2">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 font-display">Reviews</h2>
 
           {/* Show existing review by current user */}
           {existingReview && (
-            <Card className="p-4">
-              <p className="text-xs font-medium text-slate-500 mb-2">Your Review</p>
+            <Card className="p-5">
+              <p className="text-xs font-semibold text-primary-600 uppercase tracking-wide mb-3">Your Review</p>
               <ReviewCard review={existingReview} reviewer={currentUser} />
             </Card>
           )}
 
           {/* Show review from other user */}
           {otherUserReview && otherUser && (
-            <Card className="p-4">
-              <p className="text-xs font-medium text-slate-500 mb-2">Their Review</p>
+            <Card className="p-5">
+              <p className="text-xs font-semibold text-primary-600 uppercase tracking-wide mb-3">Their Review</p>
               <ReviewCard review={otherUserReview} reviewer={otherUser} />
             </Card>
           )}
@@ -245,7 +278,7 @@ export function SwapDetailPage() {
             <Card className="p-6">
               {showReviewForm ? (
                 <>
-                  <h3 className="text-sm font-semibold text-slate-900 mb-4">Leave a Review</h3>
+                  <h3 className="text-base font-bold text-slate-900 font-display mb-4">Leave a Review</h3>
                   <ReviewForm
                     swapId={swap.id}
                     revieweeId={otherUserId}
@@ -275,11 +308,11 @@ export function SwapDetailPage() {
                   />
                 </>
               ) : (
-                <div className="text-center">
-                  <p className="text-sm text-slate-600 mb-3">How was your swap experience?</p>
+                <div className="text-center py-2">
+                  <p className="text-sm text-slate-600 mb-4">How was your swap experience?</p>
                   <button
                     onClick={() => setShowReviewForm(true)}
-                    className="inline-flex items-center rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+                    className="inline-flex items-center rounded-xl bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90 transition-all duration-200"
                   >
                     Leave a Review
                   </button>

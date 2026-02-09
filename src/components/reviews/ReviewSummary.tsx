@@ -22,12 +22,12 @@ export function ReviewSummary({ reviews }: ReviewSummaryProps) {
   return (
     <div className="flex flex-col sm:flex-row gap-6">
       {/* Average rating */}
-      <div className="flex flex-col items-center justify-center gap-1">
-        <span className="text-3xl font-bold text-slate-900">
+      <div className="flex flex-col items-center justify-center gap-1 sm:min-w-[100px]">
+        <span className="text-4xl font-extrabold text-slate-900 font-display">
           {totalReviews > 0 ? averageRating.toFixed(1) : '0.0'}
         </span>
         <StarDisplay rating={averageRating} size="md" />
-        <span className="text-sm text-slate-500">
+        <span className="text-sm text-slate-400">
           {totalReviews} {totalReviews === 1 ? 'review' : 'reviews'}
         </span>
       </div>
@@ -38,7 +38,7 @@ export function ReviewSummary({ reviews }: ReviewSummaryProps) {
           const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0
           return (
             <div key={star} className="flex items-center gap-2">
-              <span className="text-sm text-slate-600 w-6 text-right">{star}</span>
+              <span className="text-sm font-medium text-slate-500 w-6 text-right">{star}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
@@ -54,11 +54,11 @@ export function ReviewSummary({ reviews }: ReviewSummaryProps) {
               </svg>
               <div className="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-accent-400 transition-all"
+                  className="h-full rounded-full bg-gradient-to-r from-accent-400 to-accent-300 transition-all duration-300"
                   style={{ width: `${percentage}%` }}
                 />
               </div>
-              <span className="text-sm text-slate-500 w-6 text-right">{count}</span>
+              <span className="text-sm text-slate-400 w-6 text-right">{count}</span>
             </div>
           )
         })}

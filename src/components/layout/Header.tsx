@@ -90,11 +90,15 @@ export function Header() {
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="flex items-center gap-2 rounded-lg p-1.5 hover:bg-slate-50 transition-colors"
               >
-                <Avatar
-                  src={currentUser.avatarUrl}
-                  name={`${currentUser.firstName} ${currentUser.lastName}`}
-                  size="sm"
-                />
+                <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
+                  <div className="rounded-full p-0.5 bg-white">
+                    <Avatar
+                      src={currentUser.avatarUrl}
+                      name={`${currentUser.firstName} ${currentUser.lastName}`}
+                      size="sm"
+                    />
+                  </div>
+                </div>
                 <span className="hidden sm:block text-sm font-medium text-slate-700">
                   {currentUser.firstName}
                 </span>
