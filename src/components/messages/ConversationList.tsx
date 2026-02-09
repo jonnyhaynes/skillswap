@@ -51,13 +51,13 @@ export function ConversationList({
 
   if (loading) {
     return (
-      <div className="p-4 space-y-4">
+      <div className="p-5 space-y-5">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="animate-pulse flex gap-3">
-            <div className="w-12 h-12 bg-slate-200 rounded-full" />
-            <div className="flex-1 space-y-2">
-              <div className="h-4 bg-slate-200 rounded w-1/3" />
-              <div className="h-3 bg-slate-200 rounded w-2/3" />
+          <div key={i} className="animate-pulse flex items-center gap-3.5">
+            <div className="w-12 h-12 bg-slate-100 rounded-full" />
+            <div className="flex-1 space-y-2.5">
+              <div className="h-4 bg-slate-100 rounded-lg w-1/3" />
+              <div className="h-3 bg-slate-100 rounded-lg w-2/3" />
             </div>
           </div>
         ))}

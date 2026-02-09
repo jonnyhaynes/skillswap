@@ -17,7 +17,7 @@ export function MessageThread({ messages, currentUserId }: MessageThreadProps) {
   }, [messages])
 
   return (
-    <div className="flex flex-col gap-3 overflow-y-auto flex-1 p-4">
+    <div className="flex flex-col gap-3 overflow-y-auto flex-1 py-4 px-1">
       {messages.map((message) => {
         const isOwn = message.senderId === currentUserId
         const sender = getUserById(message.senderId)

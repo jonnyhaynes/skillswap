@@ -88,26 +88,16 @@ export function ConversationPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 h-[calc(100vh-4rem)] flex flex-col">
-      <div className="flex items-center gap-3 pb-4 border-b border-slate-200">
+    <div className="max-w-3xl mx-auto flex flex-col h-[calc(100vh-4rem-3rem)] md:h-[calc(100vh-4rem-3rem)] pb-16 md:pb-0">
+      {/* Conversation header */}
+      <div className="flex items-center gap-3 px-1 pb-4 border-b border-slate-200/80">
         <Link
           to="/messages"
-          className="text-slate-500 hover:text-slate-700 transition-colors"
+          className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-200"
           aria-label="Back to messages"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M19 12H5" />
-            <path d="m12 19-7-7 7-7" />
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </Link>
         <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
@@ -119,8 +109,8 @@ export function ConversationPage() {
             />
           </div>
         </div>
-        <div>
-          <h1 className="text-base font-semibold text-slate-900">
+        <div className="min-w-0">
+          <h1 className="text-sm font-bold text-slate-900 font-display truncate">
             {otherUser.firstName} {otherUser.lastName}
           </h1>
           <p className="text-xs text-slate-500">{otherUser.neighbourhood}</p>

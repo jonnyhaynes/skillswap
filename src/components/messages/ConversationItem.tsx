@@ -21,9 +21,10 @@ export function ConversationItem({
     <Link
       to={`/messages/${conversation.id}`}
       className={cn(
-        'flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors',
-        isActive && 'bg-primary-50 border-l-2 border-primary-500',
-        !isActive && 'border-l-2 border-transparent'
+        'flex items-center gap-3.5 px-5 py-4 transition-all duration-200',
+        isActive
+          ? 'bg-primary-50/80 border-l-2 border-primary-500'
+          : 'border-l-2 border-transparent hover:bg-slate-50/80'
       )}
     >
       <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#2DD4BF] to-[#3B82F6]">
@@ -37,19 +38,22 @@ export function ConversationItem({
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <span className={cn('text-sm font-semibold text-slate-900 truncate', hasUnread && 'text-slate-900')}>
+          <span className={cn(
+            'text-sm truncate',
+            hasUnread ? 'font-bold text-slate-900' : 'font-semibold text-slate-900'
+          )}>
             {otherUser.firstName} {otherUser.lastName}
           </span>
           <span className="text-xs text-slate-400 shrink-0">
             {formatRelativeTime(conversation.lastMessageAt)}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mt-0.5">
           <p className={cn('text-sm truncate', hasUnread ? 'text-slate-700 font-medium' : 'text-slate-500')}>
             {conversation.lastMessagePreview}
           </p>
           {hasUnread && (
-            <span className="w-2.5 h-2.5 rounded-full bg-primary-500 shrink-0" />
+            <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] shrink-0" />
           )}
         </div>
       </div>

@@ -19,9 +19,12 @@ export function MessagesPage() {
   const conversations = getConversationsForUser(currentUser.id)
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Messages</h1>
-      <Card>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display">Messages</h1>
+        <p className="text-slate-500 mt-1">Your conversations with other skill swappers</p>
+      </div>
+      <Card className="overflow-hidden">
         {conversations.length === 0 ? (
           <EmptyInbox />
         ) : (
