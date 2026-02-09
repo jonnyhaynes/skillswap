@@ -110,7 +110,7 @@ export function SwapTimeline({ swap }: SwapTimelineProps) {
               <p
                 className={cn(
                   'text-sm font-medium -mt-0.5',
-                  step.reached ? 'text-slate-900' : 'text-slate-400'
+                  step.reached ? 'text-slate-900' : 'text-slate-500'
                 )}
               >
                 {step.label}
@@ -119,8 +119,8 @@ export function SwapTimeline({ swap }: SwapTimelineProps) {
                 <p className="text-xs text-slate-500 mt-0.5">{step.detail}</p>
               )}
               {step.date && (
-                <p className="text-xs text-slate-400 mt-0.5">
-                  {formatDate(step.date)}
+                <p className="text-xs text-slate-500 mt-0.5">
+                  <time dateTime={step.date}>{formatDate(step.date)}</time>
                 </p>
               )}
             </div>

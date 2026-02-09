@@ -92,7 +92,7 @@ function AnimatedStat({ value, label, icon: Icon, iconBg, iconColor, isLast }: {
         {isLoading ? '...' : count}
       </div>
       {/* Label */}
-      <div className="text-xs text-slate-400 font-medium mt-2 tracking-wide">{label}</div>
+      <div className="text-xs text-slate-500 font-medium mt-2 tracking-wide">{label}</div>
     </div>
   )
 }
@@ -177,8 +177,8 @@ export function HomePage() {
           <div className="absolute bottom-28 left-[6%] w-16 h-16 rounded-full border border-white/[0.06] hidden sm:block" />
 
           {/* Floating plus shapes */}
-          <div className="absolute top-20 left-[15%] text-white/[0.06] text-4xl font-light hidden lg:block select-none">+</div>
-          <div className="absolute bottom-32 right-[18%] text-white/[0.05] text-2xl font-light hidden lg:block select-none">+</div>
+          <div className="absolute top-20 left-[15%] text-white/[0.06] text-4xl font-light hidden lg:block select-none" aria-hidden="true">+</div>
+          <div className="absolute bottom-32 right-[18%] text-white/[0.05] text-2xl font-light hidden lg:block select-none" aria-hidden="true">+</div>
 
           {/* Hero content */}
           <div className="relative z-10 text-center pt-16 sm:pt-24 px-6 pb-8">
@@ -193,20 +193,22 @@ export function HomePage() {
                 <span className="bg-gradient-to-r from-emerald-200 via-teal-200 to-indigo-200 bg-clip-text text-transparent">Teach what you know.</span>
               </h1>
             )}
-            <p className="mt-6 text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="mt-6 text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
               Swap skills with your neighbours — no money, just knowledge.
             </p>
 
             {/* Floating glass search bar */}
-            <form onSubmit={handleHeroSearch} className="mt-10 max-w-xl mx-auto">
+            <form onSubmit={handleHeroSearch} className="mt-10 max-w-xl mx-auto" role="search" aria-label="Search skills">
+              <label htmlFor="hero-search" className="sr-only">Search skills</label>
               <div className="glass-dark rounded-2xl flex items-center gap-3 px-5 py-3.5 ring-1 ring-white/[0.12] shadow-xl shadow-black/10">
                 <SearchIcon className="w-5 h-5 text-white/40 shrink-0" />
                 <input
-                  type="text"
+                  id="hero-search"
+                  type="search"
                   value={heroSearch}
                   onChange={(e) => setHeroSearch(e.target.value)}
                   placeholder="Photography, Excel, Guitar..."
-                  className="flex-1 bg-transparent text-white placeholder-white/35 text-sm focus:outline-none"
+                  className="flex-1 bg-transparent text-white placeholder-white/50 text-sm focus:outline-none"
                 />
                 <button
                   type="submit"

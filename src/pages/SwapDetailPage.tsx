@@ -134,7 +134,7 @@ export function SwapDetailPage() {
                     <p className="text-xs text-slate-500 leading-relaxed">{offeredListing.description}</p>
                   </div>
                 ) : (
-                  <p className="text-sm text-slate-400">Skill listing not found</p>
+                  <p className="text-sm text-slate-500">Skill listing not found</p>
                 )}
               </div>
 
@@ -168,7 +168,7 @@ export function SwapDetailPage() {
                     <p className="text-xs text-slate-500 leading-relaxed">{requestedListing.description}</p>
                   </div>
                 ) : (
-                  <p className="text-sm text-slate-400">Skill listing not found</p>
+                  <p className="text-sm text-slate-500">Skill listing not found</p>
                 )}
               </div>
             </div>

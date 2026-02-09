@@ -78,17 +78,17 @@ export function ForgotPasswordForm() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm" role="alert">
           {error}
         </div>
       )}
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
+        <label htmlFor="forgot-email" className="block text-sm font-medium text-slate-700 mb-1">
           Email address
         </label>
         <input
-          id="email"
+          id="forgot-email"
           type="email"
           autoComplete="email"
           required

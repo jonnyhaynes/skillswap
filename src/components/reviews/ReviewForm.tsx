@@ -48,22 +48,22 @@ export function ReviewForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">
-          Rating
-        </label>
+      <fieldset>
+        <legend className="block text-sm font-medium text-slate-700 mb-2">
+          Rating <span className="text-red-600" aria-hidden="true">*</span>
+        </legend>
         <StarRating value={rating} onChange={setRating} size="lg" />
         {errors.rating && (
-          <p className="mt-1 text-sm text-red-500">{errors.rating}</p>
+          <p className="mt-1 text-sm text-red-600" role="alert">{errors.rating}</p>
         )}
-      </div>
+      </fieldset>
 
       <div>
         <label
           htmlFor="review-comment"
           className="block text-sm font-medium text-slate-700 mb-2"
         >
-          Comment
+          Comment <span className="text-red-600" aria-hidden="true">*</span>
         </label>
         <textarea
           id="review-comment"
@@ -74,10 +74,13 @@ export function ReviewForm({
           }}
           placeholder="Share your experience..."
           rows={4}
+          required
+          aria-invalid={errors.comment ? 'true' : undefined}
+          aria-describedby={errors.comment ? 'review-comment-error' : undefined}
           className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-400 transition-colors resize-none"
         />
         {errors.comment && (
-          <p className="mt-1 text-sm text-red-500">{errors.comment}</p>
+          <p id="review-comment-error" className="mt-1 text-sm text-red-600" role="alert">{errors.comment}</p>
         )}
       </div>
 

@@ -27,7 +27,7 @@ export function ReviewSummary({ reviews }: ReviewSummaryProps) {
           {totalReviews > 0 ? averageRating.toFixed(1) : '0.0'}
         </span>
         <StarDisplay rating={averageRating} size="md" />
-        <span className="text-sm text-slate-400">
+        <span className="text-sm text-slate-500">
           {totalReviews} {totalReviews === 1 ? 'review' : 'reviews'}
         </span>
       </div>
@@ -58,7 +58,7 @@ export function ReviewSummary({ reviews }: ReviewSummaryProps) {
                   style={{ width: `${percentage}%` }}
                 />
               </div>
-              <span className="text-sm text-slate-400 w-6 text-right">{count}</span>
+              <span className="text-sm text-slate-500 w-6 text-right">{count}</span>
             </div>
           )
         })}

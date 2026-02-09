@@ -11,13 +11,14 @@ export function Skeleton({ className }: SkeletonProps) {
         'animate-pulse rounded-lg bg-slate-200',
         className
       )}
+      aria-hidden="true"
     />
   )
 }
 
 export function SkeletonCard() {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden">
+    <div className="bg-white rounded-2xl overflow-hidden" aria-hidden="true">
       <div className="h-1.5 bg-slate-200 animate-pulse" />
       <div className="p-6 space-y-4">
         <div className="flex items-center justify-between">
@@ -41,10 +42,11 @@ export function SkeletonCard() {
 
 export function SkeletonGrid({ count = 6 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" role="status" aria-label="Loading content">
       {Array.from({ length: count }).map((_, i) => (
         <SkeletonCard key={i} />
       ))}
+      <span className="sr-only">Loading content</span>
     </div>
   )
 }

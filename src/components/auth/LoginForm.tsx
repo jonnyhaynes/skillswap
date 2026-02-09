@@ -38,22 +38,23 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const displayError = localError || error
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       {displayError && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm" role="alert">
           {displayError}
         </div>
       )}
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
+        <label htmlFor="login-email" className="block text-sm font-medium text-slate-700 mb-1">
           Email address
         </label>
         <input
-          id="email"
+          id="login-email"
           type="email"
           autoComplete="email"
           required
+          aria-required="true"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
@@ -63,7 +64,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
       <div>
         <div className="flex items-center justify-between mb-1">
-          <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="login-password" className="block text-sm font-medium text-slate-700">
             Password
           </label>
           <Link
@@ -74,10 +75,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           </Link>
         </div>
         <input
-          id="password"
+          id="login-password"
           type="password"
           autoComplete="current-password"
           required
+          aria-required="true"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"

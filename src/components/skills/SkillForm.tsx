@@ -115,10 +115,10 @@ export function SkillForm({ initialData, onSubmit, onCancel }: SkillFormProps) {
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">
+      <fieldset>
+        <legend className="block text-sm font-medium text-slate-700 mb-2">
           Listing Type
-        </label>
+        </legend>
         <div className="flex gap-4">
           <label
             className={cn(
@@ -165,7 +165,7 @@ export function SkillForm({ initialData, onSubmit, onCancel }: SkillFormProps) {
             </div>
           </label>
         </div>
-      </div>
+      </fieldset>
 
       <Input
         label="Availability"
@@ -174,10 +174,10 @@ export function SkillForm({ initialData, onSubmit, onCancel }: SkillFormProps) {
         placeholder="e.g. Weekday evenings, Saturday mornings"
       />
 
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">
+      <fieldset>
+        <legend className="block text-sm font-medium text-slate-700 mb-2">
           Location Options
-        </label>
+        </legend>
         <div className="flex gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -199,9 +199,9 @@ export function SkillForm({ initialData, onSubmit, onCancel }: SkillFormProps) {
           </label>
         </div>
         {errors.location && (
-          <p className="text-red-500 text-sm mt-1">{errors.location}</p>
+          <p className="text-red-600 text-sm mt-1" role="alert">{errors.location}</p>
         )}
-      </div>
+      </fieldset>
 
       <Input
         label="Tags"

@@ -24,14 +24,12 @@ export function MessageBubble({ message, isOwn, senderName }: MessageBubbleProps
       >
         {message.content}
       </div>
-      <span
-        className={cn(
-          'text-[11px] mt-1 mx-3',
-          isOwn ? 'text-slate-400' : 'text-slate-400'
-        )}
+      <time
+        dateTime={message.sentAt}
+        className="text-[11px] mt-1 mx-3 text-slate-500"
       >
         {formatRelativeTime(message.sentAt)}
-      </span>
+      </time>
     </div>
   )
 }

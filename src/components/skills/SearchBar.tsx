@@ -10,13 +10,14 @@ export function SearchBar({
   placeholder = 'Search skills...',
 }: SearchBarProps) {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full" role="search">
       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
         <svg
           className="w-5 h-5 text-slate-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -26,8 +27,12 @@ export function SearchBar({
           />
         </svg>
       </div>
+      <label htmlFor="skill-search" className="sr-only">
+        Search skills
+      </label>
       <input
-        type="text"
+        id="skill-search"
+        type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
@@ -36,9 +41,10 @@ export function SearchBar({
       {value && (
         <button
           onClick={() => onChange('')}
-          className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
+          className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-slate-700"
+          aria-label="Clear search"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

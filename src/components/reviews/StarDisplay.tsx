@@ -20,7 +20,7 @@ export function StarDisplay({ rating, size = 'md', showValue = false }: StarDisp
   const fractional = rating - fullStars
 
   return (
-    <div className="inline-flex items-center gap-0.5">
+    <div className="inline-flex items-center gap-0.5" role="img" aria-label={`${rating.toFixed(1)} out of 5 stars`}>
       {Array.from({ length: 5 }, (_, i) => {
         if (i < fullStars) {
           // Full star

@@ -26,6 +26,8 @@ export function ConversationItem({
           ? 'bg-primary-50/80 border-l-2 border-primary-500'
           : 'border-l-2 border-transparent hover:bg-slate-50/80'
       )}
+      aria-current={isActive ? 'page' : undefined}
+      aria-label={`Conversation with ${otherUser.firstName} ${otherUser.lastName}${hasUnread ? ', unread messages' : ''}`}
     >
       <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
         <div className="rounded-full p-0.5 bg-white">
@@ -44,8 +46,10 @@ export function ConversationItem({
           )}>
             {otherUser.firstName} {otherUser.lastName}
           </span>
-          <span className="text-xs text-slate-400 shrink-0">
-            {formatRelativeTime(conversation.lastMessageAt)}
+          <span className="text-xs text-slate-500 shrink-0">
+            <time dateTime={conversation.lastMessageAt}>
+              {formatRelativeTime(conversation.lastMessageAt)}
+            </time>
           </span>
         </div>
         <div className="flex items-center gap-2 mt-0.5">
@@ -53,7 +57,10 @@ export function ConversationItem({
             {conversation.lastMessagePreview}
           </p>
           {hasUnread && (
-            <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#43c1a6] to-[#6366f1] shrink-0" />
+            <>
+              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#43c1a6] to-[#6366f1] shrink-0" aria-hidden="true" />
+              <span className="sr-only">Unread</span>
+            </>
           )}
         </div>
       </div>

@@ -24,7 +24,7 @@ export function ReviewCard({ review, reviewer }: ReviewCardProps) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
           <p className="text-sm font-bold text-slate-900">{fullName}</p>
-          <span className="text-xs text-slate-400 shrink-0">
+          <span className="text-xs text-slate-500 shrink-0">
             {formatRelativeTime(review.createdAt)}
           </span>
         </div>

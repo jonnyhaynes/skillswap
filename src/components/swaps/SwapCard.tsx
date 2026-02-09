@@ -72,7 +72,7 @@ export function SwapCard({ swap, currentUserId }: SwapCardProps) {
             </div>
           </div>
 
-          <span className="text-xs text-slate-400 shrink-0">
+          <span className="text-xs text-slate-500 shrink-0">
             {formatRelativeTime(swap.proposedAt)}
           </span>
         </div>

@@ -162,7 +162,7 @@ export function SkillDetailPage() {
             </div>
           )}
 
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Posted on {formatDate(listing.createdAt)}
           </p>
         </div>

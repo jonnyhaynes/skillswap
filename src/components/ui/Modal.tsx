@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { cn } from '@/utils/cn';
 
 interface ModalProps {
@@ -22,6 +22,9 @@ export function Modal({
   children,
   size = 'md',
 }: ModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
     function handleEscape(e: KeyboardEvent) {
       if (e.key === 'Escape') {
@@ -30,46 +33,64 @@ export function Modal({
     }
 
     if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
+
+      // Focus the dialog when opened
+      requestAnimationFrame(() => {
+        dialogRef.current?.focus();
+      });
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
+
+      // Restore focus when modal closes
+      if (previousFocusRef.current) {
+        previousFocusRef.current.focus();
+      }
     };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
+
+  const titleId = `modal-title-${title.toLowerCase().replace(/\s+/g, '-')}`;
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
       aria-modal="true"
       role="dialog"
+      aria-labelledby={titleId}
     >
       <div
         className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
+        aria-hidden="true"
       />
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className={cn(
-          'relative w-full mx-4 bg-white/95 backdrop-blur-2xl rounded-2xl shadow-[0_24px_48px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.05] animate-scale-in',
+          'relative w-full mx-4 bg-white/95 backdrop-blur-2xl rounded-2xl shadow-[0_24px_48px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.05] animate-scale-in focus:outline-none',
           sizeStyles[size]
         )}
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-          <h2 className="text-lg font-bold text-slate-900">{title}</h2>
+          <h2 id={titleId} className="text-lg font-bold text-slate-900">{title}</h2>
           <button
             onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors"
-            aria-label="Close modal"
+            aria-label="Close"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-5 h-5"
               viewBox="0 0 20 20"
               fill="currentColor"
+              aria-hidden="true"
             >
               <path
                 fillRule="evenodd"

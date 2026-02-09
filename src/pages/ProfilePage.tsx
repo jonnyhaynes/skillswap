@@ -78,7 +78,7 @@ export function ProfilePage() {
         {user.bio ? (
           <p className="text-slate-600 leading-relaxed">{user.bio}</p>
         ) : (
-          <p className="text-slate-400 italic">No bio yet.</p>
+          <p className="text-slate-500 italic">No bio yet.</p>
         )}
       </Card>
 

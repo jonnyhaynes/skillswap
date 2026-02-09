@@ -39,7 +39,7 @@ export function SkillCard({ listing, user }: SkillCardProps) {
             {listing.description}
           </p>
 
-          <div className="flex items-center gap-2.5 text-sm text-slate-400 pt-4 border-t border-slate-50">
+          <div className="flex items-center gap-2.5 text-sm text-slate-500 pt-4 border-t border-slate-50">
             <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
               <div className="rounded-full p-0.5 bg-white">
                 <Avatar
@@ -53,10 +53,12 @@ export function SkillCard({ listing, user }: SkillCardProps) {
               <span className="font-medium text-slate-600">
                 {user.firstName} {user.lastName.charAt(0)}.
               </span>
-              <span className="text-slate-300 mx-1">&middot;</span>
-              <span className="text-slate-400">{user.neighbourhood}</span>
+              <span className="text-slate-300 mx-1" aria-hidden="true">&middot;</span>
+              <span className="text-slate-500">{user.neighbourhood}</span>
             </div>
-            <span className="text-xs text-slate-400 shrink-0">{formatRelativeTime(listing.createdAt)}</span>
+            <span className="text-xs text-slate-500 shrink-0">
+              <time dateTime={listing.createdAt}>{formatRelativeTime(listing.createdAt)}</time>
+            </span>
           </div>
         </div>
       </Card>

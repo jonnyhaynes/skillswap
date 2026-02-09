@@ -125,7 +125,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {displayError && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm" role="alert">
           {displayError}
         </div>
       )}
@@ -203,7 +203,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 
       <div>
         <label htmlFor="postcode" className="block text-sm font-medium text-slate-700 mb-1">
-          Postcode <span className="text-slate-400">(optional)</span>
+          Postcode <span className="text-slate-500">(optional)</span>
         </label>
         <input
           id="postcode"

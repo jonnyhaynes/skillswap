@@ -67,7 +67,7 @@ export function BrowseSkillsPage() {
       />
 
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-3">
           Categories
         </h3>
         <CategoryFilter
@@ -78,7 +78,7 @@ export function BrowseSkillsPage() {
       </div>
 
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-3">
           Type
         </h3>
         <select
@@ -94,7 +94,7 @@ export function BrowseSkillsPage() {
       </div>
 
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-3">
           Sort by
         </h3>
         <select

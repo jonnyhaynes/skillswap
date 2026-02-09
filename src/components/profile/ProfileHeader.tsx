@@ -43,7 +43,7 @@ export function ProfileHeader({
           </div>
 
           <p className="text-slate-500 mt-1">{user.neighbourhood}</p>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 mt-1">
             Member since {formatDate(user.joinedAt)}
           </p>
 

@@ -10,9 +10,9 @@ export function Footer() {
       {!currentUser && (
         <div className="border-b border-slate-800">
           <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 text-center">
-            <h3 className="text-2xl font-bold text-white font-display">
+            <h2 className="text-2xl font-bold text-white font-display">
               Ready to share your skills?
-            </h3>
+            </h2>
             <p className="mt-3 text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
               Join your neighbourhood and start swapping skills with people near you.
             </p>
@@ -32,7 +32,7 @@ export function Footer() {
           {/* Brand */}
           <div className="sm:col-span-2">
             <div className="flex items-center gap-2.5">
-              <svg className="h-7 w-7" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg className="h-7 w-7" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <defs>
                   <linearGradient id="footer-logo-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
                     <stop stopColor="#43c1a6" />
@@ -52,8 +52,8 @@ export function Footer() {
 
           {/* Links */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-3">Explore</h4>
-            <nav className="flex flex-col gap-2 text-sm">
+            <h3 className="text-sm font-semibold text-white mb-3">Explore</h3>
+            <nav className="flex flex-col gap-2 text-sm" aria-label="Explore links">
               <Link to="/browse" className="text-slate-400 hover:text-white transition-colors">Browse Skills</Link>
               <Link to="/skills/new" className="text-slate-400 hover:text-white transition-colors">Post a Skill</Link>
             </nav>
@@ -61,8 +61,8 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-3">Legal</h4>
-            <nav className="flex flex-col gap-2 text-sm">
+            <h3 className="text-sm font-semibold text-white mb-3">Legal</h3>
+            <nav className="flex flex-col gap-2 text-sm" aria-label="Legal links">
               <Link to="/terms" className="text-slate-400 hover:text-white transition-colors">Terms of Service</Link>
               <Link to="/privacy" className="text-slate-400 hover:text-white transition-colors">Privacy Policy</Link>
             </nav>
@@ -71,7 +71,7 @@ export function Footer() {
 
         <div className="mt-12 border-t border-slate-800 pt-8 text-center">
           <p className="text-xs text-slate-500">
-            &copy; {new Date().getFullYear()} SkillSwap. A <a href="https://www.colouringcode.com" target="_blank" rel="noopener noreferrer" className="hover:underline focus:underline">Colouring Code</a> design and build. Made in Rotherham.
+            &copy; {new Date().getFullYear()} SkillSwap. A <a href="https://www.colouringcode.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:underline focus:underline">Colouring Code</a> design and build. Made in Rotherham.
           </p>
         </div>
       </div>

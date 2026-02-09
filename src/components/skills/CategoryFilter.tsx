@@ -21,11 +21,16 @@ export function CategoryFilter({ selected, onChange, layout = 'horizontal' }: Ca
   };
 
   return (
-    <div className={cn(
-      isVertical ? 'flex flex-col gap-1' : 'flex flex-wrap gap-2'
-    )}>
+    <div
+      className={cn(
+        isVertical ? 'flex flex-col gap-1' : 'flex flex-wrap gap-2'
+      )}
+      role="group"
+      aria-label="Filter by category"
+    >
       <button
         onClick={() => onChange([])}
+        aria-pressed={isAllSelected}
         className={cn(
           'inline-flex items-center gap-1.5 font-medium transition-colors text-sm',
           isVertical
@@ -44,6 +49,7 @@ export function CategoryFilter({ selected, onChange, layout = 'horizontal' }: Ca
           <button
             key={category.id}
             onClick={() => toggleCategory(category.id)}
+            aria-pressed={isSelected}
             className={cn(
               'inline-flex items-center gap-1.5 font-medium transition-colors text-sm',
               isVertical
@@ -54,7 +60,7 @@ export function CategoryFilter({ selected, onChange, layout = 'horizontal' }: Ca
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             )}
           >
-            <span>{category.emoji}</span>
+            <span aria-hidden="true">{category.emoji}</span>
             <span>{category.label}</span>
           </button>
         );
