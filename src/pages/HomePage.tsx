@@ -68,31 +68,30 @@ function SparkleIcon() {
 }
 
 const STATS_CONFIG = [
-  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon, iconBg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
-  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon, iconBg: 'bg-indigo-50', iconColor: 'text-indigo-600' },
-  { label: 'Total Listings', key: 'total' as const, icon: ListIcon, iconBg: 'bg-amber-50', iconColor: 'text-amber-600' },
-  { label: 'Categories', key: 'categories' as const, icon: GridIcon, iconBg: 'bg-violet-50', iconColor: 'text-violet-600' },
+  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon },
+  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon },
+  { label: 'Total Listings', key: 'total' as const, icon: ListIcon },
+  { label: 'Categories', key: 'categories' as const, icon: GridIcon },
 ]
 
-function AnimatedStat({ value, label, icon: Icon, iconBg, iconColor, isLast }: { value: number | string; label: string; icon: React.ComponentType<{ className?: string }>; iconBg: string; iconColor: string; isLast: boolean }) {
+function AnimatedStat({ value, label, icon: Icon }: { value: number | string; label: string; icon: React.ComponentType<{ className?: string }> }) {
   const numericValue = typeof value === 'number' ? value : 0
   const isLoading = typeof value === 'string'
   const { count, ref } = useCountUp(numericValue)
 
   return (
-    <div ref={ref} className={`px-5 sm:px-8 py-6 ${!isLast ? 'border-r border-slate-100/80' : ''}`}>
+    <div ref={ref} className="hero-stat group flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3.5 sm:py-4 rounded-2xl transition-all duration-300">
       {/* Icon */}
-      <div className="mb-3">
-        <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center`}>
-          <Icon className={`w-5 h-5 ${iconColor}`} />
+      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/[0.12] flex items-center justify-center shrink-0 ring-1 ring-white/[0.08] group-hover:bg-white/[0.18] transition-colors">
+        <Icon className="w-5 h-5 text-white/90" />
+      </div>
+      {/* Text */}
+      <div className="min-w-0">
+        <div className="text-2xl sm:text-3xl font-extrabold text-white font-display tabular-nums leading-none tracking-tight">
+          {isLoading ? '...' : count}
         </div>
+        <div className="text-[11px] sm:text-xs text-white/60 font-medium mt-1 tracking-wide uppercase">{label}</div>
       </div>
-      {/* Number */}
-      <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display tabular-nums leading-none tracking-tight">
-        {isLoading ? '...' : count}
-      </div>
-      {/* Label */}
-      <div className="text-xs text-slate-500 font-medium mt-2 tracking-wide">{label}</div>
     </div>
   )
 }
@@ -158,109 +157,109 @@ export function HomePage() {
 
   return (
     <div className="space-y-16">
-      {/* Hero + Stats */}
-      <div>
-        {/* Hero banner */}
-        <div className="hero-mesh relative overflow-hidden rounded-3xl pb-16 sm:pb-20">
-          {/* Dot grid pattern */}
-          <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+      {/* Hero with integrated stats */}
+      <div className="hero-mesh relative overflow-hidden rounded-3xl">
+        {/* Dot grid pattern */}
+        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
 
-          {/* Mesh gradient blobs */}
-          <div className="absolute -top-24 -left-24 w-[500px] h-[500px] bg-gradient-to-br from-emerald-400/30 to-transparent rounded-full blur-3xl animate-[drift_20s_ease-in-out_infinite]" />
-          <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-gradient-to-tl from-indigo-400/25 to-transparent rounded-full blur-3xl animate-[drift_25s_ease-in-out_infinite_reverse]" />
-          <div className="absolute top-1/3 right-[10%] w-56 h-56 bg-gradient-to-br from-violet-400/15 to-transparent rounded-full blur-2xl" />
-          <div className="absolute top-[15%] left-[20%] w-40 h-40 bg-gradient-to-tr from-sky-400/10 to-transparent rounded-full blur-xl" />
+        {/* Mesh gradient blobs */}
+        <div className="absolute -top-24 -left-24 w-[500px] h-[500px] bg-gradient-to-br from-emerald-400/30 to-transparent rounded-full blur-3xl animate-[drift_20s_ease-in-out_infinite]" />
+        <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-gradient-to-tl from-indigo-400/25 to-transparent rounded-full blur-3xl animate-[drift_25s_ease-in-out_infinite_reverse]" />
+        <div className="absolute top-1/3 right-[10%] w-56 h-56 bg-gradient-to-br from-violet-400/15 to-transparent rounded-full blur-2xl" />
+        <div className="absolute top-[15%] left-[20%] w-40 h-40 bg-gradient-to-tr from-sky-400/10 to-transparent rounded-full blur-xl" />
 
-          {/* Accent ring decorations */}
-          <div className="absolute top-16 right-[8%] w-24 h-24 rounded-full border border-white/[0.08] hidden sm:block" />
-          <div className="absolute top-10 right-[12%] w-10 h-10 rounded-full border border-white/[0.06] hidden sm:block" />
-          <div className="absolute bottom-28 left-[6%] w-16 h-16 rounded-full border border-white/[0.06] hidden sm:block" />
+        {/* Accent ring decorations */}
+        <div className="absolute top-16 right-[8%] w-24 h-24 rounded-full border border-white/[0.08] hidden sm:block" />
+        <div className="absolute top-10 right-[12%] w-10 h-10 rounded-full border border-white/[0.06] hidden sm:block" />
+        <div className="absolute bottom-28 left-[6%] w-16 h-16 rounded-full border border-white/[0.06] hidden sm:block" />
 
-          {/* Floating plus shapes */}
-          <div className="absolute top-20 left-[15%] text-white/[0.06] text-4xl font-light hidden lg:block select-none" aria-hidden="true">+</div>
-          <div className="absolute bottom-32 right-[18%] text-white/[0.05] text-2xl font-light hidden lg:block select-none" aria-hidden="true">+</div>
+        {/* Floating plus shapes */}
+        <div className="absolute top-20 left-[15%] text-white/[0.06] text-4xl font-light hidden lg:block select-none" aria-hidden="true">+</div>
+        <div className="absolute bottom-32 right-[18%] text-white/[0.05] text-2xl font-light hidden lg:block select-none" aria-hidden="true">+</div>
 
-          {/* Hero content */}
-          <div className="relative z-10 text-center pt-16 sm:pt-24 px-6 pb-8">
-            {currentUser ? (
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-[1.1] tracking-tight">
-                Welcome back, {currentUser.firstName}!
-              </h1>
-            ) : (
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-[1.1] tracking-tight">
-                Learn what you need.
-                <br />
-                <span className="bg-gradient-to-r from-emerald-200 via-teal-200 to-indigo-200 bg-clip-text text-transparent">Teach what you know.</span>
-              </h1>
-            )}
-            <p className="mt-6 text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
-              Swap skills with your neighbours — no money, just knowledge.
-            </p>
+        {/* Hero content */}
+        <div className="relative z-10 text-center pt-16 sm:pt-24 px-6 pb-8">
+          {currentUser ? (
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-[1.1] tracking-tight">
+              Welcome back, {currentUser.firstName}!
+            </h1>
+          ) : (
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-[1.1] tracking-tight">
+              Learn what you need.
+              <br />
+              <span className="bg-gradient-to-r from-emerald-200 via-teal-200 to-indigo-200 bg-clip-text text-transparent">Teach what you know.</span>
+            </h1>
+          )}
+          <p className="mt-6 text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
+            Swap skills with your neighbours — no money, just knowledge.
+          </p>
 
-            {/* Floating glass search bar */}
-            <form onSubmit={handleHeroSearch} className="mt-10 max-w-xl mx-auto" role="search" aria-label="Search skills">
-              <label htmlFor="hero-search" className="sr-only">Search skills</label>
-              <div className="glass-dark rounded-2xl flex items-center gap-3 px-5 py-3.5 ring-1 ring-white/[0.12] shadow-xl shadow-black/10">
-                <SearchIcon className="w-5 h-5 text-white/40 shrink-0" />
-                <input
-                  id="hero-search"
-                  type="search"
-                  value={heroSearch}
-                  onChange={(e) => setHeroSearch(e.target.value)}
-                  placeholder="Photography, Excel, Guitar..."
-                  className="flex-1 bg-transparent text-white placeholder-white/50 text-sm focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  className="shrink-0 rounded-xl bg-white px-5 py-2 text-sm font-bold text-primary-700 hover:bg-white/90 transition-all shadow-sm"
-                >
-                  Search
-                </button>
-              </div>
-            </form>
-
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              {currentUser ? (
-                <>
-                  <Link
-                    to="/skills/new"
-                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-bold text-primary-700 hover:bg-white/90 transition-all shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/15"
-                  >
-                    Offer a Skill
-                  </Link>
-                  <Link
-                    to="/browse"
-                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/20 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm"
-                  >
-                    Find a Skill
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/browse"
-                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-bold text-primary-700 hover:bg-white/90 transition-all shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/15"
-                  >
-                    Find a Skill
-                  </Link>
-                  <Link
-                    to="/skills/new"
-                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/20 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm"
-                  >
-                    Offer a Skill
-                  </Link>
-                </>
-              )}
+          {/* Floating glass search bar */}
+          <form onSubmit={handleHeroSearch} className="mt-10 max-w-xl mx-auto" role="search" aria-label="Search skills">
+            <label htmlFor="hero-search" className="sr-only">Search skills</label>
+            <div className="glass-dark rounded-2xl flex items-center gap-3 px-5 py-3.5 ring-1 ring-white/[0.12] shadow-xl shadow-black/10">
+              <SearchIcon className="w-5 h-5 text-white/40 shrink-0" />
+              <input
+                id="hero-search"
+                type="search"
+                value={heroSearch}
+                onChange={(e) => setHeroSearch(e.target.value)}
+                placeholder="Photography, Excel, Guitar..."
+                className="flex-1 bg-transparent text-white placeholder-white/50 text-sm focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="shrink-0 rounded-xl bg-white px-5 py-2 text-sm font-bold text-primary-700 hover:bg-white/90 transition-all shadow-sm"
+              >
+                Search
+              </button>
             </div>
+          </form>
+
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+            {currentUser ? (
+              <>
+                <Link
+                  to="/skills/new"
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-bold text-primary-700 hover:bg-white/90 transition-all shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/15"
+                >
+                  Offer a Skill
+                </Link>
+                <Link
+                  to="/browse"
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/20 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm"
+                >
+                  Find a Skill
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/browse"
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-bold text-primary-700 hover:bg-white/90 transition-all shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/15"
+                >
+                  Find a Skill
+                </Link>
+                <Link
+                  to="/skills/new"
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/20 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm"
+                >
+                  Offer a Skill
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
-        {/* Stats row — floating overlap */}
-        <div className="relative z-10 -mt-10 sm:-mt-12 mx-2 sm:mx-6 bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.03]">
-          <div className="grid grid-cols-2 lg:grid-cols-4">
-            {STATS_CONFIG.map((stat, i) => (
-              <AnimatedStat key={stat.label} value={statValues[stat.key]} label={stat.label} icon={stat.icon} iconBg={stat.iconBg} iconColor={stat.iconColor} isLast={i === STATS_CONFIG.length - 1} />
-            ))}
+        {/* Stats — integrated into the banner */}
+        <div className="relative z-10 px-4 sm:px-8 pb-6 sm:pb-8 pt-4">
+          <div className="mx-auto max-w-4xl">
+            <div className="hero-stats-divider mb-6" />
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+              {STATS_CONFIG.map((stat) => (
+                <AnimatedStat key={stat.label} value={statValues[stat.key]} label={stat.label} icon={stat.icon} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
