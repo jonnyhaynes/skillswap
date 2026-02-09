@@ -209,6 +209,7 @@ export function mapSwapProposalToDbInsert(
     requested_skill_id: proposal.requestedSkillId,
     message: proposal.message,
     conversation_id: proposal.conversationId,
+    status: 'pending',
   }
 }
 

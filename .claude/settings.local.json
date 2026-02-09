@@ -22,7 +22,8 @@
       "Bash(ls:*)",
       "Bash(npx supabase:*)",
       "Bash(PGPASSWORD=postgres psql:*)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "WebFetch(domain:dribbble.com)"
     ]
   }
 }

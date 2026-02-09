@@ -18,6 +18,7 @@ import {
   subscribeToSwapProposals,
   unsubscribeFromSwaps,
 } from '@/services/swaps'
+import { getOrCreateConversation } from '@/services/messages'
 
 interface SwapsState {
   proposals: SwapProposal[]
@@ -46,7 +47,6 @@ export interface SwapsContextType {
     offeredSkillId: string
     requestedSkillId: string
     message: string
-    conversationId: string
   }) => Promise<SwapProposal | null>
   acceptProposal: (id: string) => Promise<boolean>
   declineProposal: (id: string) => Promise<boolean>
@@ -173,18 +173,18 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
       offeredSkillId: string
       requestedSkillId: string
       message: string
-      conversationId: string
     }): Promise<SwapProposal | null> => {
       dispatch({ type: 'SET_LOADING', loading: true })
       dispatch({ type: 'SET_ERROR', error: null })
       try {
+        const conversation = await getOrCreateConversation(data.proposerId, data.recipientId)
         const proposal = await createProposalService({
           proposerId: data.proposerId,
           recipientId: data.recipientId,
           offeredSkillId: data.offeredSkillId,
           requestedSkillId: data.requestedSkillId,
           message: data.message,
-          conversationId: data.conversationId,
+          conversationId: conversation.id,
         })
         dispatch({ type: 'ADD_PROPOSAL', proposal })
         return proposal

@@ -68,24 +68,36 @@ function SparkleIcon() {
 }
 
 const STATS_CONFIG = [
-  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon },
-  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon },
-  { label: 'Total Listings', key: 'total' as const, icon: ListIcon },
-  { label: 'Categories', key: 'categories' as const, icon: GridIcon },
+  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon, iconBg: 'bg-teal-50', iconColor: 'text-teal-600', badge: '+12.5%' },
+  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon, iconBg: 'bg-blue-50', iconColor: 'text-blue-600', badge: '+8.3%' },
+  { label: 'Total Listings', key: 'total' as const, icon: ListIcon, iconBg: 'bg-amber-50', iconColor: 'text-amber-600', badge: '+2.1%' },
+  { label: 'Categories', key: 'categories' as const, icon: GridIcon, iconBg: 'bg-purple-50', iconColor: 'text-purple-600', badge: null },
 ]
 
-function AnimatedStat({ value, label, icon: Icon }: { value: number | string; label: string; icon: React.ComponentType<{ className?: string }> }) {
+function AnimatedStat({ value, label, icon: Icon, iconBg, iconColor, badge, isLast }: { value: number | string; label: string; icon: React.ComponentType<{ className?: string }>; iconBg: string; iconColor: string; badge: string | null; isLast: boolean }) {
   const numericValue = typeof value === 'number' ? value : 0
   const isLoading = typeof value === 'string'
   const { count, ref } = useCountUp(numericValue)
 
   return (
-    <div ref={ref} className="py-6 px-4 text-center">
-      <Icon className="w-5 h-5 text-white/50 mx-auto" />
-      <div className="text-4xl sm:text-5xl font-extrabold text-white font-display mt-2 tabular-nums">
+    <div ref={ref} className={`px-5 sm:px-6 py-5 ${!isLast ? 'border-r border-slate-100' : ''}`}>
+      {/* Icon row with badge */}
+      <div className="flex items-center gap-2 mb-3">
+        <div className={`w-9 h-9 rounded-xl ${iconBg} flex items-center justify-center`}>
+          <Icon className={`w-4.5 h-4.5 ${iconColor}`} />
+        </div>
+        {badge && (
+          <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">
+            {badge}
+          </span>
+        )}
+      </div>
+      {/* Number */}
+      <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display tabular-nums leading-none">
         {isLoading ? '...' : count}
       </div>
-      <div className="text-xs uppercase tracking-wider text-white/50 mt-2 font-semibold">{label}</div>
+      {/* Label */}
+      <div className="text-xs text-slate-400 font-medium mt-1.5">{label}</div>
     </div>
   )
 }
@@ -152,90 +164,105 @@ export function HomePage() {
   return (
     <div className="space-y-12">
       {/* Hero + Stats */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-800 via-primary-600 to-teal-400">
-        {/* Decorative shapes */}
-        <div className="absolute top-0 left-0 w-72 h-72 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-56 h-56 bg-white/10 rounded-full translate-x-1/3 translate-y-1/3" />
-        <div className="absolute top-1/3 right-1/4 w-32 h-32 bg-white/5 rounded-full" />
-        <div className="absolute bottom-1/3 left-1/6 w-20 h-20 bg-white/5 rounded-full" />
+      <div>
+        {/* Hero banner */}
+        <div className="hero-mesh relative overflow-hidden rounded-2xl pb-16 sm:pb-20">
+          {/* Dot grid pattern */}
+          <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
 
-        {/* Hero content */}
-        <div className="relative z-10 text-center pt-12 sm:pt-16 px-6 pb-8">
-          {currentUser ? (
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-tight">
-              Welcome back, {currentUser.firstName}!
-            </h1>
-          ) : (
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-tight">
-              Learn what you need.
-              <br />
-              <span className="text-teal-200">Teach what you know.</span>
-            </h1>
-          )}
-          <p className="mt-4 text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
-            Swap skills with your neighbours — no money, just knowledge.
-          </p>
+          {/* Mesh gradient blobs */}
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-gradient-to-br from-teal-400/25 to-transparent rounded-full blur-3xl animate-[drift_20s_ease-in-out_infinite]" />
+          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-gradient-to-tl from-cyan-400/20 to-transparent rounded-full blur-3xl animate-[drift_25s_ease-in-out_infinite_reverse]" />
+          <div className="absolute top-1/3 right-[10%] w-48 h-48 bg-gradient-to-br from-emerald-400/15 to-transparent rounded-full blur-2xl" />
+          <div className="absolute top-[15%] left-[20%] w-32 h-32 bg-gradient-to-tr from-sky-400/10 to-transparent rounded-full blur-xl" />
 
-          {/* Floating glass search bar */}
-          <form onSubmit={handleHeroSearch} className="mt-8 max-w-xl mx-auto">
-            <div className="glass-dark rounded-2xl flex items-center gap-3 px-5 py-3">
-              <SearchIcon className="w-5 h-5 text-white/50 shrink-0" />
-              <input
-                type="text"
-                value={heroSearch}
-                onChange={(e) => setHeroSearch(e.target.value)}
-                placeholder="Photography, Excel, Guitar..."
-                className="flex-1 bg-transparent text-white placeholder-white/40 text-sm focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="shrink-0 rounded-xl bg-white px-5 py-2 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors"
-              >
-                Search
-              </button>
-            </div>
-          </form>
+          {/* Accent ring decorations */}
+          <div className="absolute top-16 right-[8%] w-24 h-24 rounded-full border border-white/[0.08] hidden sm:block" />
+          <div className="absolute top-10 right-[12%] w-10 h-10 rounded-full border border-white/[0.06] hidden sm:block" />
+          <div className="absolute bottom-28 left-[6%] w-16 h-16 rounded-full border border-white/[0.06] hidden sm:block" />
 
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+          {/* Floating plus shapes */}
+          <div className="absolute top-20 left-[15%] text-white/[0.06] text-4xl font-light hidden lg:block select-none">+</div>
+          <div className="absolute bottom-32 right-[18%] text-white/[0.05] text-2xl font-light hidden lg:block select-none">+</div>
+
+          {/* Hero content */}
+          <div className="relative z-10 text-center pt-14 sm:pt-20 px-6 pb-8">
             {currentUser ? (
-              <>
-                <Link
-                  to="/skills/new"
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors shadow-lg shadow-primary-900/20"
-                >
-                  Offer a Skill
-                </Link>
-                <Link
-                  to="/browse"
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/30 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
-                >
-                  Find a Skill
-                </Link>
-              </>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-tight">
+                Welcome back, {currentUser.firstName}!
+              </h1>
             ) : (
-              <>
-                <Link
-                  to="/browse"
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors shadow-lg shadow-primary-900/20"
-                >
-                  Find a Skill
-                </Link>
-                <Link
-                  to="/skills/new"
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/30 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
-                >
-                  Offer a Skill
-                </Link>
-              </>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-tight">
+                Learn what you need.
+                <br />
+                <span className="bg-gradient-to-r from-teal-200 to-cyan-200 bg-clip-text text-transparent">Teach what you know.</span>
+              </h1>
             )}
+            <p className="mt-5 text-lg text-white/75 max-w-2xl mx-auto leading-relaxed">
+              Swap skills with your neighbours — no money, just knowledge.
+            </p>
+
+            {/* Floating glass search bar */}
+            <form onSubmit={handleHeroSearch} className="mt-8 max-w-xl mx-auto">
+              <div className="glass-dark rounded-2xl flex items-center gap-3 px-5 py-3 ring-1 ring-white/[0.1]">
+                <SearchIcon className="w-5 h-5 text-white/40 shrink-0" />
+                <input
+                  type="text"
+                  value={heroSearch}
+                  onChange={(e) => setHeroSearch(e.target.value)}
+                  placeholder="Photography, Excel, Guitar..."
+                  className="flex-1 bg-transparent text-white placeholder-white/35 text-sm focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  className="shrink-0 rounded-xl bg-white px-5 py-2 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors"
+                >
+                  Search
+                </button>
+              </div>
+            </form>
+
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+              {currentUser ? (
+                <>
+                  <Link
+                    to="/skills/new"
+                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors shadow-lg shadow-black/10"
+                  >
+                    Offer a Skill
+                  </Link>
+                  <Link
+                    to="/browse"
+                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/25 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                  >
+                    Find a Skill
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/browse"
+                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-white px-7 py-3 text-sm font-semibold text-primary-700 hover:bg-white/90 transition-colors shadow-lg shadow-black/10"
+                  >
+                    Find a Skill
+                  </Link>
+                  <Link
+                    to="/skills/new"
+                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/25 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                  >
+                    Offer a Skill
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Stats bar — glass morphism */}
-        <div className="relative z-10 mx-4 sm:mx-8 mb-6 rounded-xl glass-dark">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
-            {STATS_CONFIG.map((stat) => (
-              <AnimatedStat key={stat.label} value={statValues[stat.key]} label={stat.label} icon={stat.icon} />
+        {/* Stats row — floating overlap */}
+        <div className="relative z-10 -mt-10 sm:-mt-12 mx-2 sm:mx-6 bg-white rounded-2xl shadow-lg shadow-black/[0.04] ring-1 ring-slate-100">
+          <div className="grid grid-cols-2 lg:grid-cols-4">
+            {STATS_CONFIG.map((stat, i) => (
+              <AnimatedStat key={stat.label} value={statValues[stat.key]} label={stat.label} icon={stat.icon} iconBg={stat.iconBg} iconColor={stat.iconColor} badge={stat.badge} isLast={i === STATS_CONFIG.length - 1} />
             ))}
           </div>
         </div>

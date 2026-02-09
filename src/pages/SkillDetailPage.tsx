@@ -14,7 +14,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { Modal } from '@/components/ui/Modal';
 import { SwapProposalForm } from '@/components/swaps/SwapProposalForm';
 import { formatDate } from '@/utils/formatDate';
-import { generateId } from '@/utils/generateId';
+
 
 export function SkillDetailPage() {
   const { skillId } = useParams();
@@ -65,18 +65,21 @@ export function SkillDetailPage() {
     setShowSwapModal(true);
   };
 
-  const handleSwapSubmit = (data: { offeredSkillId: string; requestedSkillId: string; message: string }) => {
+  const handleSwapSubmit = async (data: { offeredSkillId: string; requestedSkillId: string; message: string }) => {
     if (!currentUser || !listing) return;
-    createProposal({
+    const proposal = await createProposal({
       proposerId: currentUser.id,
       recipientId: listing.userId,
       offeredSkillId: data.offeredSkillId,
       requestedSkillId: data.requestedSkillId,
       message: data.message,
-      conversationId: generateId(),
     });
-    addToast('Swap proposal sent successfully!', 'success');
-    setShowSwapModal(false);
+    if (proposal) {
+      addToast('Swap proposal sent successfully!', 'success');
+      setShowSwapModal(false);
+    } else {
+      addToast('Failed to send swap proposal. Please try again.', 'error');
+    }
   };
 
   return (
