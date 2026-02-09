@@ -179,23 +179,41 @@ export function SkillForm({ initialData, onSubmit, onCancel }: SkillFormProps) {
           Location Options
         </legend>
         <div className="flex gap-4">
-          <label className="flex items-center gap-2 cursor-pointer">
+          <label
+            className={cn(
+              'flex-1 relative flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-colors',
+              isInPerson
+                ? 'border-primary-500 bg-primary-50'
+                : 'border-slate-200 hover:bg-slate-50'
+            )}
+          >
             <input
               type="checkbox"
               checked={isInPerson}
               onChange={(e) => setIsInPerson(e.target.checked)}
-              className="rounded border-slate-300 text-primary-500 focus:ring-primary-500"
+              className="rounded text-primary-500 focus:ring-primary-500"
             />
-            <span className="text-sm text-slate-700">Available in person</span>
+            <div>
+              <span className="text-sm font-medium text-slate-900">Available in person</span>
+            </div>
           </label>
-          <label className="flex items-center gap-2 cursor-pointer">
+          <label
+            className={cn(
+              'flex-1 relative flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-colors',
+              isRemote
+                ? 'border-primary-500 bg-primary-50'
+                : 'border-slate-200 hover:bg-slate-50'
+            )}
+          >
             <input
               type="checkbox"
               checked={isRemote}
               onChange={(e) => setIsRemote(e.target.checked)}
-              className="rounded border-slate-300 text-primary-500 focus:ring-primary-500"
+              className="rounded text-primary-500 focus:ring-primary-500"
             />
-            <span className="text-sm text-slate-700">Available remotely</span>
+            <div>
+              <span className="text-sm font-medium text-slate-900">Available remotely</span>
+            </div>
           </label>
         </div>
         {errors.location && (
