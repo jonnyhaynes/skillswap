@@ -18,6 +18,7 @@ export async function submitUserReport(data: {
   reason: ReportReason
   description: string
   evidenceSwapId?: string | null
+  evidenceSkillId?: string | null
 }): Promise<void> {
   const insert = mapUserReportToDbInsert({
     reporterId: data.reporterId,
@@ -25,6 +26,7 @@ export async function submitUserReport(data: {
     reason: data.reason,
     description: data.description,
     evidenceSwapId: data.evidenceSwapId ?? null,
+    evidenceSkillId: data.evidenceSkillId ?? null,
   })
 
   const { error } = await supabase.from('user_reports').insert(insert)

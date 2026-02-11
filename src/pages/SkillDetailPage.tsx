@@ -212,6 +212,7 @@ export function SkillDetailPage() {
                   <ReportUserButton
                     reportedUserId={listingUser.id}
                     reportedUserName={`${listingUser.firstName} ${listingUser.lastName}`}
+                    evidenceSkillId={listing.id}
                   />
                 </div>
               )}

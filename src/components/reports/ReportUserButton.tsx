@@ -5,12 +5,14 @@ interface ReportUserButtonProps {
   reportedUserId: string
   reportedUserName: string
   evidenceSwapId?: string
+  evidenceSkillId?: string
 }
 
 export function ReportUserButton({
   reportedUserId,
   reportedUserName,
   evidenceSwapId,
+  evidenceSkillId,
 }: ReportUserButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -44,6 +46,7 @@ export function ReportUserButton({
         reportedUserId={reportedUserId}
         reportedUserName={reportedUserName}
         evidenceSwapId={evidenceSwapId}
+        evidenceSkillId={evidenceSkillId}
       />
     </>
   )

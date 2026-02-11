@@ -16,6 +16,7 @@ export interface UserReport {
   reason: ReportReason
   description: string
   evidenceSwapId: string | null
+  evidenceSkillId: string | null
   status: ReportStatus
   createdAt: string
 }

@@ -24,7 +24,9 @@
       "Bash(PGPASSWORD=postgres psql:*)",
       "Bash(npx eslint:*)",
       "WebFetch(domain:dribbble.com)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker restart:*)"
     ]
   }
 }

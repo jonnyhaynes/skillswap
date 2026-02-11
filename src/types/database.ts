@@ -368,6 +368,7 @@ export interface Database {
           reason: ReportReasonDb
           description: string
           evidence_swap_id: string | null
+          evidence_skill_id: string | null
           status: ReportStatusDb
           created_at: string
         }
@@ -378,6 +379,7 @@ export interface Database {
           reason: ReportReasonDb
           description: string
           evidence_swap_id?: string | null
+          evidence_skill_id?: string | null
           status?: ReportStatusDb
           created_at?: string
         }
@@ -388,6 +390,7 @@ export interface Database {
           reason?: ReportReasonDb
           description?: string
           evidence_swap_id?: string | null
+          evidence_skill_id?: string | null
           status?: ReportStatusDb
           created_at?: string
         }

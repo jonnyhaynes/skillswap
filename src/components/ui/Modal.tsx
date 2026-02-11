@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { cn } from '@/utils/cn';
 
 interface ModalProps {
@@ -24,11 +24,17 @@ export function Modal({
 }: ModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  const stableOnClose = useCallback(() => {
+    onCloseRef.current();
+  }, []);
 
   useEffect(() => {
     function handleEscape(e: KeyboardEvent) {
       if (e.key === 'Escape') {
-        onClose();
+        stableOnClose();
       }
     }
 
@@ -52,7 +58,7 @@ export function Modal({
         previousFocusRef.current.focus();
       }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, stableOnClose]);
 
   if (!isOpen) return null;
 
@@ -67,14 +73,14 @@ export function Modal({
     >
       <div
         className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
+        onClick={stableOnClose}
         aria-hidden="true"
       />
       <div
         ref={dialogRef}
         tabIndex={-1}
         className={cn(
-          'relative w-full mx-4 bg-white/95 backdrop-blur-2xl rounded-2xl shadow-[0_24px_48px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.05] animate-scale-in focus:outline-none',
+          'relative z-10 w-full mx-4 bg-white/95 backdrop-blur-2xl rounded-2xl shadow-[0_24px_48px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.05] animate-scale-in focus:outline-none',
           sizeStyles[size]
         )}
       >
@@ -100,7 +106,7 @@ export function Modal({
             </svg>
           </button>
         </div>
-        <div className="px-6 py-5">{children}</div>
+        <div className="px-6 py-5 overflow-y-auto max-h-[calc(100vh-12rem)]">{children}</div>
       </div>
     </div>
   );

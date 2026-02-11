@@ -23,6 +23,7 @@ interface ReportUserModalProps {
   reportedUserId: string
   reportedUserName: string
   evidenceSwapId?: string
+  evidenceSkillId?: string
 }
 
 export function ReportUserModal({
@@ -31,6 +32,7 @@ export function ReportUserModal({
   reportedUserId,
   reportedUserName,
   evidenceSwapId,
+  evidenceSkillId,
 }: ReportUserModalProps) {
   const { currentUser } = useAuth()
   const { addToast } = useToast()
@@ -102,10 +104,12 @@ export function ReportUserModal({
         reason,
         description: description.trim(),
         evidenceSwapId: evidenceSwapId ?? null,
+        evidenceSkillId: evidenceSkillId ?? null,
       })
       setShowConfirmation(true)
-    } catch {
-      setError('Something went wrong. Please try again later.')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Something went wrong. Please try again later.'
+      setError(message)
     } finally {
       setLoading(false)
     }
@@ -196,9 +200,9 @@ export function ReportUserModal({
             />
           </div>
 
-          {evidenceSwapId && (
+          {(evidenceSwapId || evidenceSkillId) && (
             <p className="text-xs text-slate-400">
-              This report will be linked to the associated swap for context.
+              This report will be linked to the associated {evidenceSwapId ? 'swap' : 'skill listing'} for context.
             </p>
           )}
 

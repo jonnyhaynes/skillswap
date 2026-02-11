@@ -24,6 +24,7 @@ CREATE TABLE user_reports (
   reason report_reason NOT NULL,
   description TEXT NOT NULL,
   evidence_swap_id UUID REFERENCES swap_proposals(id) ON DELETE SET NULL,
+  evidence_skill_id UUID REFERENCES skill_listings(id) ON DELETE SET NULL,
   status report_status NOT NULL DEFAULT 'open',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   CONSTRAINT different_users CHECK (reporter_id != reported_user_id)

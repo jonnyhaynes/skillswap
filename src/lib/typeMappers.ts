@@ -268,6 +268,7 @@ export function mapDbUserReport(row: UserReportRow): UserReport {
     reason: row.reason,
     description: row.description,
     evidenceSwapId: row.evidence_swap_id,
+    evidenceSkillId: row.evidence_skill_id,
     status: row.status,
     createdAt: row.created_at,
   }
@@ -282,5 +283,6 @@ export function mapUserReportToDbInsert(
     reason: report.reason,
     description: report.description,
     evidence_swap_id: report.evidenceSwapId,
+    evidence_skill_id: report.evidenceSkillId,
   }
 }
