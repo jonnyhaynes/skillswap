@@ -1,5 +1,6 @@
 import type { Review } from '@/types'
 import { StarDisplay } from './StarDisplay'
+import { getRatingColor } from '@/utils/ratingColors'
 
 interface ReviewSummaryProps {
   reviews: Review[]
@@ -36,14 +37,15 @@ export function ReviewSummary({ reviews }: ReviewSummaryProps) {
       <div className="flex-1 space-y-2">
         {distribution.map(({ star, count }) => {
           const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0
+          const barColor = getRatingColor(star)
           return (
             <div key={star} className="flex items-center gap-2">
               <span className="text-sm font-medium text-slate-500 w-6 text-right">{star}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
-                fill="currentColor"
-                className="w-4 h-4 text-accent-400 shrink-0"
+                fill={barColor}
+                className="w-4 h-4 shrink-0"
                 aria-hidden="true"
               >
                 <path
@@ -54,8 +56,8 @@ export function ReviewSummary({ reviews }: ReviewSummaryProps) {
               </svg>
               <div className="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-accent-400 to-accent-300 transition-all duration-300"
-                  style={{ width: `${percentage}%` }}
+                  className="h-full rounded-full transition-all duration-300"
+                  style={{ width: `${percentage}%`, backgroundColor: barColor }}
                 />
               </div>
               <span className="text-sm text-slate-500 w-6 text-right">{count}</span>

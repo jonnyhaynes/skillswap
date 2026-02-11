@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { VerifiedBadge } from './VerifiedBadge'
 import { formatDate } from '@/utils/formatDate'
+import { getRatingColor } from '@/utils/ratingColors'
 
 interface ProfileHeaderProps {
   user: User
@@ -75,8 +76,8 @@ export function ProfileHeader({
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
-                fill="currentColor"
-                className="w-5 h-5 text-amber-400"
+                fill={getRatingColor(averageRating)}
+                className="w-5 h-5"
               >
                 <path
                   fillRule="evenodd"

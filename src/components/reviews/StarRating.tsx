@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import { cn } from '@/utils/cn'
+import { getRatingColor } from '@/utils/ratingColors'
 
 interface StarRatingProps {
   value: number
@@ -37,6 +38,9 @@ export function StarRating({ value, onChange, size = 'md' }: StarRatingProps) {
     [onChange]
   )
 
+  const activeValue = hoverValue || value
+  const activeColor = activeValue > 0 ? getRatingColor(activeValue) : undefined
+
   return (
     <div
       className="inline-flex items-center gap-0.5"
@@ -46,8 +50,7 @@ export function StarRating({ value, onChange, size = 'md' }: StarRatingProps) {
     >
       {Array.from({ length: 5 }, (_, i) => {
         const starValue = i + 1
-        const isActive = starValue <= (hoverValue || value)
-        const isHovering = hoverValue > 0 && starValue <= hoverValue
+        const isActive = starValue <= activeValue
 
         return (
           <button
@@ -65,15 +68,11 @@ export function StarRating({ value, onChange, size = 'md' }: StarRatingProps) {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
-              fill="currentColor"
+              fill={isActive ? activeColor : 'currentColor'}
               className={cn(
                 sizeStyles[size],
                 'transition-colors',
-                isActive
-                  ? isHovering
-                    ? 'text-accent-300'
-                    : 'text-accent-400'
-                  : 'text-slate-200'
+                !isActive && 'text-slate-200'
               )}
               aria-hidden="true"
             >

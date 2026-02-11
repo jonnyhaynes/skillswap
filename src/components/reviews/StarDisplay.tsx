@@ -1,4 +1,5 @@
 import { cn } from '@/utils/cn'
+import { getRatingColor } from '@/utils/ratingColors'
 
 interface StarDisplayProps {
   rating: number
@@ -18,6 +19,7 @@ const STAR_PATH =
 export function StarDisplay({ rating, size = 'md', showValue = false }: StarDisplayProps) {
   const fullStars = Math.floor(rating)
   const fractional = rating - fullStars
+  const starColor = getRatingColor(rating)
 
   return (
     <div className="inline-flex items-center gap-0.5" role="img" aria-label={`${rating.toFixed(1)} out of 5 stars`}>
@@ -29,8 +31,8 @@ export function StarDisplay({ rating, size = 'md', showValue = false }: StarDisp
               key={i}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
-              fill="currentColor"
-              className={cn(sizeStyles[size], 'text-accent-400')}
+              fill={starColor}
+              className={sizeStyles[size]}
               aria-hidden="true"
             >
               <path fillRule="evenodd" d={STAR_PATH} clipRule="evenodd" />
@@ -60,8 +62,8 @@ export function StarDisplay({ rating, size = 'md', showValue = false }: StarDisp
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
-                  fill="currentColor"
-                  className={cn(sizeStyles[size], 'text-accent-400')}
+                  fill={starColor}
+                  className={sizeStyles[size]}
                   aria-hidden="true"
                 >
                   <path fillRule="evenodd" d={STAR_PATH} clipRule="evenodd" />

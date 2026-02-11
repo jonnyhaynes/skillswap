@@ -112,13 +112,13 @@ export async function createReview(
 }
 
 /**
- * Check if a user can review a swap (swap is completed and they haven't reviewed yet)
+ * Check if a user can review a swap (swap is completed or cancelled and they haven't reviewed yet)
  */
 export async function canUserReviewSwap(
   swapId: string,
   userId: string
 ): Promise<boolean> {
-  // Check if swap is completed and user is a participant
+  // Check if swap is completed/cancelled and user is a participant
   const { data: swap, error: swapError } = await supabase
     .from('swap_proposals')
     .select('status, proposer_id, recipient_id')
@@ -129,7 +129,7 @@ export async function canUserReviewSwap(
     return false
   }
 
-  if (swap.status !== 'completed') {
+  if (swap.status !== 'completed' && swap.status !== 'cancelled') {
     return false
   }
 

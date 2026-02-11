@@ -16,7 +16,7 @@ export function ProfilePage() {
   const { userId } = useParams()
   const { getUserById, fetchUserById, currentUser } = useAuth()
   const { getListingsByUser } = useSkills()
-  const { getReviewsForUser, getAverageRating, getTotalReviews } = useReviews()
+  const { getReviewsForUser, getAverageRating, getTotalReviews, fetchReviewsForUser } = useReviews()
   const { proposals } = useSwaps()
   const [loading, setLoading] = useState(false)
   const [fetchAttempted, setFetchAttempted] = useState(false)
@@ -32,6 +32,12 @@ export function ProfilePage() {
       })
     }
   }, [userId, user, fetchAttempted, fetchUserById])
+
+  useEffect(() => {
+    if (userId) {
+      fetchReviewsForUser(userId)
+    }
+  }, [userId, fetchReviewsForUser])
 
   if (loading || (!user && !fetchAttempted)) {
     return (
