@@ -205,7 +205,7 @@ export function HomePage() {
                 value={heroSearch}
                 onChange={(e) => setHeroSearch(e.target.value)}
                 placeholder="Photography, Excel, Guitar..."
-                className="flex-1 bg-transparent text-white placeholder-white/50 text-sm focus:outline-none"
+                className="flex-1 bg-transparent text-white placeholder-white/50 text-sm focus:outline-none py-1"
               />
               <button
                 type="submit"
