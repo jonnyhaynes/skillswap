@@ -15,6 +15,7 @@ import { SwapActions } from '@/components/swaps/SwapActions';
 import { ReviewForm } from '@/components/reviews/ReviewForm';
 import { ReviewCard } from '@/components/reviews/ReviewCard';
 import { VerifiedBadge } from '@/components/profile/VerifiedBadge';
+import { ReportUserButton } from '@/components/reports/ReportUserButton';
 
 export function SwapDetailPage() {
   const { swapId } = useParams();
@@ -255,12 +256,19 @@ export function SwapDetailPage() {
                 <p className="text-sm text-slate-500">{otherUser.neighbourhood}</p>
               </div>
 
-              <div className="mt-4">
+              <div className="mt-4 flex flex-col gap-3">
                 <Link to={`/profile/${otherUser.id}`}>
                   <button className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all duration-200">
                     View Profile
                   </button>
                 </Link>
+                <div className="flex justify-center">
+                  <ReportUserButton
+                    reportedUserId={otherUser.id}
+                    reportedUserName={`${otherUser.firstName} ${otherUser.lastName}`}
+                    evidenceSwapId={swap.id}
+                  />
+                </div>
               </div>
             </Card>
           )}

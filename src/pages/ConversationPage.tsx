@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useMessages } from '@/hooks/useMessages'
 import { Avatar } from '@/components/ui/Avatar'
 import { VerifiedBadge } from '@/components/profile/VerifiedBadge'
+import { ReportUserButton } from '@/components/reports/ReportUserButton'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { MessageThread } from '@/components/messages/MessageThread'
 import { MessageInput } from '@/components/messages/MessageInput'
@@ -133,6 +134,12 @@ export function ConversationPage() {
             {otherUser.firstName} {otherUser.lastName}
           </h1>
           <p className="text-xs text-slate-500">{otherUser.neighbourhood}</p>
+        </div>
+        <div className="ml-auto shrink-0">
+          <ReportUserButton
+            reportedUserId={otherUser.id}
+            reportedUserName={`${otherUser.firstName} ${otherUser.lastName}`}
+          />
         </div>
       </div>
 

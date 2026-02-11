@@ -17,6 +17,8 @@ import type {
   SwapProposalUpdate,
   ReviewRow,
   ReviewInsert,
+  UserReportRow,
+  UserReportInsert,
 } from '@/types/database'
 
 import type {
@@ -26,6 +28,7 @@ import type {
   Message,
   SwapProposal,
   Review,
+  UserReport,
 } from '@/types'
 
 // ============================================
@@ -250,5 +253,34 @@ export function mapReviewToDbInsert(review: Omit<Review, 'id' | 'createdAt'>): R
     rating: review.rating,
     comment: review.comment,
     skill_category: review.skillCategory,
+  }
+}
+
+// ============================================
+// UserReport
+// ============================================
+
+export function mapDbUserReport(row: UserReportRow): UserReport {
+  return {
+    id: row.id,
+    reporterId: row.reporter_id,
+    reportedUserId: row.reported_user_id,
+    reason: row.reason,
+    description: row.description,
+    evidenceSwapId: row.evidence_swap_id,
+    status: row.status,
+    createdAt: row.created_at,
+  }
+}
+
+export function mapUserReportToDbInsert(
+  report: Omit<UserReport, 'id' | 'createdAt' | 'status'>
+): UserReportInsert {
+  return {
+    reporter_id: report.reporterId,
+    reported_user_id: report.reportedUserId,
+    reason: report.reason,
+    description: report.description,
+    evidence_swap_id: report.evidenceSwapId,
   }
 }

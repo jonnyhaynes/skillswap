@@ -36,6 +36,17 @@ export type SwapStatusDb =
   | 'completed'
   | 'cancelled'
 
+export type ReportReasonDb =
+  | 'harassment'
+  | 'inappropriate-content'
+  | 'spam'
+  | 'scam-fraud'
+  | 'dangerous-illegal-activity'
+  | 'safety-concern'
+  | 'other'
+
+export type ReportStatusDb = 'open' | 'under_review' | 'resolved' | 'dismissed'
+
 export interface Database {
   public: {
     Tables: {
@@ -349,6 +360,52 @@ export interface Database {
         }
         Relationships: []
       }
+      user_reports: {
+        Row: {
+          id: string
+          reporter_id: string
+          reported_user_id: string
+          reason: ReportReasonDb
+          description: string
+          evidence_swap_id: string | null
+          status: ReportStatusDb
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          reporter_id: string
+          reported_user_id: string
+          reason: ReportReasonDb
+          description: string
+          evidence_swap_id?: string | null
+          status?: ReportStatusDb
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          reporter_id?: string
+          reported_user_id?: string
+          reason?: ReportReasonDb
+          description?: string
+          evidence_swap_id?: string | null
+          status?: ReportStatusDb
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'user_reports_reporter_id_fkey'
+            columns: ['reporter_id']
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'user_reports_reported_user_id_fkey'
+            columns: ['reported_user_id']
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -361,6 +418,8 @@ export interface Database {
       skill_level: SkillLevelDb
       listing_type: ListingTypeDb
       swap_status: SwapStatusDb
+      report_reason: ReportReasonDb
+      report_status: ReportStatusDb
     }
     CompositeTypes: {
       [_ in never]: never
@@ -397,3 +456,6 @@ export type NeighbourhoodRow = Database['public']['Tables']['neighbourhoods']['R
 
 export type ContactEnquiryRow = Database['public']['Tables']['contact_enquiries']['Row']
 export type ContactEnquiryInsert = Database['public']['Tables']['contact_enquiries']['Insert']
+
+export type UserReportRow = Database['public']['Tables']['user_reports']['Row']
+export type UserReportInsert = Database['public']['Tables']['user_reports']['Insert']

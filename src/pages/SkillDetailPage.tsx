@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
 import { VerifiedBadge } from '@/components/profile/VerifiedBadge';
+import { ReportUserButton } from '@/components/reports/ReportUserButton';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
@@ -193,7 +194,7 @@ export function SkillDetailPage() {
               <p className="text-sm text-slate-500">{listingUser.neighbourhood}</p>
             </div>
 
-            <div className="mt-6 flex flex-col space-y-3">
+            <div className="mt-6 flex flex-col gap-3">
               <Link to={`/profile/${listingUser.id}`}>
                 <Button variant="outline" className="w-full">
                   View Profile
@@ -204,6 +205,15 @@ export function SkillDetailPage() {
                 <Button variant="primary" className="w-full" onClick={handleProposeSwap}>
                   Propose a Swap
                 </Button>
+              )}
+
+              {!isOwner && (
+                <div className="flex justify-center">
+                  <ReportUserButton
+                    reportedUserId={listingUser.id}
+                    reportedUserName={`${listingUser.firstName} ${listingUser.lastName}`}
+                  />
+                </div>
               )}
             </div>
           </Card>

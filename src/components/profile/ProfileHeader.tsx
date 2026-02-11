@@ -4,6 +4,7 @@ import { Avatar } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { VerifiedBadge } from './VerifiedBadge'
+import { ReportUserButton } from '@/components/reports/ReportUserButton'
 import { formatDate } from '@/utils/formatDate'
 import { getRatingColor } from '@/utils/ratingColors'
 
@@ -50,13 +51,20 @@ export function ProfileHeader({
             Member since {formatDate(user.joinedAt)}
           </p>
 
-          {isOwnProfile && (
+          {isOwnProfile ? (
             <div className="mt-4">
               <Link to="/profile/edit">
                 <Button variant="outline" size="sm">
                   Edit Profile
                 </Button>
               </Link>
+            </div>
+          ) : (
+            <div className="mt-4">
+              <ReportUserButton
+                reportedUserId={user.id}
+                reportedUserName={fullName}
+              />
             </div>
           )}
         </div>
