@@ -1,9 +1,13 @@
-export function VerifiedBadge() {
+interface VerifiedBadgeProps {
+  className?: string
+}
+
+export function VerifiedBadge({ className = 'w-4 h-4' }: VerifiedBadgeProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className="w-4 h-4 inline-block"
+      className={`${className} inline-block`}
       role="img"
       aria-label="Verified Neighbour"
     >

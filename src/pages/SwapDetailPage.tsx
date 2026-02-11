@@ -29,9 +29,9 @@ export function SwapDetailPage() {
 
   const swap = swapId ? getSwapById(swapId) : undefined;
 
-  // Fetch reviews for completed swaps so we know if a review already exists
+  // Fetch reviews for completed/cancelled swaps so we know if a review already exists
   useEffect(() => {
-    if (swap?.status === 'completed' && currentUser) {
+    if ((swap?.status === 'completed' || swap?.status === 'cancelled') && currentUser) {
       setReviewsLoaded(false)
       const otherUserId = swap.proposerId === currentUser.id ? swap.recipientId : swap.proposerId
       Promise.all([
@@ -267,8 +267,8 @@ export function SwapDetailPage() {
         </div>
       </div>
 
-      {/* Reviews Section - only for completed swaps */}
-      {swap.status === 'completed' && (
+      {/* Reviews Section - for completed and cancelled swaps */}
+      {(swap.status === 'completed' || swap.status === 'cancelled') && (
         <div className="space-y-4 pt-2">
           <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 font-display">Reviews</h2>
 

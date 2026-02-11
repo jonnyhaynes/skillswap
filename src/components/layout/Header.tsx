@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useMessages } from '@/hooks/useMessages'
 import { useSwaps } from '@/hooks/useSwaps'
 import { Avatar } from '@/components/ui/Avatar'
+import { VerifiedBadge } from '@/components/profile/VerifiedBadge'
 
 const NAV_LINKS = [
   { to: '/browse', label: 'Browse' },
@@ -121,14 +122,21 @@ export function Header() {
                 aria-haspopup="true"
                 aria-label="User menu"
               >
-                <div className="shrink-0 rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
-                  <div className="rounded-full p-0.5 bg-white">
-                    <Avatar
-                      src={currentUser.avatarUrl}
-                      name={`${currentUser.firstName} ${currentUser.lastName}`}
-                      size="sm"
-                    />
+                <div className="shrink-0 relative">
+                  <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+                    <div className="rounded-full p-0.5 bg-white">
+                      <Avatar
+                        src={currentUser.avatarUrl}
+                        name={`${currentUser.firstName} ${currentUser.lastName}`}
+                        size="sm"
+                      />
+                    </div>
                   </div>
+                  {currentUser.isVerifiedNeighbour && (
+                    <span className="absolute -bottom-0.5 -right-0.5">
+                      <VerifiedBadge className="w-3.5 h-3.5" />
+                    </span>
+                  )}
                 </div>
                 <span className="hidden sm:block text-sm font-medium text-slate-700">
                   {currentUser.firstName}

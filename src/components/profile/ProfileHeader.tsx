@@ -36,15 +36,13 @@ export function ProfileHeader({
               />
             </div>
           </div>
-          {user.isVerifiedNeighbour && (
-            <span className="absolute -bottom-0.5 -right-0.5">
-              <VerifiedBadge />
-            </span>
-          )}
         </div>
 
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">{fullName}</h1>
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-1.5">
+            {fullName}
+            {user.isVerifiedNeighbour && <VerifiedBadge className="w-5 h-5" />}
+          </h1>
 
           <p className="text-slate-500 mt-1">{user.neighbourhood}</p>
           <p className="text-sm text-slate-500 mt-1">
