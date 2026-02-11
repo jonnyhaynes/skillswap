@@ -3,7 +3,6 @@ import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Turnstile } from '@/components/ui/Turnstile'
 import { useAuth } from '@/hooks/useAuth'
-import { useToast } from '@/hooks/useToast'
 import { submitUserReport } from '@/services/reports'
 import type { ReportReason } from '@/types'
 
@@ -35,7 +34,6 @@ export function ReportUserModal({
   evidenceSkillId,
 }: ReportUserModalProps) {
   const { currentUser } = useAuth()
-  const { addToast } = useToast()
 
   const [reason, setReason] = useState<ReportReason | ''>('')
   const [description, setDescription] = useState('')
