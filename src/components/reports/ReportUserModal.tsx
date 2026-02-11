@@ -193,7 +193,7 @@ export function ReportUserModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
-              className="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors resize-y placeholder:text-slate-400"
+              className="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors resize-y placeholder:text-slate-400 bg-white"
               placeholder="Please describe what happened and why you're reporting this user..."
             />
           </div>
