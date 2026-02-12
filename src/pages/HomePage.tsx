@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
+import type { SkillListing } from '@/types'
 import { useAuth } from '@/hooks/useAuth'
 import { useSkills } from '@/hooks/useSkills'
 import { useCountUp } from '@/hooks/useCountUp'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { SkillGrid } from '@/components/skills/SkillGrid'
 
 function TargetIcon({ className = 'w-5 h-5' }: { className?: string }) {
@@ -122,6 +124,65 @@ const STEPS = [
     bg: 'bg-violet-50/60',
   },
 ]
+
+function FeaturedSkills({ listings }: { listings: SkillListing[] }) {
+  const { ref, revealed } = useScrollReveal(0.1)
+
+  return (
+    <div ref={ref}>
+      <div className={`flex items-center justify-between mb-8 scroll-reveal${revealed ? ' revealed' : ''}`}>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display tracking-tight">Latest Skills Near You</h2>
+        <Link to="/browse" className="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">
+          View all &rarr;
+        </Link>
+      </div>
+      <SkillGrid listings={listings} staggerReveal={revealed} />
+    </div>
+  )
+}
+
+function HowItWorks() {
+  const { ref, revealed } = useScrollReveal(0.2)
+
+  return (
+    <div ref={ref}>
+      <div className="text-center mb-10">
+        <h2 className={`text-2xl sm:text-3xl font-extrabold text-slate-900 font-display tracking-tight scroll-reveal${revealed ? ' revealed' : ''}`}>
+          How SkillSwap Works
+        </h2>
+        <p className={`mt-2 text-slate-500 text-sm scroll-reveal${revealed ? ' revealed' : ''}`} style={{ animationDelay: '0.1s' }}>
+          Three simple steps to start swapping skills
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+        {/* Connecting line (desktop only) */}
+        <div className="hidden md:block absolute top-16 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-0.5 border-t-2 border-dashed border-slate-200" />
+
+        {STEPS.map((item, index) => {
+          const Icon = item.icon
+          return (
+            <div
+              key={item.step}
+              className={`${item.bg} rounded-2xl p-8 relative ring-1 ring-black/[0.02] scroll-reveal${revealed ? ' revealed' : ''}`}
+              style={{ animationDelay: `${0.15 + index * 0.12}s` }}
+            >
+              <div className="flex items-center gap-3 mb-5">
+                <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${item.gradient} text-white flex items-center justify-center text-base font-bold shrink-0 shadow-lg shadow-primary-500/15`}>
+                  {item.step}
+                </div>
+                <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${item.gradient} flex items-center justify-center shadow-lg shadow-primary-500/15`}>
+                  <Icon />
+                </div>
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 font-display">{item.title}</h3>
+              <p className="mt-2 text-sm text-slate-500 leading-relaxed">{item.desc}</p>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
 
 export function HomePage() {
   const { currentUser } = useAuth()
@@ -265,45 +326,10 @@ export function HomePage() {
       </div>
 
       {/* How it works */}
-      <div>
-        <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display tracking-tight">How SkillSwap Works</h2>
-          <p className="mt-2 text-slate-500 text-sm">Three simple steps to start swapping skills</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-          {/* Connecting line (desktop only) */}
-          <div className="hidden md:block absolute top-16 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-0.5 border-t-2 border-dashed border-slate-200" />
-
-          {STEPS.map((item) => {
-            const Icon = item.icon
-            return (
-              <div key={item.step} className={`${item.bg} rounded-2xl p-8 relative ring-1 ring-black/[0.02]`}>
-                <div className="flex items-center gap-3 mb-5">
-                  <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${item.gradient} text-white flex items-center justify-center text-base font-bold shrink-0 shadow-lg shadow-primary-500/15`}>
-                    {item.step}
-                  </div>
-                  <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${item.gradient} flex items-center justify-center shadow-lg shadow-primary-500/15`}>
-                    <Icon />
-                  </div>
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 font-display">{item.title}</h3>
-                <p className="mt-2 text-sm text-slate-500 leading-relaxed">{item.desc}</p>
-              </div>
-            )
-          })}
-        </div>
-      </div>
+      <HowItWorks />
 
       {/* Featured skills */}
-      <div>
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display tracking-tight">Latest Skills Near You</h2>
-          <Link to="/browse" className="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">
-            View all &rarr;
-          </Link>
-        </div>
-        <SkillGrid listings={featuredSkills} />
-      </div>
+      <FeaturedSkills listings={featuredSkills} />
     </div>
   )
 }

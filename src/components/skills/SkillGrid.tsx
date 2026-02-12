@@ -6,9 +6,11 @@ import { EmptyState } from '@/components/ui/EmptyState'
 
 interface SkillGridProps {
   listings: SkillListing[]
+  /** When true, each card animates in with a stagger. Used on the homepage. */
+  staggerReveal?: boolean
 }
 
-export function SkillGrid({ listings }: SkillGridProps) {
+export function SkillGrid({ listings, staggerReveal }: SkillGridProps) {
   const { fetchUsersByIds } = useAuth()
   const [users, setUsers] = useState<Map<string, User>>(new Map())
   const [loading, setLoading] = useState(listings.length > 0)
@@ -77,10 +79,18 @@ export function SkillGrid({ listings }: SkillGridProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-      {listings.map((listing) => {
+      {listings.map((listing, index) => {
         const user = users.get(listing.userId)
         if (!user) return null
-        return <SkillCard key={listing.id} listing={listing} user={user} />
+        return (
+          <div
+            key={listing.id}
+            className={staggerReveal ? 'scroll-reveal revealed' : undefined}
+            style={staggerReveal ? { animationDelay: `${0.08 + index * 0.08}s` } : undefined}
+          >
+            <SkillCard listing={listing} user={user} />
+          </div>
+        )
       })}
     </div>
   )

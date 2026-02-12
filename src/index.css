@@ -163,6 +163,26 @@ body {
   animation: scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Scroll-triggered reveal — starts hidden, animates in when `.revealed` is added */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-reveal {
+  opacity: 0;
+}
+
+.scroll-reveal.revealed {
+  animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* Gradient text utility */
 .text-gradient {
   background: linear-gradient(135deg, var(--color-gradient-teal-start), var(--color-gradient-teal-end));

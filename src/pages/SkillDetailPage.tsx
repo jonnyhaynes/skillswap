@@ -173,7 +173,7 @@ export function SkillDetailPage() {
           <Card className="p-6">
             <div className="flex flex-col items-center text-center">
               <div className="relative inline-block">
-                <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+                <div className="rounded-full p-0.5 bg-primary-500">
                   <div className="rounded-full p-0.5 bg-white">
                     <Avatar
                       src={listingUser.avatarUrl}

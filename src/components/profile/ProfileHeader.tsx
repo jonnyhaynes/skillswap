@@ -29,7 +29,7 @@ export function ProfileHeader({
     <Card className="p-8">
       <div className="flex flex-col sm:flex-row gap-6">
         <div className="self-start shrink-0 relative">
-          <div className="rounded-full p-1 bg-gradient-to-br from-[#43c1a6] to-[#6366f1] shadow-lg shadow-primary-500/15">
+          <div className="rounded-full p-1 bg-primary-500 shadow-lg shadow-primary-500/15">
             <div className="rounded-full p-0.5 bg-white">
               <Avatar
                 src={user.avatarUrl}

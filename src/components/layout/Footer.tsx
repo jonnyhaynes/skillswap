@@ -18,7 +18,7 @@ export function Footer() {
             </p>
             <Link
               to="/signup"
-              className="mt-6 inline-flex items-center rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 hover:brightness-105 transition-all duration-200"
+              className="mt-6 inline-flex items-center rounded-xl bg-primary-600 hover:bg-primary-700 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-200"
             >
               Get Started
             </Link>

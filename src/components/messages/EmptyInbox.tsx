@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button'
 export function EmptyInbox() {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#43c1a6]/10 to-[#6366f1]/10 flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-2xl bg-primary-50 flex items-center justify-center mb-4">
         <svg
           className="w-8 h-8 text-primary-400"
           fill="none"

@@ -31,7 +31,7 @@ export function ConversationItem({
       aria-label={`Conversation with ${otherUser.firstName} ${otherUser.lastName}${hasUnread ? ', unread messages' : ''}`}
     >
       <div className="shrink-0 relative">
-        <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+        <div className="rounded-full p-0.5 bg-primary-500">
           <div className="rounded-full p-0.5 bg-white">
             <Avatar
               src={otherUser.avatarUrl}
@@ -66,7 +66,7 @@ export function ConversationItem({
           </p>
           {hasUnread && (
             <>
-              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#43c1a6] to-[#6366f1] shrink-0" aria-hidden="true" />
+              <span className="w-2 h-2 rounded-full bg-primary-500 shrink-0" aria-hidden="true" />
               <span className="sr-only">Unread</span>
             </>
           )}

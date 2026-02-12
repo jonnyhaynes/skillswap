@@ -120,8 +120,8 @@ export function ReportUserModal({
       {showConfirmation ? (
         <div className="text-center py-6 space-y-5">
           <div className="relative mx-auto w-20 h-20">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#43c1a6] to-[#6366f1] opacity-15 animate-ping" style={{ animationDuration: '2s' }} />
-            <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#43c1a6] to-[#6366f1] flex items-center justify-center shadow-lg shadow-primary-500/20">
+            <div className="absolute inset-0 rounded-full bg-primary-500 opacity-15 animate-ping" style={{ animationDuration: '2s' }} />
+            <div className="relative w-20 h-20 rounded-full bg-primary-500 flex items-center justify-center shadow-lg shadow-primary-500/20">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-9 h-9 text-white"

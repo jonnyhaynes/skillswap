@@ -114,7 +114,7 @@ export function ConversationPage() {
           </svg>
         </Link>
         <div className="shrink-0 relative">
-          <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+          <div className="rounded-full p-0.5 bg-primary-500">
             <div className="rounded-full p-0.5 bg-white">
               <Avatar
                 src={otherUser.avatarUrl}

@@ -106,7 +106,7 @@ export function Header() {
           {currentUser && (
             <Link
               to="/skills/new"
-              className="hidden sm:inline-flex rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/25 hover:brightness-105 transition-all duration-200"
+              className="hidden sm:inline-flex rounded-xl bg-primary-600 hover:bg-primary-700 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/25 transition-all duration-200"
             >
               + Post a Skill
             </Link>
@@ -123,7 +123,7 @@ export function Header() {
                 aria-label="User menu"
               >
                 <div className="shrink-0 relative">
-                  <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+                  <div className="rounded-full p-0.5 bg-primary-500">
                     <div className="rounded-full p-0.5 bg-white">
                       <Avatar
                         src={currentUser.avatarUrl}
@@ -201,7 +201,7 @@ export function Header() {
               </Link>
               <Link
                 to="/signup"
-                className="hidden sm:inline-flex rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/25 hover:brightness-105 transition-all duration-200"
+                className="hidden sm:inline-flex rounded-xl bg-primary-600 hover:bg-primary-700 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/25 transition-all duration-200"
               >
                 Sign up
               </Link>
@@ -267,7 +267,7 @@ export function Header() {
             <>
               <Link
                 to="/skills/new"
-                className="mt-2 block rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-3 py-2.5 text-center text-sm font-semibold text-white shadow-md shadow-primary-500/20 hover:brightness-105 transition-all duration-200"
+                className="mt-2 block rounded-xl bg-primary-600 hover:bg-primary-700 px-3 py-2.5 text-center text-sm font-semibold text-white shadow-md shadow-primary-500/20 transition-all duration-200"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 + Post a Skill
@@ -293,7 +293,7 @@ export function Header() {
               </Link>
               <Link
                 to="/signup"
-                className="block rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] px-3 py-2.5 text-center text-sm font-semibold text-white shadow-md shadow-primary-500/20 hover:brightness-105 transition-all duration-200"
+                className="block rounded-xl bg-primary-600 hover:bg-primary-700 px-3 py-2.5 text-center text-sm font-semibold text-white shadow-md shadow-primary-500/20 transition-all duration-200"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Sign up

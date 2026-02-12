@@ -42,7 +42,7 @@ export function SkillCard({ listing, user }: SkillCardProps) {
 
           <div className="flex items-center gap-2.5 text-sm text-slate-500 pt-4 border-t border-slate-50">
             <div className="shrink-0 relative">
-              <div className="rounded-full p-0.5 bg-gradient-to-br from-[#43c1a6] to-[#6366f1]">
+              <div className="rounded-full p-0.5 bg-primary-500">
                 <div className="rounded-full p-0.5 bg-white">
                   <Avatar
                     src={user.avatarUrl}

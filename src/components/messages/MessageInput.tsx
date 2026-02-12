@@ -62,7 +62,7 @@ export function MessageInput({
       <button
         onClick={handleSend}
         disabled={disabled || !content.trim()}
-        className="shrink-0 w-10 h-10 rounded-xl bg-gradient-to-r from-[#43c1a6] to-[#6366f1] flex items-center justify-center text-white hover:opacity-90 active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="shrink-0 w-10 h-10 rounded-xl bg-primary-600 hover:bg-primary-700 flex items-center justify-center text-white active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
         aria-label="Send message"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">

@@ -92,7 +92,7 @@ export function SwapTimeline({ swap }: SwapTimelineProps) {
                 className={cn(
                   'w-3 h-3 rounded-full shrink-0',
                   step.reached
-                    ? 'bg-gradient-to-br from-[#43c1a6] to-[#6366f1] border-0'
+                    ? 'bg-primary-500 border-0'
                     : 'bg-white border-2 border-slate-200'
                 )}
               />
@@ -100,7 +100,7 @@ export function SwapTimeline({ swap }: SwapTimelineProps) {
                 <div
                   className={cn(
                     'w-0.5 flex-1 min-h-6',
-                    step.reached ? 'bg-gradient-to-b from-[#43c1a6] to-[#6366f1]' : 'bg-slate-200'
+                    step.reached ? 'bg-primary-500' : 'bg-slate-200'
                   )}
                 />
               )}
