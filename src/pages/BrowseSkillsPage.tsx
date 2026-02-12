@@ -58,12 +58,38 @@ export function BrowseSkillsPage() {
         <div className="lg:grid lg:grid-cols-[260px_1fr] lg:gap-8">
           {/* Sidebar skeleton */}
           <aside className="hidden lg:block">
-            <div className="space-y-4">
-              <div className="h-12 bg-slate-100 rounded-xl animate-pulse" />
-              <div className="space-y-2">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i} className="h-9 bg-slate-100 rounded-lg animate-pulse" />
-                ))}
+            <div className="space-y-6">
+              {/* Search bar */}
+              <div className="h-12 rounded-xl skeleton-shimmer" />
+
+              {/* Categories */}
+              <div>
+                <div className="h-3 w-20 rounded skeleton-shimmer mb-3" />
+                <div className="space-y-1.5">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i} className="h-9 rounded-lg skeleton-shimmer" />
+                  ))}
+                </div>
+              </div>
+
+              {/* Type pills */}
+              <div>
+                <div className="h-3 w-10 rounded skeleton-shimmer mb-3" />
+                <div className="flex gap-1.5">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="h-8 w-16 rounded-lg skeleton-shimmer" />
+                  ))}
+                </div>
+              </div>
+
+              {/* Sort pills */}
+              <div>
+                <div className="h-3 w-14 rounded skeleton-shimmer mb-3" />
+                <div className="flex flex-wrap gap-1.5">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="h-8 w-14 rounded-lg skeleton-shimmer" />
+                  ))}
+                </div>
               </div>
             </div>
           </aside>
