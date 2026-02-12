@@ -154,28 +154,21 @@ function HowItWorks() {
           Three simple steps to start swapping skills
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-        {/* Connecting line (desktop only) */}
-        <div className="hidden md:block absolute top-16 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-0.5 border-t-2 border-dashed border-slate-200" />
-
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 mt-4">
         {STEPS.map((item, index) => {
           const Icon = item.icon
           return (
             <div
               key={item.step}
-              className={`${item.bg} rounded-2xl p-8 relative ring-1 ring-black/[0.02] scroll-reveal${revealed ? ' revealed' : ''}`}
+              className={`${item.bg} rounded-2xl pt-12 pb-8 px-8 relative ring-1 ring-black/[0.02] scroll-reveal${revealed ? ' revealed' : ''}`}
               style={{ animationDelay: `${0.15 + index * 0.12}s` }}
             >
-              <div className="flex items-center gap-3 mb-5">
-                <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${item.gradient} text-white flex items-center justify-center text-base font-bold shrink-0 shadow-lg shadow-primary-500/15`}>
-                  {item.step}
-                </div>
-                <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${item.gradient} flex items-center justify-center shadow-lg shadow-primary-500/15`}>
-                  <Icon />
-                </div>
+              {/* Overlapping icon badge */}
+              <div className={`absolute -top-5 left-8 w-10 h-10 rounded-xl bg-gradient-to-br ${item.gradient} text-white flex items-center justify-center shadow-lg shadow-black/10 ring-4 ring-[#f8fafc]`}>
+                <Icon />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 font-display">{item.title}</h3>
-              <p className="mt-2 text-sm text-slate-500 leading-relaxed">{item.desc}</p>
+              <h3 className="text-lg font-bold text-slate-900 font-display mb-3">{item.title}</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
             </div>
           )
         })}
