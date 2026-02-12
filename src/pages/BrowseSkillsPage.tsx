@@ -5,10 +5,25 @@ import { useSkills } from '@/hooks/useSkills'
 import { useDebounce } from '@/hooks/useDebounce'
 import { filterSkills } from '@/utils/filterSkills'
 import { sortSkills, type SortOption } from '@/utils/sortSkills'
+import { CATEGORIES } from '@/data/categories'
 import { SearchBar } from '@/components/skills/SearchBar'
 import { CategoryFilter } from '@/components/skills/CategoryFilter'
 import { SkillGrid } from '@/components/skills/SkillGrid'
 import { SkeletonGrid } from '@/components/ui/Skeleton'
+import { cn } from '@/utils/cn'
+
+const TYPE_OPTIONS: { value: ListingType | 'all'; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'offered', label: 'Offered' },
+  { value: 'wanted', label: 'Seeking' },
+]
+
+const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+  { value: 'newest', label: 'Newest' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'title-asc', label: 'A–Z' },
+  { value: 'title-desc', label: 'Z–A' },
+]
 
 export function BrowseSkillsPage() {
   const { listings, loading, initialized } = useSkills()
@@ -81,33 +96,46 @@ export function BrowseSkillsPage() {
         <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-3">
           Type
         </h3>
-        <select
-          id="listing-type"
-          value={listingType}
-          onChange={(e) => setListingType(e.target.value as ListingType | 'all')}
-          className="w-full rounded-xl bg-slate-50 border-0 py-2.5 px-3 text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:outline-none transition-colors"
-        >
-          <option value="all">All types</option>
-          <option value="offered">Offered</option>
-          <option value="wanted">Wanted</option>
-        </select>
+        <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter by type">
+          {TYPE_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setListingType(opt.value)}
+              aria-pressed={listingType === opt.value}
+              className={cn(
+                'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
+                listingType === opt.value
+                  ? 'bg-slate-900 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              )}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div>
         <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-3">
           Sort by
         </h3>
-        <select
-          id="sort-by"
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as SortOption)}
-          className="w-full rounded-xl bg-slate-50 border-0 py-2.5 px-3 text-sm text-slate-700 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:outline-none transition-colors"
-        >
-          <option value="newest">Newest first</option>
-          <option value="oldest">Oldest first</option>
-          <option value="title-asc">A–Z</option>
-          <option value="title-desc">Z–A</option>
-        </select>
+        <div className="flex flex-wrap gap-1.5" role="group" aria-label="Sort order">
+          {SORT_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setSortBy(opt.value)}
+              aria-pressed={sortBy === opt.value}
+              className={cn(
+                'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
+                sortBy === opt.value
+                  ? 'bg-slate-900 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              )}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -162,7 +190,28 @@ export function BrowseSkillsPage() {
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm text-slate-500">
               {filteredAndSorted.length} {filteredAndSorted.length === 1 ? 'result' : 'results'}
+              {selectedCategories.length > 0 && (
+                <> in {selectedCategories.map((c) => CATEGORIES.find((cat) => cat.id === c)?.label).filter(Boolean).join(', ')}</>
+              )}
+              {listingType !== 'all' && (
+                <> · {listingType === 'offered' ? 'Offered' : 'Seeking'}</>
+              )}
+              {debouncedQuery && (
+                <> · &ldquo;{debouncedQuery}&rdquo;</>
+              )}
             </span>
+            {activeFilterCount > 0 && (
+              <button
+                onClick={() => {
+                  setSelectedCategories([])
+                  setListingType('all')
+                  setSearchQuery('')
+                }}
+                className="text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors"
+              >
+                Clear filters
+              </button>
+            )}
           </div>
           <SkillGrid listings={filteredAndSorted} />
         </div>
