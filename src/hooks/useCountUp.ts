@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 export function useCountUp(end: number, duration = 1200) {
   const [count, setCount] = useState(0)
+  const [finished, setFinished] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const hasAnimated = useRef(false)
   const isVisible = useRef(false)
@@ -39,7 +40,11 @@ export function useCountUp(end: number, duration = 1200) {
         const progress = Math.min(elapsed / duration, 1)
         const eased = 1 - Math.pow(1 - progress, 3)
         setCount(Math.round(eased * end))
-        if (progress < 1) requestAnimationFrame(tick)
+        if (progress < 1) {
+          requestAnimationFrame(tick)
+        } else {
+          setFinished(true)
+        }
       }
 
       requestAnimationFrame(tick)
@@ -48,5 +53,5 @@ export function useCountUp(end: number, duration = 1200) {
     tryAnimate()
   }, [end, duration])
 
-  return { count, ref }
+  return { count, ref, finished }
 }

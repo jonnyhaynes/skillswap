@@ -1,9 +1,11 @@
-import { Outlet, ScrollRestoration } from 'react-router'
+import { Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { MobileNav } from './MobileNav'
 
 export function RootLayout() {
+  const { pathname } = useLocation()
+
   return (
     <div className="flex min-h-screen flex-col">
       <a
@@ -14,7 +16,7 @@ export function RootLayout() {
       </a>
       <Header />
       <main id="main-content" className="flex-1 pb-16 md:pb-0">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div key={pathname} className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 animate-fade-in">
           <Outlet />
         </div>
       </main>

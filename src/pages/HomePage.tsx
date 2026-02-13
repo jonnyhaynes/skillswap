@@ -79,7 +79,7 @@ const STATS_CONFIG = [
 function AnimatedStat({ value, label, icon: Icon }: { value: number | string; label: string; icon: React.ComponentType<{ className?: string }> }) {
   const numericValue = typeof value === 'number' ? value : 0
   const isLoading = typeof value === 'string'
-  const { count, ref } = useCountUp(numericValue)
+  const { count, ref, finished } = useCountUp(numericValue)
 
   return (
     <div ref={ref} className="hero-stat group flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3.5 sm:py-4 rounded-2xl transition-all duration-300">
@@ -89,7 +89,7 @@ function AnimatedStat({ value, label, icon: Icon }: { value: number | string; la
       </div>
       {/* Text */}
       <div className="min-w-0">
-        <div className="text-2xl sm:text-3xl font-extrabold text-white font-display tabular-nums leading-none tracking-tight">
+        <div className={`text-2xl sm:text-3xl font-extrabold text-white font-display tabular-nums leading-none tracking-tight${finished ? ' stat-pop' : ''}`}>
           {isLoading ? '...' : count}
         </div>
         <div className="text-[11px] sm:text-xs text-white/60 font-medium mt-1 tracking-wide uppercase">{label}</div>

@@ -16,7 +16,7 @@ export function SkillCard({ listing, user }: SkillCardProps) {
   const category = getCategoryInfo(listing.category);
 
   return (
-    <Link to={`/skills/${listing.id}`} className="block group">
+    <Link to={`/skills/${listing.id}`} className="block group h-full">
       <Card hover className="h-full flex flex-col overflow-hidden group-hover:ring-primary-200/60 transition-all duration-300">
         {/* Category colour bar */}
         <div className={`h-1 ${category.barColor}`} />
@@ -25,7 +25,7 @@ export function SkillCard({ listing, user }: SkillCardProps) {
           {/* Top row: category + badge */}
           <div className="flex items-center justify-between mb-3">
             <span className={`text-xs font-semibold uppercase tracking-wide ${category.textColor}`}>
-              {category.emoji} {category.label}
+              <span className="inline-block emoji-wiggle">{category.emoji}</span> {category.label}
             </span>
             <Badge variant={listing.listingType === 'offered' ? 'success' : 'warning'}>
               {listing.listingType === 'offered' ? 'Offering' : 'Seeking'}
@@ -58,11 +58,10 @@ export function SkillCard({ listing, user }: SkillCardProps) {
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <span className="font-medium text-slate-600">
+              <div className="font-medium text-slate-600 truncate">
                 {user.firstName} {user.lastName.charAt(0)}.
-              </span>
-              <span className="text-slate-300 mx-1" aria-hidden="true">&middot;</span>
-              <span className="text-slate-500">{user.neighbourhood}</span>
+              </div>
+              <div className="text-xs text-slate-400 truncate">{user.neighbourhood}</div>
             </div>
             <span className="text-xs text-slate-500 shrink-0">
               <time dateTime={listing.createdAt}>{formatRelativeTime(listing.createdAt)}</time>

@@ -90,6 +90,7 @@ export function SkillGrid({ listings, staggerReveal }: SkillGridProps) {
           >
             <SkillCard listing={listing} user={user} />
           </div>
+
         )
       })}
     </div>
