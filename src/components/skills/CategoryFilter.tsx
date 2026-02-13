@@ -25,7 +25,7 @@ export function CategoryFilter({ selected, onChange, layout = 'horizontal' }: Ca
     <div
       className={cn(
         isGrid
-          ? 'grid grid-cols-3 gap-1.5'
+          ? 'grid grid-cols-2 sm:grid-cols-3 gap-1.5'
           : isVertical
             ? 'flex flex-col gap-1'
             : 'flex flex-wrap gap-2'
@@ -39,9 +39,9 @@ export function CategoryFilter({ selected, onChange, layout = 'horizontal' }: Ca
         className={cn(
           'inline-flex items-center gap-1.5 font-medium transition-colors text-sm',
           isGrid
-            ? 'col-span-3 justify-center rounded-lg px-3 py-2'
+            ? 'col-span-2 sm:col-span-3 justify-center rounded-lg p-2'
             : isVertical
-              ? 'w-full justify-start rounded-lg px-3 py-2'
+              ? 'w-full justify-start rounded-lg p-2'
               : 'rounded-xl px-4 py-2',
           isAllSelected
             ? 'bg-slate-900 text-white'
@@ -60,10 +60,10 @@ export function CategoryFilter({ selected, onChange, layout = 'horizontal' }: Ca
             className={cn(
               'inline-flex items-center gap-1.5 font-medium transition-colors text-sm',
               isGrid
-                ? 'justify-start rounded-lg px-2.5 py-2'
+                ? 'justify-start rounded-lg p-2'
                 : isVertical
-                  ? 'w-full justify-start rounded-lg px-3 py-2'
-                  : 'rounded-xl px-4 py-2',
+                  ? 'w-full justify-start rounded-lg p-2'
+                  : 'rounded-xl p-2',
               isSelected
                 ? `${category.bgColor} ${category.textColor}`
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'

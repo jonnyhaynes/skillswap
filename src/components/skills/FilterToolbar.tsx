@@ -66,7 +66,7 @@ export function FilterToolbar({
         <FilterPopover
           label="Categories"
           activeCount={selectedCategories.length}
-          panelClassName="w-[380px] p-4"
+          panelClassName="sm:w-[380px] sm:p-3"
         >
           <CategoryFilter
             selected={selectedCategories}
@@ -79,7 +79,7 @@ export function FilterToolbar({
         <FilterPopover
           label="Type"
           activeCount={listingType !== 'all' ? 1 : 0}
-          panelClassName="p-3"
+          panelClassName="sm:p-3"
         >
           <div className="flex gap-1.5" role="group" aria-label="Filter by type">
             {TYPE_OPTIONS.map((opt) => (
@@ -110,9 +110,9 @@ export function FilterToolbar({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           }
-          panelClassName="w-[320px] p-4"
+          panelClassName="sm:w-[320px] sm:p-3"
         >
-          <div className="space-y-3">
+          <div className="space-y-2">
             <NeighbourhoodTypeahead
               value={selectedNeighbourhood?.name ?? ''}
               onChange={onNeighbourhoodChange}
@@ -133,7 +133,7 @@ export function FilterToolbar({
         <FilterPopover
           label={`Sort: ${SORT_OPTIONS.find((o) => o.value === sortBy)?.label ?? 'Newest'}`}
           align="right"
-          panelClassName="w-[180px] p-2"
+          panelClassName="sm:w-[180px] sm:p-2"
         >
           <div className="flex flex-col gap-0.5" role="group" aria-label="Sort order">
             {SORT_OPTIONS.map((opt) => {
