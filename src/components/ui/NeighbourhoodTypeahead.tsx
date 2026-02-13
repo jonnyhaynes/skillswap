@@ -34,12 +34,22 @@ export function NeighbourhoodTypeahead({
   const inputId = id || label.toLowerCase().replace(/\s+/g, '-')
   const errorId = error ? `${inputId}-error` : undefined
 
-  // Load fallback neighbourhoods list once (for when API key is missing)
+  // Load fallback neighbourhoods list once (used when API key is missing or API fails)
   useEffect(() => {
-    if (!hasApiKey) {
-      getNeighbourhoods().then(setFallbackResults)
+    getNeighbourhoods().then(setFallbackResults)
+  }, [])
+
+  // Sync query with external value changes (e.g. form reset)
+  useEffect(() => {
+    setQuery(value)
+  }, [value])
+
+  // Clean up debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
     }
-  }, [hasApiKey])
+  }, [])
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -77,9 +87,13 @@ export function NeighbourhoodTypeahead({
       setIsOpen(places.length > 0)
       setActiveIndex(-1)
     } catch {
-      // Silently fail — user can still type manually
-      setResults([])
-      setIsOpen(false)
+      // API failed — fall back to filtering the DB/static list
+      const filtered = fallbackResults
+        .filter((n) => n.toLowerCase().includes(term.toLowerCase()))
+        .slice(0, 10)
+      setResults(filtered.map((n) => ({ name: n, localType: '', county: '' })))
+      setIsOpen(filtered.length > 0)
+      setActiveIndex(-1)
     } finally {
       setLoading(false)
     }
