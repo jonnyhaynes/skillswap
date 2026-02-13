@@ -23,6 +23,9 @@ export async function getNeighbourhoods(): Promise<string[]> {
  * Inserts it if missing; silently succeeds if already present.
  * Call this when a user selects a place from the typeahead,
  * before storing it on their profile.
+ *
+ * Throws on failure so callers can handle FK constraint issues
+ * before attempting to save a profile.
  */
 export async function ensureNeighbourhoodExists(name: string): Promise<void> {
   const trimmed = name.trim()
@@ -33,6 +36,6 @@ export async function ensureNeighbourhoodExists(name: string): Promise<void> {
     .upsert({ name: trimmed }, { onConflict: 'name' })
 
   if (error) {
-    console.error('Failed to ensure neighbourhood exists:', error.message)
+    throw new Error(`Failed to ensure neighbourhood exists: ${error.message}`)
   }
 }
