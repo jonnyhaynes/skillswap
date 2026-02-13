@@ -1,3 +1,14 @@
+/**
+ * Static fallback list of neighbourhoods.
+ *
+ * Primary sources (in priority order):
+ *   1. OS Names API — live typeahead search for any place in Great Britain
+ *   2. Supabase `neighbourhoods` table — stores places users have selected
+ *   3. This array — offline/fallback only
+ *
+ * This list is used when both the API and database are unreachable.
+ * It does NOT need to be kept in sync — the database is the source of truth.
+ */
 export const NEIGHBOURHOODS = [
   'Aston cum Aughton',
   'Aughton Common',
