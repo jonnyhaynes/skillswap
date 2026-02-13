@@ -8,14 +8,23 @@ interface SkillGridProps {
   listings: SkillListing[]
   /** When true, each card animates in with a stagger. Used on the homepage. */
   staggerReveal?: boolean
+  /** Pre-fetched user map. When provided, SkillGrid skips its own user fetch. */
+  preloadedUsers?: Map<string, User>
 }
 
-export function SkillGrid({ listings, staggerReveal }: SkillGridProps) {
+export function SkillGrid({ listings, staggerReveal, preloadedUsers }: SkillGridProps) {
   const { fetchUsersByIds } = useAuth()
-  const [users, setUsers] = useState<Map<string, User>>(new Map())
-  const [loading, setLoading] = useState(listings.length > 0)
+  const [users, setUsers] = useState<Map<string, User>>(preloadedUsers ?? new Map())
+  const [loading, setLoading] = useState(!preloadedUsers && listings.length > 0)
 
   useEffect(() => {
+    // Skip fetching if users were preloaded
+    if (preloadedUsers) {
+      setUsers(preloadedUsers)
+      setLoading(false)
+      return
+    }
+
     if (listings.length === 0) {
       return
     }
@@ -34,11 +43,11 @@ export function SkillGrid({ listings, staggerReveal }: SkillGridProps) {
     return () => {
       cancelled = true
     }
-  }, [listings, fetchUsersByIds])
+  }, [listings, fetchUsersByIds, preloadedUsers])
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse">
             <div className="h-1.5 bg-slate-200" />
@@ -78,7 +87,7 @@ export function SkillGrid({ listings, staggerReveal }: SkillGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
       {listings.map((listing, index) => {
         const user = users.get(listing.userId)
         if (!user) return null

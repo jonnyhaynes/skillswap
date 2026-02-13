@@ -84,7 +84,7 @@ export function FilterPopover({
           role="dialog"
           aria-label={label}
           className={cn(
-            'absolute z-50 mt-2 rounded-2xl bg-white/80 backdrop-blur-xl shadow-lg ring-1 ring-black/[0.06] animate-scale-in',
+            'absolute z-50 mt-2 max-w-[calc(100vw-2rem)] sm:max-w-none rounded-2xl bg-white/80 backdrop-blur-xl shadow-lg ring-1 ring-black/[0.06] animate-scale-in',
             align === 'right' ? 'right-0' : 'left-0',
             panelClassName
           )}
