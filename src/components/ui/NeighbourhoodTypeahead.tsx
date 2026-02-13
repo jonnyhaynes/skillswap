@@ -30,7 +30,7 @@ export function NeighbourhoodTypeahead({
 
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>()
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const inputId = id || label.toLowerCase().replace(/\s+/g, '-')
   const errorId = error ? `${inputId}-error` : undefined
 
