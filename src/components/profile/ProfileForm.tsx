@@ -2,10 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import type { User } from '@/types'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
-import { Select } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
 import { Avatar } from '@/components/ui/Avatar'
-import { getNeighbourhoods } from '@/services/neighbourhoods'
+import { NeighbourhoodTypeahead } from '@/components/ui/NeighbourhoodTypeahead'
+import { ensureNeighbourhoodExists } from '@/services/neighbourhoods'
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
 
@@ -28,19 +28,11 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
   const [bio, setBio] = useState(user.bio)
   const [neighbourhood, setNeighbourhood] = useState(user.neighbourhood)
   const [postcode, setPostcode] = useState(user.postcode)
-  const [neighbourhoodOptions, setNeighbourhoodOptions] = useState<{ value: string; label: string }[]>([])
-
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const [avatarRemoved, setAvatarRemoved] = useState(false)
   const [fileError, setFileError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    getNeighbourhoods().then((names) =>
-      setNeighbourhoodOptions(names.map((n) => ({ value: n, label: n })))
-    )
-  }, [])
 
   // Clean up object URL on unmount or when preview changes
   useEffect(() => {
@@ -92,8 +84,10 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
     setFileError(null)
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    // Ensure the selected neighbourhood exists in the DB
+    await ensureNeighbourhoodExists(neighbourhood)
     onSubmit({
       fields: {
         firstName,
@@ -193,11 +187,9 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Select
-          label="Neighbourhood"
-          options={neighbourhoodOptions}
+        <NeighbourhoodTypeahead
           value={neighbourhood}
-          onChange={(e) => setNeighbourhood(e.target.value)}
+          onChange={setNeighbourhood}
         />
         <Input
           label="Postcode"
