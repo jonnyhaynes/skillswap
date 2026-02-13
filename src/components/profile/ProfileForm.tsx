@@ -86,8 +86,13 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    // Ensure the selected neighbourhood exists in the DB
-    await ensureNeighbourhoodExists(neighbourhood)
+    try {
+      // Ensure the selected neighbourhood exists in the DB
+      await ensureNeighbourhoodExists(neighbourhood)
+    } catch {
+      // If the upsert fails, proceed anyway — the profile update
+      // will fail with a FK error which the caller can handle
+    }
     onSubmit({
       fields: {
         firstName,
