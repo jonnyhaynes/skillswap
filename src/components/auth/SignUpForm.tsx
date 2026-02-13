@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback, type FormEvent } from 'react'
+import { useState, useCallback, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/Button'
 import { Turnstile } from '@/components/ui/Turnstile'
 import { useAuth } from '@/hooks/useAuth'
-import { getNeighbourhoods } from '@/services/neighbourhoods'
+import { ensureNeighbourhoodExists } from '@/services/neighbourhoods'
+import { NeighbourhoodTypeahead } from '@/components/ui/NeighbourhoodTypeahead'
 
 interface SignUpFormProps {
   onSuccess?: () => void
@@ -22,12 +23,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
   })
   const [localError, setLocalError] = useState<string | null>(null)
   const [showConfirmation, setShowConfirmation] = useState(false)
-  const [neighbourhoods, setNeighbourhoods] = useState<string[]>([])
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
-
-  useEffect(() => {
-    getNeighbourhoods().then(setNeighbourhoods)
-  }, [])
 
   const handleTurnstileVerify = useCallback((token: string) => {
     setTurnstileToken(token)
@@ -37,7 +33,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
     setTurnstileToken(null)
   }, [])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -76,7 +72,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
     }
 
     if (!formData.neighbourhood) {
-      setLocalError('Please select a neighbourhood')
+      setLocalError('Please select a neighbourhood from the suggestions')
       return
     }
 
@@ -84,6 +80,9 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
       setLocalError('Please complete the verification check')
       return
     }
+
+    // Ensure the selected neighbourhood exists in the DB (upserts)
+    await ensureNeighbourhoodExists(formData.neighbourhood)
 
     const result = await signUp(formData.email, formData.password, {
       firstName: formData.firstName,
@@ -195,26 +194,13 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
         />
       </div>
 
-      <div>
-        <label htmlFor="neighbourhood" className="block text-sm font-medium text-slate-700 mb-1">
-          Neighbourhood
-        </label>
-        <select
-          id="neighbourhood"
-          name="neighbourhood"
-          required
-          value={formData.neighbourhood}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-        >
-          <option value="">Select a neighbourhood</option>
-          {neighbourhoods.map((n) => (
-            <option key={n} value={n}>
-              {n}
-            </option>
-          ))}
-        </select>
-      </div>
+      <NeighbourhoodTypeahead
+        value={formData.neighbourhood}
+        onChange={(value) =>
+          setFormData((prev) => ({ ...prev, neighbourhood: value }))
+        }
+        required
+      />
 
       <div>
         <label htmlFor="postcode" className="block text-sm font-medium text-slate-700 mb-1">
