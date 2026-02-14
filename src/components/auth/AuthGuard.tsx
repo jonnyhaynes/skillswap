@@ -6,7 +6,7 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children }: AuthGuardProps) {
-  const { currentUser, initialized, loading } = useAuth()
+  const { currentUser, initialized, loading, needsOnboarding } = useAuth()
   const location = useLocation()
 
   // Show loading spinner while checking auth state
@@ -24,6 +24,11 @@ export function AuthGuard({ children }: AuthGuardProps) {
   // Redirect to login if not authenticated
   if (!currentUser) {
     return <Navigate to="/login" state={{ from: location }} replace />
+  }
+
+  // Redirect to onboarding if profile is incomplete (skip if already on onboarding)
+  if (needsOnboarding && location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />
   }
 
   return <>{children}</>

@@ -16,6 +16,7 @@ import { ConversationPage } from '@/pages/ConversationPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { SignUpPage } from '@/pages/SignUpPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
+import { OnboardingPage } from '@/pages/OnboardingPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { TermsOfServicePage } from '@/pages/TermsOfServicePage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
@@ -66,6 +67,16 @@ export const router = createBrowserRouter([
       { path: 'login', Component: LoginPage },
       { path: 'signup', Component: SignUpPage },
       { path: 'forgot-password', Component: ForgotPasswordPage },
+
+      // Onboarding for new OAuth users
+      {
+        path: 'onboarding',
+        element: (
+          <AuthGuard>
+            <OnboardingPage />
+          </AuthGuard>
+        ),
+      },
 
       // Protected routes - require authentication
       {
