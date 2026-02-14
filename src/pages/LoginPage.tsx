@@ -5,13 +5,16 @@ import { useAuth } from '@/hooks/useAuth'
 export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { currentUser, initialized } = useAuth()
+  const { currentUser, initialized, needsOnboarding } = useAuth()
 
   // Get the redirect destination from location state, or default to home
   const from = (location.state as { from?: Location })?.from?.pathname || '/'
 
   // Redirect if already logged in
   if (initialized && currentUser) {
+    if (needsOnboarding) {
+      return <Navigate to="/onboarding" replace />
+    }
     return <Navigate to={from} replace />
   }
 

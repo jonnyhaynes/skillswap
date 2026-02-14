@@ -3,10 +3,13 @@ import { SignUpForm } from '@/components/auth/SignUpForm'
 import { useAuth } from '@/hooks/useAuth'
 
 export function SignUpPage() {
-  const { currentUser, initialized } = useAuth()
+  const { currentUser, initialized, needsOnboarding } = useAuth()
 
   // Redirect if already logged in
   if (initialized && currentUser) {
+    if (needsOnboarding) {
+      return <Navigate to="/onboarding" replace />
+    }
     return <Navigate to="/" replace />
   }
 
