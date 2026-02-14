@@ -68,8 +68,14 @@ export function BrowseSkillsPage() {
   }, [listings])
 
   const referenceCoords = useMemo<NeighbourhoodCoords | null>(() => {
-    if (selectedNeighbourhood?.latitude && selectedNeighbourhood?.longitude) {
-      return { latitude: selectedNeighbourhood.latitude, longitude: selectedNeighbourhood.longitude }
+    if (selectedNeighbourhood) {
+      // Prefer coordinates from the OS API response
+      if (selectedNeighbourhood.latitude && selectedNeighbourhood.longitude) {
+        return { latitude: selectedNeighbourhood.latitude, longitude: selectedNeighbourhood.longitude }
+      }
+      // Fallback: look up coordinates from the neighbourhoods table
+      const dbCoords = neighbourhoodCoordsMap.get(selectedNeighbourhood.name)
+      if (dbCoords) return dbCoords
     }
     if (currentUser?.neighbourhood) {
       const userCoords = neighbourhoodCoordsMap.get(currentUser.neighbourhood)
