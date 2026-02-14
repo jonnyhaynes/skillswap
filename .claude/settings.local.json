@@ -27,7 +27,20 @@
       "Bash(find:*)",
       "Bash(docker exec:*)",
       "Bash(docker restart:*)",
-      "WebFetch(domain:fonts.bunny.net)"
+      "WebFetch(domain:fonts.bunny.net)",
+      "WebFetch(domain:docs.os.uk)",
+      "WebFetch(domain:osdatahub.os.uk)",
+      "WebFetch(domain:labs.os.uk)",
+      "WebFetch(domain:docs.publicsectormapping.gov.scot)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nchore: add OS Names API key placeholder to .env.example\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: add OS Names API searchPlaces service\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: add ensureNeighbourhoodExists upsert function\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: throw on ensureNeighbourhoodExists failure instead of swallowing\n\nCallers need to know if the upsert failed so they can handle the FK\nconstraint error before attempting to save a profile.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: add NeighbourhoodTypeahead component with OS Names API\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "Bash(npm run lint:*)",
+      "Bash(xargs ls:*)"
     ]
   }
 }

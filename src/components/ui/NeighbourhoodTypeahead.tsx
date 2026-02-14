@@ -5,7 +5,7 @@ import { cn } from '@/utils/cn'
 
 interface NeighbourhoodTypeaheadProps {
   value: string
-  onChange: (value: string) => void
+  onChange: (place: PlaceResult | null) => void
   label?: string
   required?: boolean
   id?: string
@@ -105,7 +105,7 @@ export function NeighbourhoodTypeahead({
 
     // Clear selection if user edits after selecting
     if (value && val !== value) {
-      onChange('')
+      onChange(null)
     }
 
     // Debounce the search
@@ -115,7 +115,7 @@ export function NeighbourhoodTypeahead({
 
   function selectPlace(place: PlaceResult) {
     setQuery(place.name)
-    onChange(place.name)
+    onChange(place)
     setIsOpen(false)
     setResults([])
     inputRef.current?.focus()
@@ -148,13 +148,15 @@ export function NeighbourhoodTypeahead({
 
   return (
     <div ref={containerRef} className="relative w-full">
-      <label
-        htmlFor={inputId}
-        className="block text-sm font-semibold text-slate-700 mb-1.5"
-      >
-        {label}
-        {required && <span className="text-red-600 ml-0.5" aria-hidden="true">*</span>}
-      </label>
+      {label && label !== '' && (
+        <label
+          htmlFor={inputId}
+          className="block text-sm font-semibold text-slate-700 mb-1.5"
+        >
+          {label}
+          {required && <span className="text-red-600 ml-0.5" aria-hidden="true">*</span>}
+        </label>
+      )}
       <input
         ref={inputRef}
         id={inputId}

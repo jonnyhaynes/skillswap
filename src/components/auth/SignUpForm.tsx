@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { ensureNeighbourhoodExists } from '@/services/neighbourhoods'
 import { NeighbourhoodTypeahead } from '@/components/ui/NeighbourhoodTypeahead'
 
+
 interface SignUpFormProps {
   onSuccess?: () => void
 }
@@ -24,6 +25,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
   const [localError, setLocalError] = useState<string | null>(null)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  const [neighbourhoodCoords, setNeighbourhoodCoords] = useState<{ latitude?: number; longitude?: number }>({})
 
   const handleTurnstileVerify = useCallback((token: string) => {
     setTurnstileToken(token)
@@ -82,7 +84,11 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
     }
 
     // Ensure the selected neighbourhood exists in the DB (upserts)
-    await ensureNeighbourhoodExists(formData.neighbourhood)
+    await ensureNeighbourhoodExists(
+      formData.neighbourhood,
+      neighbourhoodCoords.latitude,
+      neighbourhoodCoords.longitude,
+    )
 
     const result = await signUp(formData.email, formData.password, {
       firstName: formData.firstName,
@@ -196,9 +202,13 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 
       <NeighbourhoodTypeahead
         value={formData.neighbourhood}
-        onChange={(value) =>
-          setFormData((prev) => ({ ...prev, neighbourhood: value }))
-        }
+        onChange={(place) => {
+          setFormData((prev) => ({ ...prev, neighbourhood: place?.name ?? '' }))
+          setNeighbourhoodCoords({
+            latitude: place?.latitude,
+            longitude: place?.longitude,
+          })
+        }}
         required
       />
 

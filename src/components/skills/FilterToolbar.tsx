@@ -66,12 +66,12 @@ export function FilterToolbar({
         <FilterPopover
           label="Categories"
           activeCount={selectedCategories.length}
-          panelClassName="sm:w-[380px] sm:p-3"
+          panelClassName="sm:w-[260px] sm:p-2"
         >
           <CategoryFilter
             selected={selectedCategories}
             onChange={onCategoriesChange}
-            layout="grid"
+            layout="list"
           />
         </FilterPopover>
 
@@ -79,7 +79,7 @@ export function FilterToolbar({
         <FilterPopover
           label="Type"
           activeCount={listingType !== 'all' ? 1 : 0}
-          panelClassName="sm:p-3"
+          panelClassName="sm:p-2"
         >
           <div className="flex gap-1.5" role="group" aria-label="Filter by type">
             {TYPE_OPTIONS.map((opt) => (
@@ -103,6 +103,7 @@ export function FilterToolbar({
         {/* Location */}
         <FilterPopover
           label="Location"
+          align="right"
           activeCount={selectedNeighbourhood ? 1 : 0}
           icon={
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,7 +111,7 @@ export function FilterToolbar({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           }
-          panelClassName="sm:w-[320px] sm:p-3"
+          panelClassName="sm:w-[320px] sm:p-2"
         >
           <div className="space-y-2">
             <NeighbourhoodTypeahead

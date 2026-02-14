@@ -319,16 +319,22 @@ export interface Database {
         Row: {
           id: string
           name: string
+          latitude: number | null
+          longitude: number | null
           created_at: string
         }
         Insert: {
           id?: string
           name: string
+          latitude?: number | null
+          longitude?: number | null
           created_at?: string
         }
         Update: {
           id?: string
           name?: string
+          latitude?: number | null
+          longitude?: number | null
           created_at?: string
         }
         Relationships: []

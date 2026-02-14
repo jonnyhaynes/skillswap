@@ -7,6 +7,7 @@ import { Avatar } from '@/components/ui/Avatar'
 import { NeighbourhoodTypeahead } from '@/components/ui/NeighbourhoodTypeahead'
 import { ensureNeighbourhoodExists } from '@/services/neighbourhoods'
 
+
 const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
 
 export interface ProfileFormData {
@@ -32,6 +33,7 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const [avatarRemoved, setAvatarRemoved] = useState(false)
   const [fileError, setFileError] = useState<string | null>(null)
+  const [neighbourhoodCoords, setNeighbourhoodCoords] = useState<{ latitude?: number; longitude?: number }>({})
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Clean up object URL on unmount or when preview changes
@@ -88,7 +90,11 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
     e.preventDefault()
     try {
       // Ensure the selected neighbourhood exists in the DB
-      await ensureNeighbourhoodExists(neighbourhood)
+      await ensureNeighbourhoodExists(
+        neighbourhood,
+        neighbourhoodCoords.latitude,
+        neighbourhoodCoords.longitude,
+      )
     } catch {
       // If the upsert fails, proceed anyway — the profile update
       // will fail with a FK error which the caller can handle
@@ -194,7 +200,13 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <NeighbourhoodTypeahead
           value={neighbourhood}
-          onChange={setNeighbourhood}
+          onChange={(place) => {
+            setNeighbourhood(place?.name ?? '')
+            setNeighbourhoodCoords({
+              latitude: place?.latitude,
+              longitude: place?.longitude,
+            })
+          }}
         />
         <Input
           label="Postcode"
