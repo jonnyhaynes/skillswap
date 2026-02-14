@@ -17,6 +17,7 @@ interface AuthState {
   loading: boolean
   initialized: boolean
   error: string | null
+  needsOnboarding: boolean
   // Cache for fetched user profiles
   usersCache: Map<string, AppUser>
 }
@@ -28,6 +29,7 @@ type AuthAction =
   | { type: 'SET_INITIALIZED' }
   | { type: 'UPDATE_PROFILE'; data: Partial<AppUser> }
   | { type: 'CACHE_USERS'; users: AppUser[] }
+  | { type: 'SET_NEEDS_ONBOARDING'; needsOnboarding: boolean }
   | { type: 'LOGOUT' }
 
 export interface AuthContextType {
@@ -43,6 +45,7 @@ export interface AuthContextType {
     captchaToken?: string
   ) => Promise<{ error?: string }>
   signIn: (email: string, password: string, captchaToken?: string) => Promise<{ error?: string }>
+  signInWithOAuth: (provider: 'google' | 'apple') => Promise<{ error?: string }>
   signOut: () => Promise<void>
   resetPassword: (email: string, captchaToken?: string) => Promise<{ error?: string }>
   updateProfile: (data: Partial<AppUser>) => Promise<{ error?: string }>
@@ -50,6 +53,7 @@ export interface AuthContextType {
   fetchUserById: (userId: string) => Promise<AppUser | null>
   fetchUsersByIds: (userIds: string[]) => Promise<AppUser[]>
   clearError: () => void
+  needsOnboarding: boolean
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -87,6 +91,8 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
       action.users.forEach((user) => cache.set(user.id, user))
       return { ...state, usersCache: cache }
     }
+    case 'SET_NEEDS_ONBOARDING':
+      return { ...state, needsOnboarding: action.needsOnboarding }
     case 'LOGOUT':
       return {
         ...state,
@@ -106,6 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading: true,
     initialized: false,
     error: null,
+    needsOnboarding: false,
     usersCache: new Map(),
   })
 
@@ -131,6 +138,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (event === 'SIGNED_IN' && session?.user) {
         getProfile(session.user.id).then((profile) => {
           dispatch({ type: 'SET_SESSION', session, user: profile })
+          // Check if OAuth user needs to complete onboarding
+          if (profile && profile.neighbourhood === 'Unknown') {
+            dispatch({ type: 'SET_NEEDS_ONBOARDING', needsOnboarding: true })
+          }
         })
       } else if (event === 'SIGNED_OUT') {
         dispatch({ type: 'LOGOUT' })
@@ -211,6 +222,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: errorMessage }
       }
 
+      return {}
+    },
+    []
+  )
+
+  const signInWithOAuth = useCallback(
+    async (provider: 'google' | 'apple'): Promise<{ error?: string }> => {
+      dispatch({ type: 'SET_LOADING', loading: true })
+      dispatch({ type: 'SET_ERROR', error: null })
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/`,
+        },
+      })
+
+      if (error) {
+        const errorMessage = getAuthErrorMessage(error)
+        dispatch({ type: 'SET_ERROR', error: errorMessage })
+        return { error: errorMessage }
+      }
+
+      // Browser will redirect — no need to dispatch further
       return {}
     },
     []
@@ -340,6 +375,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         error: state.error,
         signUp,
         signIn,
+        signInWithOAuth,
         signOut,
         resetPassword,
         updateProfile,
@@ -347,6 +383,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         fetchUserById,
         fetchUsersByIds,
         clearError,
+        needsOnboarding: state.needsOnboarding,
       }}
     >
       {children}
