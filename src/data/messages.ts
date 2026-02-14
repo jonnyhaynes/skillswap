@@ -51,6 +51,38 @@ export const conversations: Conversation[] = [
     lastMessageAt: '2026-01-22T16:30:00Z',
     lastMessagePreview: 'The tomato seedlings are coming along brilliantly!',
   },
+  {
+    id: 'conv-7',
+    participantIds: ['user-3', 'user-1'],
+    swapId: 'swap-7',
+    createdAt: '2025-12-12T10:00:00Z',
+    lastMessageAt: '2026-01-15T17:00:00Z',
+    lastMessagePreview: 'Thanks for the website Alex, it looks brilliant!',
+  },
+  {
+    id: 'conv-8',
+    participantIds: ['user-1', 'user-5'],
+    swapId: 'swap-8',
+    createdAt: '2025-12-18T14:00:00Z',
+    lastMessageAt: '2026-01-18T16:00:00Z',
+    lastMessagePreview: 'The bookshelf is rock solid now, cheers Tom!',
+  },
+  {
+    id: 'conv-9',
+    participantIds: ['user-6', 'user-1'],
+    swapId: 'swap-9',
+    createdAt: '2025-12-22T09:00:00Z',
+    lastMessageAt: '2026-01-20T15:00:00Z',
+    lastMessagePreview: 'Danke schön for the React help, Alex!',
+  },
+  {
+    id: 'conv-10',
+    participantIds: ['user-1', 'user-7'],
+    swapId: 'swap-10',
+    createdAt: '2025-12-20T11:00:00Z',
+    lastMessageAt: '2026-01-19T14:00:00Z',
+    lastMessagePreview: 'Portfolio site is live, really happy with it!',
+  },
 ];
 
 export const messages: Message[] = [
@@ -342,6 +374,122 @@ export const messages: Message[] = [
     content:
       'The tomato seedlings are coming along brilliantly! Thanks again for all the gardening wisdom. The photography sessions were so rewarding for me too.',
     sentAt: '2026-01-22T16:30:00Z',
+    isRead: true,
+  },
+
+  // conv-7: James <-> Alex (cooking for web dev)
+  {
+    id: 'msg-32',
+    conversationId: 'conv-7',
+    senderId: 'user-3',
+    content:
+      'Hi Alex! I have been meaning to get a basic website set up for the restaurant. Your web dev skills would be perfect. I can teach you Italian cooking in return - we can use the restaurant kitchen!',
+    sentAt: '2025-12-12T10:00:00Z',
+    isRead: true,
+  },
+  {
+    id: 'msg-33',
+    conversationId: 'conv-7',
+    senderId: 'user-1',
+    content:
+      'James, that sounds amazing! I have been to your place and the food is incredible. Would love to learn some of those pasta techniques. Let us do it!',
+    sentAt: '2025-12-13T09:00:00Z',
+    isRead: true,
+  },
+  {
+    id: 'msg-34',
+    conversationId: 'conv-7',
+    senderId: 'user-3',
+    content:
+      'Thanks for the website Alex, it looks brilliant! Already had a few online reservations come through.',
+    sentAt: '2026-01-15T17:00:00Z',
+    isRead: true,
+  },
+
+  // conv-8: Alex <-> Tom (web dev for carpentry)
+  {
+    id: 'msg-35',
+    conversationId: 'conv-8',
+    senderId: 'user-1',
+    content:
+      'Hi Tom! I have a wobbly bookshelf and a desk that needs some love. Happy to help you set up a website for your carpentry business in return. What do you think?',
+    sentAt: '2025-12-18T14:00:00Z',
+    isRead: true,
+  },
+  {
+    id: 'msg-36',
+    conversationId: 'conv-8',
+    senderId: 'user-5',
+    content:
+      'Sounds like a deal, Alex! Bring the bookshelf round to the workshop on Saturday and we will sort it out. A website would be a game changer for getting new customers.',
+    sentAt: '2025-12-19T11:00:00Z',
+    isRead: true,
+  },
+  {
+    id: 'msg-37',
+    conversationId: 'conv-8',
+    senderId: 'user-1',
+    content:
+      'The bookshelf is rock solid now, cheers Tom! Your website is live too - let me know if you want to tweak anything.',
+    sentAt: '2026-01-18T16:00:00Z',
+    isRead: true,
+  },
+
+  // conv-9: Lena <-> Alex (German for React mentoring)
+  {
+    id: 'msg-38',
+    conversationId: 'conv-9',
+    senderId: 'user-6',
+    content:
+      'Hey Alex, I am building a language learning app and could really use some React guidance. I can offer German lessons in return - always useful if you travel to Berlin!',
+    sentAt: '2025-12-22T09:00:00Z',
+    isRead: true,
+  },
+  {
+    id: 'msg-39',
+    conversationId: 'conv-9',
+    senderId: 'user-1',
+    content:
+      'Hi Lena! I have actually been wanting to learn German for a while. A language app sounds like a great project to mentor on too. Let us set something up!',
+    sentAt: '2025-12-23T10:30:00Z',
+    isRead: true,
+  },
+  {
+    id: 'msg-40',
+    conversationId: 'conv-9',
+    senderId: 'user-6',
+    content:
+      'Danke schön for the React help, Alex! The app is really coming together and my understanding of components has clicked.',
+    sentAt: '2026-01-20T15:00:00Z',
+    isRead: true,
+  },
+
+  // conv-10: Alex <-> David (web dev for photography)
+  {
+    id: 'msg-41',
+    conversationId: 'conv-10',
+    senderId: 'user-1',
+    content:
+      'Hi David! I have seen your photography work and it is stunning. I would love to learn the basics of composition and lighting. Can offer web dev help in return - maybe a portfolio site?',
+    sentAt: '2025-12-20T11:00:00Z',
+    isRead: true,
+  },
+  {
+    id: 'msg-42',
+    conversationId: 'conv-10',
+    senderId: 'user-7',
+    content:
+      'Alex, that would be perfect! I have been needing a proper portfolio site for ages. Happy to teach you photography - we could do some walks around Victoria Park for the practical sessions.',
+    sentAt: '2025-12-21T08:00:00Z',
+    isRead: true,
+  },
+  {
+    id: 'msg-43',
+    conversationId: 'conv-10',
+    senderId: 'user-7',
+    content:
+      'Portfolio site is live, really happy with it! Your photos from last weekend were great too - you have got a real eye for it.',
+    sentAt: '2026-01-19T14:00:00Z',
     isRead: true,
   },
 ];
