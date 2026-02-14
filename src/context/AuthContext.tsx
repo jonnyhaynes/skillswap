@@ -123,6 +123,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (session?.user) {
         const profile = await getProfile(session.user.id)
         dispatch({ type: 'SET_SESSION', session, user: profile })
+        // Check if user needs to complete onboarding
+        if (profile && profile.neighbourhood === 'Unknown') {
+          dispatch({ type: 'SET_NEEDS_ONBOARDING', needsOnboarding: true })
+        }
       } else {
         dispatch({ type: 'SET_SESSION', session: null, user: null })
       }
@@ -290,6 +294,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const updated = await updateProfileService(state.currentUser.id, data)
         dispatch({ type: 'UPDATE_PROFILE', data: updated })
+        // Clear onboarding flag if neighbourhood was updated
+        if (updated.neighbourhood && updated.neighbourhood !== 'Unknown') {
+          dispatch({ type: 'SET_NEEDS_ONBOARDING', needsOnboarding: false })
+        }
         dispatch({ type: 'SET_LOADING', loading: false })
         return {}
       } catch (err) {
