@@ -2,6 +2,7 @@ import { useState, useCallback, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/Button'
 import { Turnstile } from '@/components/ui/Turnstile'
+import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons'
 import { useAuth } from '@/hooks/useAuth'
 import { ensureNeighbourhoodExists } from '@/services/neighbourhoods'
 import { NeighbourhoodTypeahead } from '@/components/ui/NeighbourhoodTypeahead'
@@ -144,6 +145,8 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      <SocialLoginButtons />
+
       {displayError && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm" role="alert">
           {displayError}
