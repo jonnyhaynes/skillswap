@@ -193,14 +193,14 @@ WHERE id = '00000000-0000-0000-0000-000000000001';
 UPDATE public.profiles SET
   avatar_url = 'https://i.pravatar.cc/150?u=maria.santos',
   bio = 'Classically trained guitarist with 15 years of experience. Passionate about flamenco and teaching others to find their rhythm.',
-  is_verified_neighbour = TRUE,
+  is_verified_neighbour = FALSE,
   joined_at = '2025-11-10T14:30:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000002';
 
 UPDATE public.profiles SET
   avatar_url = 'https://i.pravatar.cc/150?u=james.obrien',
   bio = 'Head chef at a local Italian restaurant with a love for sharing recipes. Recently got into food photography and want to level up.',
-  is_verified_neighbour = TRUE,
+  is_verified_neighbour = FALSE,
   joined_at = '2025-11-15T11:00:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000003';
 
@@ -214,7 +214,7 @@ WHERE id = '00000000-0000-0000-0000-000000000004';
 UPDATE public.profiles SET
   avatar_url = 'https://i.pravatar.cc/150?u=tom.williams',
   bio = 'Carpenter with 20 years of experience in furniture restoration. Planning a trip to Barcelona and want to brush up on my Spanish.',
-  is_verified_neighbour = TRUE,
+  is_verified_neighbour = FALSE,
   joined_at = '2025-12-05T16:45:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000005';
 
@@ -228,14 +228,14 @@ WHERE id = '00000000-0000-0000-0000-000000000006';
 UPDATE public.profiles SET
   avatar_url = 'https://i.pravatar.cc/150?u=david.kim',
   bio = 'Professional photographer with a studio in Bramley. Just moved into a place with a garden and have no idea where to start.',
-  is_verified_neighbour = TRUE,
+  is_verified_neighbour = FALSE,
   joined_at = '2025-12-15T13:20:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000007';
 
 UPDATE public.profiles SET
   avatar_url = 'https://i.pravatar.cc/150?u=sarah.johnson',
   bio = 'Allotment enthusiast and community garden organiser. Keen to learn programming so I can build an app for our gardening co-op.',
-  is_verified_neighbour = TRUE,
+  is_verified_neighbour = FALSE,
   joined_at = '2025-12-20T09:30:00Z'
 WHERE id = '00000000-0000-0000-0000-000000000008';
 
@@ -506,6 +506,38 @@ INSERT INTO public.conversations (id, participant_ids, created_at, last_message_
     '2025-12-28T11:00:00Z',
     '2026-01-22T16:30:00Z',
     'The tomato seedlings are coming along brilliantly!'
+  ),
+  -- conv-7: James <-> Alex (cooking for web dev)
+  (
+    '20000000-0000-0000-0000-000000000007',
+    ARRAY['00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000001']::UUID[],
+    '2025-12-12T10:00:00Z',
+    '2026-01-15T17:00:00Z',
+    'Thanks for the website Alex, it looks brilliant!'
+  ),
+  -- conv-8: Alex <-> Tom (web dev for carpentry)
+  (
+    '20000000-0000-0000-0000-000000000008',
+    ARRAY['00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000005']::UUID[],
+    '2025-12-18T14:00:00Z',
+    '2026-01-18T16:00:00Z',
+    'The bookshelf is rock solid now, cheers Tom!'
+  ),
+  -- conv-9: Lena <-> Alex (German for React mentoring)
+  (
+    '20000000-0000-0000-0000-000000000009',
+    ARRAY['00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000001']::UUID[],
+    '2025-12-22T09:00:00Z',
+    '2026-01-20T15:00:00Z',
+    'Danke schön for the React help, Alex!'
+  ),
+  -- conv-10: Alex <-> David (web dev for photography)
+  (
+    '20000000-0000-0000-0000-000000000010',
+    ARRAY['00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000007']::UUID[],
+    '2025-12-20T11:00:00Z',
+    '2026-01-19T14:00:00Z',
+    'Portfolio site is live, really happy with it!'
   );
 
 -- ============================================
@@ -602,6 +634,66 @@ INSERT INTO public.swap_proposals (id, proposer_id, recipient_id, offered_skill_
     '2026-01-22T16:30:00Z',
     '20000000-0000-0000-0000-000000000006',
     TRUE, TRUE
+  ),
+  -- swap-7: James <-> Alex (completed: cooking for web dev)
+  (
+    '30000000-0000-0000-0000-000000000007',
+    '00000000-0000-0000-0000-000000000003',
+    '00000000-0000-0000-0000-000000000001',
+    '10000000-0000-0000-0000-000000000005',
+    '10000000-0000-0000-0000-000000000001',
+    'Hi Alex! I have been meaning to get a basic website set up for the restaurant. Your web dev skills would be perfect. I can teach you Italian cooking in return - we can use the restaurant kitchen!',
+    'completed',
+    '2025-12-12T10:00:00Z',
+    '2025-12-13T09:00:00Z',
+    '2026-01-15T17:00:00Z',
+    '20000000-0000-0000-0000-000000000007',
+    TRUE, TRUE
+  ),
+  -- swap-8: Alex <-> Tom (completed: web dev for carpentry)
+  (
+    '30000000-0000-0000-0000-000000000008',
+    '00000000-0000-0000-0000-000000000001',
+    '00000000-0000-0000-0000-000000000005',
+    '10000000-0000-0000-0000-000000000001',
+    '10000000-0000-0000-0000-000000000009',
+    'Hi Tom! I have a wobbly bookshelf and a desk that needs some love. Happy to help you set up a website for your carpentry business in return. What do you think?',
+    'completed',
+    '2025-12-18T14:00:00Z',
+    '2025-12-19T11:00:00Z',
+    '2026-01-18T16:00:00Z',
+    '20000000-0000-0000-0000-000000000008',
+    TRUE, TRUE
+  ),
+  -- swap-9: Lena <-> Alex (completed: German for React mentoring)
+  (
+    '30000000-0000-0000-0000-000000000009',
+    '00000000-0000-0000-0000-000000000006',
+    '00000000-0000-0000-0000-000000000001',
+    '10000000-0000-0000-0000-000000000011',
+    '10000000-0000-0000-0000-000000000018',
+    'Hey Alex, I am building a language learning app and could really use some React guidance. I can offer German lessons in return - always useful if you travel to Berlin!',
+    'completed',
+    '2025-12-22T09:00:00Z',
+    '2025-12-23T10:30:00Z',
+    '2026-01-20T15:00:00Z',
+    '20000000-0000-0000-0000-000000000009',
+    TRUE, TRUE
+  ),
+  -- swap-10: Alex <-> David (completed: web dev for photography)
+  (
+    '30000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000001',
+    '00000000-0000-0000-0000-000000000007',
+    '10000000-0000-0000-0000-000000000001',
+    '10000000-0000-0000-0000-000000000014',
+    'Hi David! I have seen your photography work and it is stunning. I would love to learn the basics of composition and lighting. Can offer web dev help in return - maybe a portfolio site?',
+    'completed',
+    '2025-12-20T11:00:00Z',
+    '2025-12-21T08:00:00Z',
+    '2026-01-19T14:00:00Z',
+    '20000000-0000-0000-0000-000000000010',
+    TRUE, TRUE
   );
 
 -- ============================================
@@ -614,6 +706,10 @@ UPDATE public.conversations SET swap_id = '30000000-0000-0000-0000-000000000003'
 UPDATE public.conversations SET swap_id = '30000000-0000-0000-0000-000000000004' WHERE id = '20000000-0000-0000-0000-000000000004';
 UPDATE public.conversations SET swap_id = '30000000-0000-0000-0000-000000000005' WHERE id = '20000000-0000-0000-0000-000000000005';
 UPDATE public.conversations SET swap_id = '30000000-0000-0000-0000-000000000006' WHERE id = '20000000-0000-0000-0000-000000000006';
+UPDATE public.conversations SET swap_id = '30000000-0000-0000-0000-000000000007' WHERE id = '20000000-0000-0000-0000-000000000007';
+UPDATE public.conversations SET swap_id = '30000000-0000-0000-0000-000000000008' WHERE id = '20000000-0000-0000-0000-000000000008';
+UPDATE public.conversations SET swap_id = '30000000-0000-0000-0000-000000000009' WHERE id = '20000000-0000-0000-0000-000000000009';
+UPDATE public.conversations SET swap_id = '30000000-0000-0000-0000-000000000010' WHERE id = '20000000-0000-0000-0000-000000000010';
 
 -- ============================================
 -- 7. MESSAGES
@@ -851,6 +947,98 @@ INSERT INTO public.messages (id, conversation_id, sender_id, content, sent_at, i
     '00000000-0000-0000-0000-000000000007',
     'The tomato seedlings are coming along brilliantly! Thanks again for all the gardening wisdom. The photography sessions were so rewarding for me too.',
     '2026-01-22T16:30:00Z', TRUE
+  ),
+
+  -- conv-7: James <-> Alex (cooking for web dev)
+  (
+    '40000000-0000-0000-0000-000000000032',
+    '20000000-0000-0000-0000-000000000007',
+    '00000000-0000-0000-0000-000000000003',
+    'Hi Alex! I have been meaning to get a basic website set up for the restaurant. Your web dev skills would be perfect. I can teach you Italian cooking in return - we can use the restaurant kitchen!',
+    '2025-12-12T10:00:00Z', TRUE
+  ),
+  (
+    '40000000-0000-0000-0000-000000000033',
+    '20000000-0000-0000-0000-000000000007',
+    '00000000-0000-0000-0000-000000000001',
+    'James, that sounds amazing! I have been to your place and the food is incredible. Would love to learn some of those pasta techniques. Let us do it!',
+    '2025-12-13T09:00:00Z', TRUE
+  ),
+  (
+    '40000000-0000-0000-0000-000000000034',
+    '20000000-0000-0000-0000-000000000007',
+    '00000000-0000-0000-0000-000000000003',
+    'Thanks for the website Alex, it looks brilliant! Already had a few online reservations come through.',
+    '2026-01-15T17:00:00Z', TRUE
+  ),
+
+  -- conv-8: Alex <-> Tom (web dev for carpentry)
+  (
+    '40000000-0000-0000-0000-000000000035',
+    '20000000-0000-0000-0000-000000000008',
+    '00000000-0000-0000-0000-000000000001',
+    'Hi Tom! I have a wobbly bookshelf and a desk that needs some love. Happy to help you set up a website for your carpentry business in return. What do you think?',
+    '2025-12-18T14:00:00Z', TRUE
+  ),
+  (
+    '40000000-0000-0000-0000-000000000036',
+    '20000000-0000-0000-0000-000000000008',
+    '00000000-0000-0000-0000-000000000005',
+    'Sounds like a deal, Alex! Bring the bookshelf round to the workshop on Saturday and we will sort it out. A website would be a game changer for getting new customers.',
+    '2025-12-19T11:00:00Z', TRUE
+  ),
+  (
+    '40000000-0000-0000-0000-000000000037',
+    '20000000-0000-0000-0000-000000000008',
+    '00000000-0000-0000-0000-000000000001',
+    'The bookshelf is rock solid now, cheers Tom! Your website is live too - let me know if you want to tweak anything.',
+    '2026-01-18T16:00:00Z', TRUE
+  ),
+
+  -- conv-9: Lena <-> Alex (German for React mentoring)
+  (
+    '40000000-0000-0000-0000-000000000038',
+    '20000000-0000-0000-0000-000000000009',
+    '00000000-0000-0000-0000-000000000006',
+    'Hey Alex, I am building a language learning app and could really use some React guidance. I can offer German lessons in return - always useful if you travel to Berlin!',
+    '2025-12-22T09:00:00Z', TRUE
+  ),
+  (
+    '40000000-0000-0000-0000-000000000039',
+    '20000000-0000-0000-0000-000000000009',
+    '00000000-0000-0000-0000-000000000001',
+    'Hi Lena! I have actually been wanting to learn German for a while. A language app sounds like a great project to mentor on too. Let us set something up!',
+    '2025-12-23T10:30:00Z', TRUE
+  ),
+  (
+    '40000000-0000-0000-0000-000000000040',
+    '20000000-0000-0000-0000-000000000009',
+    '00000000-0000-0000-0000-000000000006',
+    'Danke schön for the React help, Alex! The app is really coming together and my understanding of components has clicked.',
+    '2026-01-20T15:00:00Z', TRUE
+  ),
+
+  -- conv-10: Alex <-> David (web dev for photography)
+  (
+    '40000000-0000-0000-0000-000000000041',
+    '20000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000001',
+    'Hi David! I have seen your photography work and it is stunning. I would love to learn the basics of composition and lighting. Can offer web dev help in return - maybe a portfolio site?',
+    '2025-12-20T11:00:00Z', TRUE
+  ),
+  (
+    '40000000-0000-0000-0000-000000000042',
+    '20000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000007',
+    'Alex, that would be perfect! I have been needing a proper portfolio site for ages. Happy to teach you photography - we could do some walks around Victoria Park for the practical sessions.',
+    '2025-12-21T08:00:00Z', TRUE
+  ),
+  (
+    '40000000-0000-0000-0000-000000000043',
+    '20000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000007',
+    'Portfolio site is live, really happy with it! Your photos from last weekend were great too - you have got a real eye for it.',
+    '2026-01-19T14:00:00Z', TRUE
   );
 
 -- Re-enable the trigger
@@ -903,4 +1091,92 @@ INSERT INTO public.reviews (id, swap_id, reviewer_id, reviewee_id, rating, comme
     'David is a brilliant photographer and a patient teacher. My allotment photos have gone from blurry phone snaps to images our community group actually uses in their newsletter. Only giving 4 stars because I wanted more sessions!',
     'photography',
     '2026-01-23T14:00:00Z'
+  ),
+
+  -- swap-7 reviews: James <-> Alex (cooking for web dev)
+  (
+    '50000000-0000-0000-0000-000000000005',
+    '30000000-0000-0000-0000-000000000007',
+    '00000000-0000-0000-0000-000000000001',
+    '00000000-0000-0000-0000-000000000003',
+    4,
+    'James is an amazing cook and a great teacher. The pasta-making session was a highlight. His restaurant kitchen is a brilliant setup for learning.',
+    'cooking',
+    '2026-01-16T10:00:00Z'
+  ),
+  (
+    '50000000-0000-0000-0000-000000000006',
+    '30000000-0000-0000-0000-000000000007',
+    '00000000-0000-0000-0000-000000000003',
+    '00000000-0000-0000-0000-000000000001',
+    5,
+    'Alex built me a fantastic restaurant website from scratch. He explained everything clearly and even showed me how to update the menu myself. Top-notch swap partner.',
+    'technology',
+    '2026-01-16T11:00:00Z'
+  ),
+
+  -- swap-8 reviews: Alex <-> Tom (web dev for carpentry)
+  (
+    '50000000-0000-0000-0000-000000000007',
+    '30000000-0000-0000-0000-000000000008',
+    '00000000-0000-0000-0000-000000000001',
+    '00000000-0000-0000-0000-000000000005',
+    5,
+    'Tom is a master craftsman. He fixed my bookshelf, taught me how to use a hand plane, and even helped me refinish an old side table. His workshop is incredible.',
+    'diy-repairs',
+    '2026-01-19T09:00:00Z'
+  ),
+  (
+    '50000000-0000-0000-0000-000000000008',
+    '30000000-0000-0000-0000-000000000008',
+    '00000000-0000-0000-0000-000000000005',
+    '00000000-0000-0000-0000-000000000001',
+    5,
+    'Alex helped me build a proper website for my carpentry business with a gallery and contact form. He was patient and made it easy to understand. Already getting enquiries through it!',
+    'technology',
+    '2026-01-19T10:00:00Z'
+  ),
+
+  -- swap-9 reviews: Lena <-> Alex (German for React mentoring)
+  (
+    '50000000-0000-0000-0000-000000000009',
+    '30000000-0000-0000-0000-000000000009',
+    '00000000-0000-0000-0000-000000000001',
+    '00000000-0000-0000-0000-000000000006',
+    4,
+    'Lena is a patient and encouraging German teacher. Her conversational approach works really well and I can already handle basic conversations. Would have loved a few more sessions.',
+    'languages',
+    '2026-01-21T09:00:00Z'
+  ),
+  (
+    '50000000-0000-0000-0000-000000000010',
+    '30000000-0000-0000-0000-000000000009',
+    '00000000-0000-0000-0000-000000000006',
+    '00000000-0000-0000-0000-000000000001',
+    5,
+    'Alex is an excellent React mentor. He helped me understand component architecture and state management for my language app. The code reviews were especially valuable.',
+    'technology',
+    '2026-01-21T10:00:00Z'
+  ),
+
+  -- swap-10 reviews: Alex <-> David (web dev for photography)
+  (
+    '50000000-0000-0000-0000-000000000011',
+    '30000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000001',
+    '00000000-0000-0000-0000-000000000007',
+    5,
+    'David is a phenomenal photography teacher. Understanding composition and lighting has completely changed how I see the world. My Instagram has never looked better!',
+    'photography',
+    '2026-01-20T09:00:00Z'
+  ),
+  (
+    '50000000-0000-0000-0000-000000000012',
+    '30000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000007',
+    '00000000-0000-0000-0000-000000000001',
+    5,
+    'Alex helped me create a stunning portfolio site that really showcases my photography. He has a great eye for design and was brilliant at explaining the technical side.',
+    'technology',
+    '2026-01-20T10:00:00Z'
   );
