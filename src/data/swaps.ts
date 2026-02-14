@@ -97,4 +97,72 @@ export const swaps: SwapProposal[] = [
     proposerCompleted: true,
     recipientCompleted: true,
   },
+  // swap-7: Alex <-> James (web dev for cooking) - completed
+  {
+    id: 'swap-7',
+    proposerId: 'user-3',
+    recipientId: 'user-1',
+    offeredSkillId: 'skill-5',
+    requestedSkillId: 'skill-1',
+    message:
+      'Hi Alex! I have been meaning to get a basic website set up for the restaurant. Your web dev skills would be perfect. I can teach you Italian cooking in return - we can use the restaurant kitchen!',
+    status: 'completed',
+    proposedAt: '2025-12-12T10:00:00Z',
+    respondedAt: '2025-12-13T09:00:00Z',
+    completedAt: '2026-01-15T17:00:00Z',
+    conversationId: 'conv-7',
+    proposerCompleted: true,
+    recipientCompleted: true,
+  },
+  // swap-8: Alex <-> Tom (web dev for carpentry) - completed
+  {
+    id: 'swap-8',
+    proposerId: 'user-1',
+    recipientId: 'user-5',
+    offeredSkillId: 'skill-1',
+    requestedSkillId: 'skill-9',
+    message:
+      'Hi Tom! I have a wobbly bookshelf and a desk that needs some love. Happy to help you set up a website for your carpentry business in return. What do you think?',
+    status: 'completed',
+    proposedAt: '2025-12-18T14:00:00Z',
+    respondedAt: '2025-12-19T11:00:00Z',
+    completedAt: '2026-01-18T16:00:00Z',
+    conversationId: 'conv-8',
+    proposerCompleted: true,
+    recipientCompleted: true,
+  },
+  // swap-9: Alex <-> Lena (React mentoring for German) - completed
+  {
+    id: 'swap-9',
+    proposerId: 'user-6',
+    recipientId: 'user-1',
+    offeredSkillId: 'skill-11',
+    requestedSkillId: 'skill-18',
+    message:
+      'Hey Alex, I am building a language learning app and could really use some React guidance. I can offer German lessons in return - always useful if you travel to Berlin!',
+    status: 'completed',
+    proposedAt: '2025-12-22T09:00:00Z',
+    respondedAt: '2025-12-23T10:30:00Z',
+    completedAt: '2026-01-20T15:00:00Z',
+    conversationId: 'conv-9',
+    proposerCompleted: true,
+    recipientCompleted: true,
+  },
+  // swap-10: Alex <-> David (web dev for photography) - completed
+  {
+    id: 'swap-10',
+    proposerId: 'user-1',
+    recipientId: 'user-7',
+    offeredSkillId: 'skill-1',
+    requestedSkillId: 'skill-14',
+    message:
+      'Hi David! I have seen your photography work and it is stunning. I would love to learn the basics of composition and lighting. Can offer web dev help in return - maybe a portfolio site?',
+    status: 'completed',
+    proposedAt: '2025-12-20T11:00:00Z',
+    respondedAt: '2025-12-21T08:00:00Z',
+    completedAt: '2026-01-19T14:00:00Z',
+    conversationId: 'conv-10',
+    proposerCompleted: true,
+    recipientCompleted: true,
+  },
 ];
