@@ -77,6 +77,14 @@ export function getAuthErrorMessage(error: AuthError): string {
     return 'Too many attempts. Please wait a moment and try again.'
   }
 
+  if (message.includes('provider is not enabled')) {
+    return 'This sign-in method is not currently available. Please try another method.'
+  }
+
+  if (message.includes('oauth')) {
+    return 'There was a problem signing in with your account. Please try again.'
+  }
+
   // Return the original message if no specific handling
   return error.message
 }
