@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { SkillListing, User } from '@/types'
 import { useAuth } from '@/hooks/useAuth'
 import { SkillCard } from './SkillCard'
+import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
 
 interface SkillGridProps {
@@ -110,13 +111,9 @@ export function SkillGrid({ listings, staggerReveal, preloadedUsers, onLoadMore,
 
       {onLoadMore && remainingCount !== undefined && remainingCount > 0 && (
         <div className="mt-8 flex justify-center">
-          <button
-            type="button"
-            onClick={onLoadMore}
-            className="px-6 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-sm"
-          >
+          <Button variant="outline" onClick={onLoadMore}>
             Load more ({remainingCount} remaining)
-          </button>
+          </Button>
         </div>
       )}
     </div>
