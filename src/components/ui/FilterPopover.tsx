@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, type ReactNode } from 'react'
+import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react'
 import { cn } from '@/utils/cn'
 
 interface FilterPopoverProps {
@@ -9,6 +9,10 @@ interface FilterPopoverProps {
   align?: 'left' | 'right'
   /** Optional: extra classes on the popover panel */
   panelClassName?: string
+  /** Controlled open state (for accordion mode) */
+  isOpen?: boolean
+  /** Callback to toggle open state (for accordion mode) */
+  onToggle?: () => void
 }
 
 export function FilterPopover({
@@ -18,22 +22,56 @@ export function FilterPopover({
   children,
   align = 'left',
   panelClassName,
+  isOpen: controlledOpen,
+  onToggle,
 }: FilterPopoverProps) {
-  const [open, setOpen] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+  const isControlled = controlledOpen !== undefined
+  const open = isControlled ? controlledOpen : internalOpen
   const containerRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
+
+  const toggle = useCallback(() => {
+    if (isControlled) {
+      onToggle?.()
+    } else {
+      setInternalOpen((prev) => !prev)
+    }
+  }, [isControlled, onToggle])
+
+  const close = useCallback(() => {
+    if (isControlled) {
+      if (open) onToggle?.()
+    } else {
+      setInternalOpen(false)
+    }
+  }, [isControlled, open, onToggle])
+
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return !window.matchMedia('(min-width: 640px)').matches
+  })
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 640px)')
+    function handleChange(e: MediaQueryListEvent) {
+      setIsMobile(!e.matches)
+    }
+    mq.addEventListener('change', handleChange)
+    return () => mq.removeEventListener('change', handleChange)
+  }, [])
 
   // Close on outside click (desktop only — mobile has backdrop) or Escape
   useEffect(() => {
     if (!open) return
     function handleMouseDown(e: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false)
+        close()
       }
     }
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
-        setOpen(false)
+        close()
         buttonRef.current?.focus()
       }
     }
@@ -43,19 +81,19 @@ export function FilterPopover({
       document.removeEventListener('mousedown', handleMouseDown)
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [open])
+  }, [open, close])
 
-  // Lock body scroll on mobile when open
+  // Lock body scroll on mobile when open (only for bottom sheet mode, not accordion)
   useEffect(() => {
     if (!open) return
-    const mq = window.matchMedia('(min-width: 640px)')
-    if (mq.matches) return // desktop — don't lock scroll
+    if (isControlled) return // accordion mode — no scroll lock
+    if (!isMobile) return // desktop — don't lock scroll
 
     document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = ''
     }
-  }, [open])
+  }, [open, isMobile, isControlled])
 
   const isActive = open || activeCount > 0
 
@@ -64,7 +102,7 @@ export function FilterPopover({
       <button
         ref={buttonRef}
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={toggle}
         aria-expanded={open}
         aria-haspopup="true"
         className={cn(
@@ -91,36 +129,41 @@ export function FilterPopover({
         </svg>
       </button>
 
-      {open && (
+      {/* Desktop: dropdown popover (unchanged) */}
+      {open && !isMobile && (
+        <div
+          role="dialog"
+          aria-label={label}
+          className={cn(
+            'absolute mt-2 rounded-2xl bg-white/80 backdrop-blur-xl shadow-lg ring-1 ring-black/[0.06] animate-scale-in',
+            align === 'right' ? 'right-0' : 'left-0',
+            panelClassName
+          )}
+        >
+          {children}
+        </div>
+      )}
+
+      {/* Controlled mobile (accordion mode): button only — parent renders content */}
+
+      {/* Mobile bottom sheet (uncontrolled mode only) */}
+      {open && isMobile && !isControlled && (
         <>
-          {/* Mobile backdrop */}
           <div
-            className="sm:hidden fixed inset-0 z-40 bg-black/25 backdrop-blur-sm animate-fade-in"
-            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-40 bg-black/25 backdrop-blur-sm animate-fade-in"
+            onClick={close}
             aria-hidden="true"
           />
-
-          {/* Panel: bottom-sheet on mobile, dropdown on desktop */}
           <div
             role="dialog"
             aria-label={label}
-            className={cn(
-              // Mobile: fixed bottom sheet
-              'fixed inset-x-0 bottom-0 z-50 rounded-t-2xl bg-white shadow-[0_-4px_24px_rgba(0,0,0,0.12)] animate-slide-up',
-              'max-h-[80vh] overflow-y-auto',
-              // Desktop: absolute dropdown
-              'sm:absolute sm:inset-auto sm:bottom-auto sm:mt-2 sm:rounded-2xl sm:bg-white/80 sm:backdrop-blur-xl sm:shadow-lg sm:ring-1 sm:ring-black/[0.06] sm:animate-scale-in',
-              'sm:max-h-none sm:overflow-visible',
-              align === 'right' ? 'sm:right-0' : 'sm:left-0',
-              panelClassName
-            )}
+            className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl bg-white shadow-[0_-4px_24px_rgba(0,0,0,0.12)] animate-slide-up max-h-[80vh] overflow-y-auto"
           >
-            {/* Mobile header with close button */}
-            <div className="sm:hidden flex items-center justify-between px-4 pt-4 pb-2 border-b border-slate-100">
+            <div className="flex items-center justify-between px-4 pt-4 pb-2 border-b border-slate-100">
               <span className="text-sm font-semibold text-slate-700">{label}</span>
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={close}
                 className="rounded-lg p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
                 aria-label="Close"
               >
@@ -129,9 +172,7 @@ export function FilterPopover({
                 </svg>
               </button>
             </div>
-
-            {/* Content — extra padding on mobile */}
-            <div className="p-4 sm:p-0">
+            <div className="p-4">
               {children}
             </div>
           </div>
