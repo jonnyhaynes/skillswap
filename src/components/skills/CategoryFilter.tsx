@@ -56,6 +56,8 @@ export function CategoryFilter({ selected, onChange, layout = 'horizontal' }: Ca
           />
         </div>
 
+        <p className="mb-2 text-xs text-slate-400">You can select multiple categories</p>
+
         {/* Scrollable single-column list */}
         <div className="max-h-[260px] overflow-y-auto -mx-0.5 px-0.5">
           {/* All option */}

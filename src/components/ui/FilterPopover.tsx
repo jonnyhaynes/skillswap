@@ -20,6 +20,8 @@ export function FilterPopover({
   panelClassName,
 }: FilterPopoverProps) {
   const [open, setOpen] = useState(false)
+  const [keyboardOffset, setKeyboardOffset] = useState(0)
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight)
   const containerRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -54,6 +56,34 @@ export function FilterPopover({
     document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = ''
+    }
+  }, [open])
+
+  // Adjust bottom-sheet position when on-screen keyboard is visible.
+  // Note: matchMedia is checked once on open — orientation changes while
+  // the sheet is open are not tracked (acceptable trade-off for simplicity).
+  useEffect(() => {
+    if (!open) return
+    const mq = window.matchMedia('(min-width: 640px)')
+    if (mq.matches) return
+
+    const vv = window.visualViewport
+    if (!vv) return
+
+    const handleResize = () => {
+      const offset = window.innerHeight - vv.height - vv.offsetTop
+      setKeyboardOffset(Math.max(0, offset))
+      setViewportHeight(vv.height)
+    }
+
+    handleResize()
+    vv.addEventListener('resize', handleResize)
+    vv.addEventListener('scroll', handleResize)
+    return () => {
+      vv.removeEventListener('resize', handleResize)
+      vv.removeEventListener('scroll', handleResize)
+      setKeyboardOffset(0)
+      setViewportHeight(window.innerHeight)
     }
   }, [open])
 
@@ -106,7 +136,7 @@ export function FilterPopover({
             aria-label={label}
             className={cn(
               // Mobile: fixed bottom sheet
-              'fixed inset-x-0 bottom-0 z-50 rounded-t-2xl bg-white shadow-[0_-4px_24px_rgba(0,0,0,0.12)] animate-slide-up',
+              'fixed inset-x-0 bottom-0 z-50 rounded-t-2xl bg-white shadow-[0_-4px_24px_rgba(0,0,0,0.12)] animate-slide-up transition-[bottom,max-height] duration-200 ease-out',
               'max-h-[80vh] overflow-y-auto',
               // Desktop: absolute dropdown
               'sm:absolute sm:inset-auto sm:bottom-auto sm:mt-2 sm:rounded-2xl sm:bg-white/80 sm:backdrop-blur-xl sm:shadow-lg sm:ring-1 sm:ring-black/[0.06] sm:animate-scale-in',
@@ -114,9 +144,23 @@ export function FilterPopover({
               align === 'right' ? 'sm:right-0' : 'sm:left-0',
               panelClassName
             )}
+            style={
+              keyboardOffset > 0
+                ? {
+                    bottom: `${keyboardOffset}px`,
+                    maxHeight: `calc(${viewportHeight}px * 0.8)`,
+                    transition: 'bottom 0.2s ease-out, max-height 0.2s ease-out',
+                  }
+                : undefined
+            }
           >
+            {/* Drag handle */}
+            <div className="sm:hidden flex justify-center pt-3 pb-1" aria-hidden="true">
+              <div className="h-1 w-8 rounded-full bg-slate-300" />
+            </div>
+
             {/* Mobile header with close button */}
-            <div className="sm:hidden flex items-center justify-between px-4 pt-4 pb-2 border-b border-slate-100">
+            <div className="sm:hidden flex items-center justify-between px-4 pt-1 pb-2 border-b border-slate-100">
               <span className="text-sm font-semibold text-slate-700">{label}</span>
               <button
                 type="button"
@@ -131,7 +175,7 @@ export function FilterPopover({
             </div>
 
             {/* Content — extra padding on mobile */}
-            <div className="p-4 sm:p-0">
+            <div className="p-4 safe-area-bottom sm:p-0">
               {children}
             </div>
           </div>
