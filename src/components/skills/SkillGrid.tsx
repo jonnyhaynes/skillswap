@@ -47,7 +47,7 @@ export function SkillGrid({ listings, staggerReveal, preloadedUsers }: SkillGrid
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse">
             <div className="h-1.5 bg-slate-200" />
@@ -87,7 +87,7 @@ export function SkillGrid({ listings, staggerReveal, preloadedUsers }: SkillGrid
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {listings.map((listing, index) => {
         const user = users.get(listing.userId)
         if (!user) return null

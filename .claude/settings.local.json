@@ -40,7 +40,11 @@
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: add NeighbourhoodTypeahead component with OS Names API\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git commit:*)",
       "Bash(npm run lint:*)",
-      "Bash(xargs ls:*)"
+      "Bash(xargs ls:*)",
+      "Bash(git checkout:*)",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap branch:*)",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap status)",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap log --oneline -1)"
     ]
   }
 }

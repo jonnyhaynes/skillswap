@@ -8,6 +8,7 @@ import { SkillBadge } from '@/components/skills/SkillBadge';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
+import { AvatarLightbox } from '@/components/ui/AvatarLightbox';
 import { VerifiedBadge } from '@/components/profile/VerifiedBadge';
 import { ReportUserButton } from '@/components/reports/ReportUserButton';
 import { Button } from '@/components/ui/Button';
@@ -28,6 +29,7 @@ export function SkillDetailPage() {
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showSwapModal, setShowSwapModal] = useState(false);
+  const [showAvatarLightbox, setShowAvatarLightbox] = useState(false);
 
   const listing = skillId ? getListingById(skillId) : undefined;
   const listingUser = listing ? getUserById(listing.userId) : undefined;
@@ -173,7 +175,12 @@ export function SkillDetailPage() {
           <Card className="p-6">
             <div className="flex flex-col items-center text-center">
               <div className="relative inline-block">
-                <div className="rounded-full p-0.5 bg-primary-500">
+                <button
+                  type="button"
+                  onClick={() => setShowAvatarLightbox(true)}
+                  className="rounded-full p-0.5 bg-primary-500 cursor-pointer hover:shadow-lg hover:shadow-primary-500/25 transition-shadow"
+                  aria-label={`View ${listingUser.firstName} ${listingUser.lastName}'s avatar`}
+                >
                   <div className="rounded-full p-0.5 bg-white">
                     <Avatar
                       src={listingUser.avatarUrl}
@@ -181,7 +188,7 @@ export function SkillDetailPage() {
                       size="lg"
                     />
                   </div>
-                </div>
+                </button>
                 {listingUser.isVerifiedNeighbour && (
                   <span className="absolute -bottom-0.5 -right-0.5">
                     <VerifiedBadge />
@@ -265,6 +272,13 @@ export function SkillDetailPage() {
           />
         </Modal>
       )}
+
+      <AvatarLightbox
+        isOpen={showAvatarLightbox}
+        onClose={() => setShowAvatarLightbox(false)}
+        src={listingUser.avatarUrl}
+        name={`${listingUser.firstName} ${listingUser.lastName}`}
+      />
     </div>
   );
 }

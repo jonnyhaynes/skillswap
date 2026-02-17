@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { Link } from 'react-router'
 import type { User } from '@/types'
 import { Avatar } from '@/components/ui/Avatar'
+import { AvatarLightbox } from '@/components/ui/AvatarLightbox'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { VerifiedBadge } from './VerifiedBadge'
@@ -24,12 +26,18 @@ export function ProfileHeader({
   isOwnProfile,
 }: ProfileHeaderProps) {
   const fullName = `${user.firstName} ${user.lastName}`
+  const [showAvatarLightbox, setShowAvatarLightbox] = useState(false)
 
   return (
     <Card className="p-8">
       <div className="flex flex-col sm:flex-row gap-6">
         <div className="self-start shrink-0 relative">
-          <div className="rounded-full p-1 bg-primary-500 shadow-lg shadow-primary-500/15">
+          <button
+            type="button"
+            onClick={() => setShowAvatarLightbox(true)}
+            className="rounded-full p-1 bg-primary-500 shadow-lg shadow-primary-500/15 cursor-pointer hover:shadow-xl hover:shadow-primary-500/25 transition-shadow"
+            aria-label={`View ${fullName}'s avatar`}
+          >
             <div className="rounded-full p-0.5 bg-white">
               <Avatar
                 src={user.avatarUrl}
@@ -37,7 +45,7 @@ export function ProfileHeader({
                 size="xl"
               />
             </div>
-          </div>
+          </button>
         </div>
 
         <div className="flex-1 min-w-0">
@@ -102,6 +110,13 @@ export function ProfileHeader({
           <p className="text-sm text-slate-500">Reviews</p>
         </div>
       </div>
+
+      <AvatarLightbox
+        isOpen={showAvatarLightbox}
+        onClose={() => setShowAvatarLightbox(false)}
+        src={user.avatarUrl}
+        name={fullName}
+      />
     </Card>
   )
 }
