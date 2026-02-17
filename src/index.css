@@ -270,11 +270,6 @@ input[type="search"]::-webkit-search-cancel-button {
   color: #0f172a;
 }
 
-/* Safe area bottom padding for devices with home indicator */
-.safe-area-bottom {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
 /* Respect reduced motion preferences (WCAG 2.3.3) */
 @media (prefers-reduced-motion: reduce) {
   *,
