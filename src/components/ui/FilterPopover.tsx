@@ -20,7 +20,6 @@ export function FilterPopover({
   panelClassName,
 }: FilterPopoverProps) {
   const [open, setOpen] = useState(false)
-  const [keyboardOffset, setKeyboardOffset] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -55,31 +54,6 @@ export function FilterPopover({
     document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = ''
-    }
-  }, [open])
-
-  // Track mobile keyboard height via visualViewport
-  useEffect(() => {
-    if (!open) return
-    const mq = window.matchMedia('(min-width: 640px)')
-    if (mq.matches) return // desktop — no keyboard issues
-
-    const vv = window.visualViewport
-    if (!vv) return // unsupported browser — graceful no-op
-    const viewport = vv
-
-    function handleResize() {
-      const offset = window.innerHeight - viewport.height - viewport.offsetTop
-      setKeyboardOffset(Math.max(0, offset))
-    }
-
-    vv.addEventListener('resize', handleResize)
-    // Run once immediately in case keyboard is already open
-    handleResize()
-
-    return () => {
-      vv.removeEventListener('resize', handleResize)
-      setKeyboardOffset(0)
     }
   }, [open])
 
@@ -140,10 +114,6 @@ export function FilterPopover({
               align === 'right' ? 'sm:right-0' : 'sm:left-0',
               panelClassName
             )}
-            style={keyboardOffset > 0 ? {
-              bottom: `${keyboardOffset}px`,
-              maxHeight: `calc(80vh - ${keyboardOffset}px)`,
-            } : undefined}
           >
             {/* Mobile header with close button */}
             <div className="sm:hidden flex items-center justify-between px-4 pt-4 pb-2 border-b border-slate-100">
