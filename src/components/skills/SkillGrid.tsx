@@ -10,9 +10,13 @@ interface SkillGridProps {
   staggerReveal?: boolean
   /** Pre-fetched user map. When provided, SkillGrid skips its own user fetch. */
   preloadedUsers?: Map<string, User>
+  /** Called when "Load more" is clicked. If omitted, no button is shown. */
+  onLoadMore?: () => void
+  /** Number of results not yet visible. Shown in the button label. */
+  remainingCount?: number
 }
 
-export function SkillGrid({ listings, staggerReveal, preloadedUsers }: SkillGridProps) {
+export function SkillGrid({ listings, staggerReveal, preloadedUsers, onLoadMore, remainingCount }: SkillGridProps) {
   const { fetchUsersByIds } = useAuth()
   const [users, setUsers] = useState<Map<string, User>>(preloadedUsers ?? new Map())
   const [loading, setLoading] = useState(!preloadedUsers && listings.length > 0)
@@ -87,21 +91,34 @@ export function SkillGrid({ listings, staggerReveal, preloadedUsers }: SkillGrid
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {listings.map((listing, index) => {
-        const user = users.get(listing.userId)
-        if (!user) return null
-        return (
-          <div
-            key={listing.id}
-            className={staggerReveal ? 'scroll-reveal revealed' : undefined}
-            style={staggerReveal ? { animationDelay: `${0.08 + index * 0.08}s` } : undefined}
-          >
-            <SkillCard listing={listing} user={user} />
-          </div>
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {listings.map((listing, index) => {
+          const user = users.get(listing.userId)
+          if (!user) return null
+          return (
+            <div
+              key={listing.id}
+              className={staggerReveal ? 'scroll-reveal revealed' : undefined}
+              style={staggerReveal ? { animationDelay: `${0.08 + index * 0.08}s` } : undefined}
+            >
+              <SkillCard listing={listing} user={user} />
+            </div>
+          )
+        })}
+      </div>
 
-        )
-      })}
+      {onLoadMore && remainingCount !== undefined && remainingCount > 0 && (
+        <div className="mt-8 flex justify-center">
+          <button
+            type="button"
+            onClick={onLoadMore}
+            className="px-6 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-sm"
+          >
+            Load more ({remainingCount} remaining)
+          </button>
+        </div>
+      )}
     </div>
   )
 }

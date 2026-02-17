@@ -13,6 +13,8 @@ import { ActiveFilters } from '@/components/skills/ActiveFilters'
 import type { PlaceResult } from '@/services/osNames'
 import { getNeighbourhoodCoords, type NeighbourhoodCoords } from '@/services/neighbourhoods'
 
+const PAGE_SIZE = 18
+
 export function BrowseSkillsPage() {
   const { listings, loading, initialized } = useSkills()
   const [searchParams] = useSearchParams()
@@ -34,6 +36,12 @@ export function BrowseSkillsPage() {
   const [neighbourhoodCoordsMap, setNeighbourhoodCoordsMap] = useState<Map<string, NeighbourhoodCoords>>(new Map())
 
   const debouncedQuery = useDebounce(searchQuery, 300)
+
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE)
+  }, [debouncedQuery, selectedCategories, listingType, sortBy, selectedNeighbourhood])
 
   useEffect(() => {
     let cancelled = false
@@ -96,6 +104,13 @@ export function BrowseSkillsPage() {
       neighbourhoodCoords: neighbourhoodCoordsMap,
     })
   }, [listings, debouncedQuery, selectedCategories, listingType, sortBy, referenceCoords, usersMap, neighbourhoodCoordsMap])
+
+  const visibleListings = useMemo(
+    () => filteredAndSorted.slice(0, visibleCount),
+    [filteredAndSorted, visibleCount]
+  )
+
+  const remainingCount = filteredAndSorted.length - visibleListings.length
 
   const handleNeighbourhoodChange = (place: PlaceResult | null) => {
     setSelectedNeighbourhood(place)
@@ -179,7 +194,12 @@ export function BrowseSkillsPage() {
       </div>
 
       {/* Results grid — full width now */}
-      <SkillGrid listings={filteredAndSorted} preloadedUsers={usersMap} />
+      <SkillGrid
+        listings={visibleListings}
+        preloadedUsers={usersMap}
+        onLoadMore={() => setVisibleCount((c) => c + PAGE_SIZE)}
+        remainingCount={remainingCount}
+      />
     </div>
   )
 }
