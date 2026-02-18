@@ -23,7 +23,7 @@ export function FilterPopover({
   const containerRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
-  // Close on outside click (desktop only — mobile has backdrop) or Escape
+  // Close on outside click or Escape
   useEffect(() => {
     if (!open) return
     function handleMouseDown(e: MouseEvent) {
@@ -42,18 +42,6 @@ export function FilterPopover({
     return () => {
       document.removeEventListener('mousedown', handleMouseDown)
       document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [open])
-
-  // Lock body scroll on mobile when open
-  useEffect(() => {
-    if (!open) return
-    const mq = window.matchMedia('(min-width: 640px)')
-    if (mq.matches) return // desktop — don't lock scroll
-
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = ''
     }
   }, [open])
 
@@ -92,50 +80,17 @@ export function FilterPopover({
       </button>
 
       {open && (
-        <>
-          {/* Mobile backdrop */}
-          <div
-            className="sm:hidden fixed inset-0 z-40 bg-black/25 backdrop-blur-sm animate-fade-in"
-            onClick={() => setOpen(false)}
-            aria-hidden="true"
-          />
-
-          {/* Panel: bottom-sheet on mobile, dropdown on desktop */}
-          <div
-            role="dialog"
-            aria-label={label}
-            className={cn(
-              // Mobile: fixed bottom sheet
-              'fixed inset-x-0 bottom-0 z-50 rounded-t-2xl bg-white shadow-[0_-4px_24px_rgba(0,0,0,0.12)] animate-slide-up',
-              'max-h-[80vh] overflow-y-auto',
-              // Desktop: absolute dropdown
-              'sm:absolute sm:inset-auto sm:bottom-auto sm:mt-2 sm:rounded-2xl sm:bg-white/80 sm:backdrop-blur-xl sm:shadow-lg sm:ring-1 sm:ring-black/[0.06] sm:animate-scale-in',
-              'sm:max-h-none sm:overflow-visible',
-              align === 'right' ? 'sm:right-0' : 'sm:left-0',
-              panelClassName
-            )}
-          >
-            {/* Mobile header with close button */}
-            <div className="sm:hidden flex items-center justify-between px-4 pt-4 pb-2 border-b border-slate-100">
-              <span className="text-sm font-semibold text-slate-700">{label}</span>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="rounded-lg p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-                aria-label="Close"
-              >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Content — extra padding on mobile */}
-            <div className="p-4 sm:p-0">
-              {children}
-            </div>
-          </div>
-        </>
+        <div
+          role="dialog"
+          aria-label={label}
+          className={cn(
+            'absolute z-50 mt-2 rounded-2xl bg-white/80 backdrop-blur-xl shadow-lg ring-1 ring-black/[0.06] animate-scale-in',
+            align === 'right' ? 'right-0' : 'left-0',
+            panelClassName
+          )}
+        >
+          {children}
+        </div>
       )}
     </div>
   )
