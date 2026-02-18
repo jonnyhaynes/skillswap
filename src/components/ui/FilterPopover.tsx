@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react'
 import { cn } from '@/utils/cn'
-import { useIsMobile } from '@/hooks/useIsMobile'
 
 interface FilterPopoverProps {
   label: string
@@ -48,7 +47,19 @@ export function FilterPopover({
     }
   }, [isControlled, open, onToggle])
 
-  const isMobile = useIsMobile()
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return !window.matchMedia('(min-width: 640px)').matches
+  })
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 640px)')
+    function handleChange(e: MediaQueryListEvent) {
+      setIsMobile(!e.matches)
+    }
+    mq.addEventListener('change', handleChange)
+    return () => mq.removeEventListener('change', handleChange)
+  }, [])
 
   // Close on outside click (desktop only — mobile has backdrop) or Escape
   useEffect(() => {
