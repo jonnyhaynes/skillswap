@@ -560,7 +560,7 @@ INSERT INTO public.swap_proposals (id, proposer_id, recipient_id, offered_skill_
     '20000000-0000-0000-0000-000000000001',
     TRUE, TRUE
   ),
-  -- swap-2: Priya <-> Alex (accepted: yoga for React mentoring)
+  -- swap-2: Priya <-> Alex (in_progress: yoga for React mentoring)
   (
     '30000000-0000-0000-0000-000000000002',
     '00000000-0000-0000-0000-000000000004',
@@ -568,7 +568,7 @@ INSERT INTO public.swap_proposals (id, proposer_id, recipient_id, offered_skill_
     '10000000-0000-0000-0000-000000000007',
     '10000000-0000-0000-0000-000000000018',
     'Hey Alex, I noticed you offer React mentoring. I am trying to build a website for my yoga studio and would love some guidance. I can offer yoga and meditation sessions in return if you are interested!',
-    'accepted',
+    'in_progress',
     '2026-01-05T10:00:00Z',
     '2026-01-06T08:15:00Z',
     NULL,
@@ -778,7 +778,7 @@ INSERT INTO public.messages (id, conversation_id, sender_id, content, sent_at, i
     '2026-01-20T17:00:00Z', TRUE
   ),
 
-  -- conv-2: Priya <-> Alex (accepted swap - yoga for React mentoring)
+  -- conv-2: Priya <-> Alex (in_progress swap - yoga for React mentoring)
   (
     '40000000-0000-0000-0000-000000000009',
     '20000000-0000-0000-0000-000000000002',
