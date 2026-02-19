@@ -18,7 +18,7 @@ export function Footer() {
         </svg>
       </div>
 
-      <div className="bg-slate-900 text-slate-300 relative overflow-hidden">
+      <div className="bg-slate-900 text-slate-300 relative overflow-hidden pb-16 md:pb-0">
         {/* Topographic pattern overlay */}
         <div
           className="absolute inset-0 opacity-[0.03] pointer-events-none"
