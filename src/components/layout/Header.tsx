@@ -31,7 +31,7 @@ export function Header() {
     navigate('/')
   }
 
-  // Close profile menu on Escape key
+  // Close profile menu on Escape key or click outside
   useEffect(() => {
     if (!profileMenuOpen) return
     function handleKeyDown(e: KeyboardEvent) {
@@ -40,8 +40,17 @@ export function Header() {
         profileButtonRef.current?.focus()
       }
     }
+    function handleClickOutside(e: MouseEvent) {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target as Node)) {
+        setProfileMenuOpen(false)
+      }
+    }
     document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
   }, [profileMenuOpen])
 
   // Filter nav links based on auth state
