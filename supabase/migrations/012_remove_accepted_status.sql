@@ -1,3 +1,5 @@
+BEGIN;
+
 -- Migrate any existing 'accepted' rows to 'in_progress'
 UPDATE public.swap_proposals
 SET
@@ -47,3 +49,5 @@ CREATE POLICY "Users can create reviews for own completed or cancelled swaps"
       AND (proposer_id = auth.uid() OR recipient_id = auth.uid())
     )
   );
+
+COMMIT;
