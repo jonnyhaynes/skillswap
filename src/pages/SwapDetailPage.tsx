@@ -22,7 +22,7 @@ export function SwapDetailPage() {
   const navigate = useNavigate();
   const { currentUser, getUserById } = useAuth();
   const { getListingById } = useSkills();
-  const { getSwapById, acceptProposal, declineProposal, startProgress, markComplete, cancelProposal } = useSwaps();
+  const { getSwapById, acceptProposal, declineProposal, markComplete, cancelProposal } = useSwaps();
   const { addToast } = useToast();
   const { addReview, getReviewForSwap, fetchReviewForSwap } = useReviews();
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -83,11 +83,6 @@ export function SwapDetailPage() {
   const handleDecline = () => {
     declineProposal(swap.id);
     addToast('Swap proposal declined.', 'info');
-  };
-
-  const handleStartProgress = () => {
-    startProgress(swap.id);
-    addToast('Swap is now in progress!', 'success');
   };
 
   const handleComplete = () => {
@@ -226,7 +221,6 @@ export function SwapDetailPage() {
               onDecline={handleDecline}
               onComplete={handleComplete}
               onCancel={handleCancel}
-              onStartProgress={handleStartProgress}
             />
           </Card>
 

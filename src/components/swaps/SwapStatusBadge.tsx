@@ -7,7 +7,6 @@ interface SwapStatusBadgeProps {
 
 const statusConfig: Record<SwapStatus, { label: string; className: string }> = {
   pending: { label: 'Pending', className: 'bg-amber-50 text-amber-600' },
-  accepted: { label: 'Accepted', className: 'bg-blue-50 text-blue-600' },
   declined: { label: 'Declined', className: 'bg-red-50 text-red-600' },
   in_progress: { label: 'In Progress', className: 'bg-indigo-50 text-indigo-600' },
   completed: { label: 'Completed', className: 'bg-teal-50 text-teal-700' },

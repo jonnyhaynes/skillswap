@@ -205,7 +205,7 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SET_LOADING', loading: true })
     dispatch({ type: 'SET_ERROR', error: null })
     try {
-      const updated = await updateSwapStatus(id, 'accepted')
+      const updated = await updateSwapStatus(id, 'in_progress')
       dispatch({ type: 'UPDATE_PROPOSAL', proposal: updated })
       return true
     } catch (err) {
@@ -322,7 +322,7 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
       state.proposals.filter(
         (p) =>
           (p.proposerId === userId || p.recipientId === userId) &&
-          (p.status === 'accepted' || p.status === 'in_progress')
+          p.status === 'in_progress'
       ),
     [state.proposals]
   )

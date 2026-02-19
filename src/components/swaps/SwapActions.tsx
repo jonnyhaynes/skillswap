@@ -10,7 +10,6 @@ interface SwapActionsProps {
   onDecline: () => void;
   onComplete: () => void;
   onCancel: () => void;
-  onStartProgress: () => void;
 }
 
 export function SwapActions({
@@ -20,7 +19,6 @@ export function SwapActions({
   onDecline,
   onComplete,
   onCancel,
-  onStartProgress,
 }: SwapActionsProps) {
   const [showDeclineDialog, setShowDeclineDialog] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
@@ -91,38 +89,6 @@ export function SwapActions({
         </>
       );
     }
-  }
-
-  if (swap.status === 'accepted') {
-    return (
-      <>
-        <div className="space-y-3">
-          <Button variant="primary" onClick={onStartProgress} className="w-full">
-            Start Progress
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setShowCancelDialog(true)}
-            className="w-full"
-          >
-            Cancel Swap
-          </Button>
-        </div>
-
-        <ConfirmDialog
-          isOpen={showCancelDialog}
-          title="Cancel Swap"
-          message="Are you sure you want to cancel this swap? This action cannot be undone."
-          confirmLabel="Cancel Swap"
-          variant="danger"
-          onConfirm={() => {
-            onCancel();
-            setShowCancelDialog(false);
-          }}
-          onCancel={() => setShowCancelDialog(false)}
-        />
-      </>
-    );
   }
 
   if (swap.status === 'in_progress') {

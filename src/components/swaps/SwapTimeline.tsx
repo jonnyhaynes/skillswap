@@ -46,12 +46,6 @@ export function SwapTimeline({ swap }: SwapTimelineProps) {
       date: null,
       reached: true,
     });
-  } else if (swap.status === 'accepted') {
-    steps.push({
-      label: 'In Progress',
-      date: null,
-      reached: false,
-    });
   }
 
   if (swap.completedAt) {
@@ -60,10 +54,7 @@ export function SwapTimeline({ swap }: SwapTimelineProps) {
       date: swap.completedAt,
       reached: true,
     });
-  } else if (
-    swap.status === 'accepted' ||
-    swap.status === 'in_progress'
-  ) {
+  } else if (swap.status === 'in_progress') {
     steps.push({
       label: 'Completed',
       date: null,
