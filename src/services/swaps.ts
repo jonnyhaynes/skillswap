@@ -96,6 +96,7 @@ export async function updateSwapStatus(
 ): Promise<SwapProposal> {
   const updates: Partial<SwapProposal> = { status }
 
+  // Set respondedAt when the recipient gives a definitive response (accept or decline)
   if (status === 'in_progress' || status === 'declined') {
     updates.respondedAt = new Date().toISOString()
   }

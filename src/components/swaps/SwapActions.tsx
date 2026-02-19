@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { SwapProposal } from '@/types';
+import type { SwapProposal, SwapStatus } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 
@@ -134,7 +134,7 @@ export function SwapActions({
   }
 
   // completed, declined, cancelled
-  const statusText: Record<string, string> = {
+  const statusText: Partial<Record<SwapStatus, string>> = {
     completed: 'This swap has been completed.',
     declined: 'This swap proposal was declined.',
     cancelled: 'This swap has been cancelled.',

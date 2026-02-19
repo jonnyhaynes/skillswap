@@ -50,7 +50,6 @@ export interface SwapsContextType {
   }) => Promise<SwapProposal | null>
   acceptProposal: (id: string) => Promise<boolean>
   declineProposal: (id: string) => Promise<boolean>
-  startProgress: (id: string) => Promise<boolean>
   markComplete: (id: string, userId: string) => Promise<boolean>
   cancelProposal: (id: string) => Promise<boolean>
   getSwapById: (id: string) => SwapProposal | undefined
@@ -229,20 +228,6 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const startProgress = useCallback(async (id: string): Promise<boolean> => {
-    dispatch({ type: 'SET_LOADING', loading: true })
-    dispatch({ type: 'SET_ERROR', error: null })
-    try {
-      const updated = await updateSwapStatus(id, 'in_progress')
-      dispatch({ type: 'UPDATE_PROPOSAL', proposal: updated })
-      return true
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to start swap'
-      dispatch({ type: 'SET_ERROR', error: message })
-      return false
-    }
-  }, [])
-
   const markComplete = useCallback(
     async (id: string, userId: string): Promise<boolean> => {
       dispatch({ type: 'SET_LOADING', loading: true })
@@ -352,7 +337,6 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
         createProposal,
         acceptProposal,
         declineProposal,
-        startProgress,
         markComplete,
         cancelProposal,
         getSwapById,
