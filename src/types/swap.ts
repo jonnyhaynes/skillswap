@@ -1,6 +1,5 @@
 export type SwapStatus =
   | 'pending'
-  | 'accepted'
   | 'declined'
   | 'in_progress'
   | 'completed'

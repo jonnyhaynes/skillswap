@@ -25,7 +25,7 @@ export const swaps: SwapProposal[] = [
     requestedSkillId: 'skill-18',
     message:
       'Hey Alex, I noticed you offer React mentoring. I am trying to build a website for my yoga studio and would love some guidance. I can offer yoga and meditation sessions in return if you are interested!',
-    status: 'accepted',
+    status: 'in_progress',
     proposedAt: '2026-01-05T10:00:00Z',
     respondedAt: '2026-01-06T08:15:00Z',
     completedAt: null,

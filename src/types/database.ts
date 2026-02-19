@@ -30,7 +30,6 @@ export type ListingTypeDb = 'offered' | 'wanted'
 
 export type SwapStatusDb =
   | 'pending'
-  | 'accepted'
   | 'declined'
   | 'in_progress'
   | 'completed'
