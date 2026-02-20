@@ -245,7 +245,7 @@ export function HomePage() {
             </h1>
           )}
           <p className="mt-6 text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
-            Swap skills with your neighbours — no money, just knowledge.
+            Swap skills with your neighbours — no money, just knowledge and time.
           </p>
 
           {/* Floating glass search bar */}
