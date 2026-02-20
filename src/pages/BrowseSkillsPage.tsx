@@ -12,6 +12,7 @@ import { FilterToolbar } from '@/components/skills/FilterToolbar'
 import { ActiveFilters } from '@/components/skills/ActiveFilters'
 import type { PlaceResult } from '@/services/osNames'
 import { getNeighbourhoodCoords, type NeighbourhoodCoords } from '@/services/neighbourhoods'
+import { trackSearch } from '@/lib/analytics'
 
 const PAGE_SIZE = 18
 
@@ -42,6 +43,12 @@ export function BrowseSkillsPage() {
   useEffect(() => {
     setVisibleCount(PAGE_SIZE)
   }, [debouncedQuery, selectedCategories, listingType, sortBy, selectedNeighbourhood])
+
+  useEffect(() => {
+    if (debouncedQuery.length >= 3) {
+      trackSearch(debouncedQuery)
+    }
+  }, [debouncedQuery])
 
   useEffect(() => {
     let cancelled = false
