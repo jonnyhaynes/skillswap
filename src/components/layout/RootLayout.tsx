@@ -22,7 +22,7 @@ export function RootLayout() {
       </main>
       <Footer />
       <MobileNav />
-      <ScrollRestoration />
+      <ScrollRestoration getKey={(location) => location.pathname} />
     </div>
   )
 }

@@ -22,6 +22,19 @@ import { TermsOfServicePage } from '@/pages/TermsOfServicePage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
 import { ContactPage } from '@/pages/ContactPage'
 
+// Stable named wrappers — avoids remounting when search params change
+// (inline `element={<AuthGuard><Page /></AuthGuard>}` creates a new element each render)
+const GuardedSkillDetail = () => <AuthGuard><SkillDetailPage /></AuthGuard>
+const GuardedOnboarding = () => <AuthGuard><OnboardingPage /></AuthGuard>
+const GuardedCreateListing = () => <AuthGuard><CreateListingPage /></AuthGuard>
+const GuardedEditListing = () => <AuthGuard><EditListingPage /></AuthGuard>
+const GuardedEditProfile = () => <AuthGuard><EditProfilePage /></AuthGuard>
+const GuardedMyListings = () => <AuthGuard><MyListingsPage /></AuthGuard>
+const GuardedSwaps = () => <AuthGuard><SwapsPage /></AuthGuard>
+const GuardedSwapDetail = () => <AuthGuard><SwapDetailPage /></AuthGuard>
+const GuardedMessages = () => <AuthGuard><MessagesPage /></AuthGuard>
+const GuardedConversation = () => <AuthGuard><ConversationPage /></AuthGuard>
+
 function RouteErrorPage() {
   const error = useRouteError()
   console.error('Route error:', error)
@@ -53,14 +66,7 @@ export const router = createBrowserRouter([
       // Public routes
       { index: true, Component: HomePage },
       { path: 'browse', Component: BrowseSkillsPage },
-      {
-        path: 'skills/:skillId',
-        element: (
-          <AuthGuard>
-            <SkillDetailPage />
-          </AuthGuard>
-        ),
-      },
+      { path: 'skills/:skillId', Component: GuardedSkillDetail },
       { path: 'profile/:userId', Component: ProfilePage },
 
       // Auth routes (public, redirect if logged in)
@@ -69,80 +75,17 @@ export const router = createBrowserRouter([
       { path: 'forgot-password', Component: ForgotPasswordPage },
 
       // Onboarding for new OAuth users
-      {
-        path: 'onboarding',
-        element: (
-          <AuthGuard>
-            <OnboardingPage />
-          </AuthGuard>
-        ),
-      },
+      { path: 'onboarding', Component: GuardedOnboarding },
 
       // Protected routes - require authentication
-      {
-        path: 'skills/new',
-        element: (
-          <AuthGuard>
-            <CreateListingPage />
-          </AuthGuard>
-        ),
-      },
-      {
-        path: 'skills/:skillId/edit',
-        element: (
-          <AuthGuard>
-            <EditListingPage />
-          </AuthGuard>
-        ),
-      },
-      {
-        path: 'profile/edit',
-        element: (
-          <AuthGuard>
-            <EditProfilePage />
-          </AuthGuard>
-        ),
-      },
-      {
-        path: 'my-listings',
-        element: (
-          <AuthGuard>
-            <MyListingsPage />
-          </AuthGuard>
-        ),
-      },
-      {
-        path: 'swaps',
-        element: (
-          <AuthGuard>
-            <SwapsPage />
-          </AuthGuard>
-        ),
-      },
-      {
-        path: 'swaps/:swapId',
-        element: (
-          <AuthGuard>
-            <SwapDetailPage />
-          </AuthGuard>
-        ),
-      },
-      {
-        path: 'messages',
-        element: (
-          <AuthGuard>
-            <MessagesPage />
-          </AuthGuard>
-        ),
-      },
-      {
-        path: 'messages/:conversationId',
-        element: (
-          <AuthGuard>
-            <ConversationPage />
-          </AuthGuard>
-        ),
-      },
+      { path: 'skills/new', Component: GuardedCreateListing },
+      { path: 'skills/:skillId/edit', Component: GuardedEditListing },
+      { path: 'profile/edit', Component: GuardedEditProfile },
+      { path: 'my-listings', Component: GuardedMyListings },
+      { path: 'swaps', Component: GuardedSwaps },
+      { path: 'swaps/:swapId', Component: GuardedSwapDetail },
+      { path: 'messages', Component: GuardedMessages },
+      { path: 'messages/:conversationId', Component: GuardedConversation },
 
       // Legal pages
       { path: 'terms', Component: TermsOfServicePage },
