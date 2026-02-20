@@ -26,12 +26,16 @@ if (measurementId) {
   window.gtag('config', measurementId, { send_page_view: false })
 }
 
+function isGtagReady(): boolean {
+  return Boolean(measurementId) && typeof window.gtag === 'function'
+}
+
 /**
  * Track a page view. No-op if VITE_GA_MEASUREMENT_ID is not set.
  */
 export function trackPageView(path: string): void {
-  if (!measurementId || typeof window.gtag !== 'function') return
-  window.gtag('event', 'page_view', {
+  if (!isGtagReady()) return
+  window.gtag!('event', 'page_view', {
     page_path: path,
     send_to: measurementId,
   })
@@ -42,8 +46,8 @@ export function trackPageView(path: string): void {
  * No-op if VITE_GA_MEASUREMENT_ID is not set.
  */
 export function trackSignUp(): void {
-  if (!measurementId || typeof window.gtag !== 'function') return
-  window.gtag('event', 'sign_up', {
+  if (!isGtagReady()) return
+  window.gtag!('event', 'sign_up', {
     send_to: measurementId,
   })
 }
@@ -53,20 +57,21 @@ export function trackSignUp(): void {
  * No-op if VITE_GA_MEASUREMENT_ID is not set.
  */
 export function trackSwapRequested(): void {
-  if (!measurementId || typeof window.gtag !== 'function') return
-  window.gtag('event', 'swap_requested', {
+  if (!isGtagReady()) return
+  window.gtag!('event', 'swap_requested', {
     send_to: measurementId,
   })
 }
 
 /**
  * Track a search query. Uses GA4's recommended 'search' event.
- * Only call this when query.length >= 3.
+ * Only fires for queries of 3+ non-whitespace characters.
  * No-op if VITE_GA_MEASUREMENT_ID is not set.
  */
 export function trackSearch(query: string): void {
-  if (!measurementId || typeof window.gtag !== 'function') return
-  window.gtag('event', 'search', {
+  if (!isGtagReady()) return
+  if (query.trim().length < 3) return
+  window.gtag!('event', 'search', {
     search_term: query,
     send_to: measurementId,
   })
