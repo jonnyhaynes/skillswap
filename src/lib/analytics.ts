@@ -9,9 +9,16 @@ declare global {
 
 const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID
 
-// Only inject the GA4 script when the env var is present.
-// This prevents local dev and staging from polluting production analytics.
-if (measurementId) {
+let _initialized = false
+
+/**
+ * Initialise GA4. Safe to call multiple times — only runs once.
+ * Must be called explicitly after the user has granted cookie consent.
+ */
+export function initGA4(): void {
+  if (_initialized || !measurementId) return
+  _initialized = true
+
   const script = document.createElement('script')
   script.async = true
   script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`
@@ -38,7 +45,7 @@ function isGtagReady(): boolean {
 const EMAIL_PATTERN = /\S+@\S+\.\S+/
 
 /**
- * Track a page view. No-op if VITE_GA_MEASUREMENT_ID is not set.
+ * Track a page view. No-op if GA4 has not been initialised.
  */
 export function trackPageView(path: string): void {
   if (!isGtagReady()) return
@@ -50,7 +57,7 @@ export function trackPageView(path: string): void {
 
 /**
  * Track a successful sign-up. Uses GA4's recommended 'sign_up' event.
- * No-op if VITE_GA_MEASUREMENT_ID is not set.
+ * No-op if GA4 has not been initialised.
  */
 export function trackSignUp(): void {
   if (!isGtagReady()) return
@@ -61,7 +68,7 @@ export function trackSignUp(): void {
 
 /**
  * Track a successful swap proposal submission.
- * No-op if VITE_GA_MEASUREMENT_ID is not set.
+ * No-op if GA4 has not been initialised.
  */
 export function trackSwapRequested(): void {
   if (!isGtagReady()) return
@@ -74,7 +81,7 @@ export function trackSwapRequested(): void {
  * Track a search query. Uses GA4's recommended 'search' event.
  * Only fires for queries of 3+ non-whitespace characters.
  * Skips email-shaped queries to avoid sending PII to GA4.
- * No-op if VITE_GA_MEASUREMENT_ID is not set.
+ * No-op if GA4 has not been initialised.
  */
 export function trackSearch(query: string): void {
   if (!isGtagReady()) return

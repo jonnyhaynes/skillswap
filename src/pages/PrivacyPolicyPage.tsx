@@ -75,10 +75,22 @@ export function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-slate-900 font-display">6. Cookies and Tracking</h2>
-          <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-            SkillSwap uses essential cookies to maintain your session and remember your preferences. We do not use third-party tracking cookies or advertising networks. Analytics data is collected in an anonymised and aggregated form to help us understand how the platform is used.
-          </p>
+          <h2 className="text-lg font-bold text-slate-900 font-display">6. Cookies and Analytics</h2>
+          <div className="mt-2 space-y-3 text-sm text-slate-600 leading-relaxed">
+            <p>
+              <strong className="text-slate-800">Strictly necessary cookies</strong> — SkillSwap uses session cookies provided by Supabase to keep you signed in and maintain your preferences. These are essential for the service to function and do not require your consent.
+            </p>
+            <p>
+              <strong className="text-slate-800">Google Analytics 4</strong> — With your consent, we use Google Analytics 4 (operated by Google Ireland Limited) to understand how SkillSwap is used. GA4 sets cookies (<code className="font-mono text-xs bg-slate-100 px-1 py-0.5 rounded">_ga</code>, <code className="font-mono text-xs bg-slate-100 px-1 py-0.5 rounded">_ga_&lt;ID&gt;</code>) that persist for up to 2 years. We collect anonymised data about pages visited and actions taken — no personally identifiable information is sent. Data may be transferred to the United States under Standard Contractual Clauses in accordance with{' '}
+              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 underline underline-offset-2">Google's Privacy Policy</a>.
+            </p>
+            <p>
+              <strong className="text-slate-800">Bugsnag</strong> — With your consent, we use Bugsnag (operated by SmartBear Software Inc.) to detect and report application errors. Bugsnag does not set cookies, but error reports may include your browser type, operating system, and the page you were viewing when an error occurred. Data may be transferred to the United States under Standard Contractual Clauses.
+            </p>
+            <p>
+              You can withdraw consent at any time by clearing the <code className="font-mono text-xs bg-slate-100 px-1 py-0.5 rounded">skillswap_cookie_consent</code> key from your browser's local storage and refreshing the page. Withdrawing consent prevents future data collection but does not affect data already transmitted.
+            </p>
+          </div>
         </section>
 
         <section>

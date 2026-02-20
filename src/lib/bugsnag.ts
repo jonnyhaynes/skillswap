@@ -4,7 +4,16 @@ import React from 'react'
 
 const apiKey = import.meta.env.VITE_BUGSNAG_API_KEY
 
-if (apiKey) {
+let _initialized = false
+
+/**
+ * Initialise Bugsnag. Safe to call multiple times — only runs once.
+ * Must be called explicitly after the user has granted cookie consent.
+ */
+export function initBugsnag(): void {
+  if (_initialized || !apiKey) return
+  _initialized = true
+
   Bugsnag.start({
     apiKey,
     plugins: [new BugsnagPluginReact()],
@@ -13,8 +22,15 @@ if (apiKey) {
   })
 }
 
-export const BugsnagErrorBoundary = apiKey
-  ? Bugsnag.getPlugin('react')!.createErrorBoundary(React)
-  : null
+/**
+ * Returns the Bugsnag React error boundary component if Bugsnag has been
+ * started (i.e. after consent has been granted), otherwise null.
+ * Called in App.tsx on each render so the boundary activates as soon as
+ * Bugsnag is initialised.
+ */
+export function createBugsnagErrorBoundary() {
+  if (!apiKey || !Bugsnag.isStarted()) return null
+  return Bugsnag.getPlugin('react')!.createErrorBoundary(React)
+}
 
 export default Bugsnag

@@ -3,14 +3,20 @@ import { Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { MobileNav } from './MobileNav'
+import { CookieBanner } from '@/components/ui/CookieBanner'
 import { trackPageView } from '@/lib/analytics'
+import { useCookieConsent } from '@/hooks/useCookieConsent'
 
 export function RootLayout() {
   const { pathname } = useLocation()
+  const { consentStatus } = useCookieConsent()
 
   useEffect(() => {
-    trackPageView(pathname)
-  }, [pathname])
+    // Only track page views after the user has accepted cookies
+    if (consentStatus === 'accepted') {
+      trackPageView(pathname)
+    }
+  }, [pathname, consentStatus])
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -28,6 +34,7 @@ export function RootLayout() {
       </main>
       <Footer />
       <MobileNav />
+      <CookieBanner />
       <ScrollRestoration getKey={(location) => location.pathname} />
     </div>
   )
