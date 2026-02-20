@@ -45,9 +45,7 @@ export function BrowseSkillsPage() {
   }, [debouncedQuery, selectedCategories, listingType, sortBy, selectedNeighbourhood])
 
   useEffect(() => {
-    if (debouncedQuery.length >= 3) {
-      trackSearch(debouncedQuery)
-    }
+    trackSearch(debouncedQuery)
   }, [debouncedQuery])
 
   useEffect(() => {
