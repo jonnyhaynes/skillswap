@@ -1,10 +1,16 @@
+import { useEffect } from 'react'
 import { Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { MobileNav } from './MobileNav'
+import { trackPageView } from '@/lib/analytics'
 
 export function RootLayout() {
   const { pathname } = useLocation()
+
+  useEffect(() => {
+    trackPageView(pathname)
+  }, [pathname])
 
   return (
     <div className="flex min-h-screen flex-col">
