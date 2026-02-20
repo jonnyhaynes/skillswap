@@ -5,6 +5,7 @@ import { Turnstile } from '@/components/ui/Turnstile'
 import { useAuth } from '@/hooks/useAuth'
 import { ensureNeighbourhoodExists } from '@/services/neighbourhoods'
 import { NeighbourhoodTypeahead } from '@/components/ui/NeighbourhoodTypeahead'
+import { trackSignUp } from '@/lib/analytics'
 
 
 interface SignUpFormProps {
@@ -98,6 +99,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
     }, turnstileToken)
 
     if (!result.error) {
+      trackSignUp()
       setShowConfirmation(true)
       onSuccess?.()
     }
