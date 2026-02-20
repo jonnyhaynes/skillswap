@@ -5,11 +5,6 @@ import { supabase } from '@/lib/supabase'
 const HEARTBEAT_INTERVAL_MS = 60_000
 const ONLINE_THRESHOLD_MS = 2 * 60_000 // 2 minutes grace period
 
-interface PresenceState {
-  isOnline: boolean
-  lastSeenAt: string | null
-}
-
 // Module-level map so presence data is accessible outside the hook
 // without needing context. Keyed by userId.
 const presenceMap = new Map<string, { onlineAt: number }>()
@@ -24,10 +19,13 @@ export function usePresence(userId: string | null) {
 
   const updateLastSeen = useCallback(async () => {
     if (!userId) return
-    await supabase
+    const { error } = await supabase
       .from('profiles')
       .update({ last_seen_at: new Date().toISOString() })
       .eq('id', userId)
+    if (error && import.meta.env.DEV) {
+      console.warn('[usePresence] last_seen_at update failed:', error.message)
+    }
   }, [userId])
 
   useEffect(() => {
@@ -77,16 +75,11 @@ export function usePresence(userId: string | null) {
 /**
  * Check presence state for any user.
  * isOnline: true if they are in the presence channel right now.
- * lastSeenAt: from the DB (passed in from the User object).
  */
-export function getPresenceState(
-  userId: string,
-  lastSeenAt: string | null
-): PresenceState {
+export function getPresenceState(userId: string): { isOnline: boolean } {
   const entry = presenceMap.get(userId)
   const isOnline = entry
     ? Date.now() - entry.onlineAt < ONLINE_THRESHOLD_MS
     : false
-
-  return { isOnline, lastSeenAt }
+  return { isOnline }
 }

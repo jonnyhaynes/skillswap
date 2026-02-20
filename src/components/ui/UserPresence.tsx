@@ -1,6 +1,6 @@
-// src/components/ui/UserPresence.tsx
+import { useState, useEffect } from 'react'
 import { getPresenceState } from '@/hooks/usePresence'
-import { formatRelativeTime } from '@/utils/formatDate'
+import { formatRelativeTime } from '@/utils/formatRelativeTime'
 
 interface UserPresenceProps {
   userId: string
@@ -9,10 +9,21 @@ interface UserPresenceProps {
 }
 
 export function UserPresence({ userId, lastSeenAt, className = '' }: UserPresenceProps) {
-  const { isOnline } = getPresenceState(userId, lastSeenAt)
+  const [isOnline, setIsOnline] = useState(() => getPresenceState(userId).isOnline)
+
+  useEffect(() => {
+    // Check immediately
+    setIsOnline(getPresenceState(userId).isOnline)
+
+    // Re-check every 30 seconds to pick up presence changes
+    const interval = setInterval(() => {
+      setIsOnline(getPresenceState(userId).isOnline)
+    }, 30_000)
+
+    return () => clearInterval(interval)
+  }, [userId])
 
   if (!isOnline && !lastSeenAt) {
-    // User predates the feature — render nothing
     return null
   }
 

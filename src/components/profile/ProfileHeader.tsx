@@ -60,7 +60,9 @@ export function ProfileHeader({
             Member since {formatDate(user.joinedAt)}
           </p>
           <div className="mt-1">
-            <UserPresence userId={user.id} lastSeenAt={user.lastSeenAt} />
+            {!isOwnProfile && (
+              <UserPresence userId={user.id} lastSeenAt={user.lastSeenAt} />
+            )}
           </div>
 
           {isOwnProfile ? (

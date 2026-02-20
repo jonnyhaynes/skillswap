@@ -235,7 +235,8 @@ UPDATE public.profiles SET
   avatar_url = 'https://i.pravatar.cc/150?u=david.kim',
   bio = 'Professional photographer with a studio in Bramley. Just moved into a place with a garden and have no idea where to start.',
   is_verified_neighbour = FALSE,
-  joined_at = '2025-12-15T13:20:00Z'
+  joined_at = '2025-12-15T13:20:00Z',
+  last_seen_at = NULL
 WHERE id = '00000000-0000-0000-0000-000000000007';
 
 UPDATE public.profiles SET
