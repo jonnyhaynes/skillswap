@@ -62,6 +62,7 @@ export interface Database {
           joined_at: string
           is_verified_neighbour: boolean
           updated_at: string
+          last_seen_at: string | null
         }
         Insert: {
           id: string
@@ -75,6 +76,7 @@ export interface Database {
           joined_at?: string
           is_verified_neighbour?: boolean
           updated_at?: string
+          last_seen_at?: string | null
         }
         Update: {
           id?: string
@@ -88,6 +90,7 @@ export interface Database {
           joined_at?: string
           is_verified_neighbour?: boolean
           updated_at?: string
+          last_seen_at?: string | null
         }
         Relationships: []
       }

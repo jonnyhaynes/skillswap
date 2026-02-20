@@ -46,6 +46,7 @@ export function mapProfileToUser(profile: ProfileRow): User {
     neighbourhood: profile.neighbourhood,
     postcode: profile.postcode,
     joinedAt: profile.joined_at,
+    lastSeenAt: profile.last_seen_at ?? null,
     isVerifiedNeighbour: profile.is_verified_neighbour,
     // These are computed/not stored in profiles table
     skillsOffered: [],

@@ -8,6 +8,7 @@ export interface User {
   neighbourhood: string;
   postcode: string;
   joinedAt: string;
+  lastSeenAt: string | null;
   isVerifiedNeighbour: boolean;
   skillsOffered: string[];
   skillsWanted: string[];
