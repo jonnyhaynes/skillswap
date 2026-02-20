@@ -18,6 +18,9 @@ if (measurementId) {
   document.head.appendChild(script)
 
   window.dataLayer = window.dataLayer || []
+  // GA4 requires the native `arguments` object — do NOT convert to rest params.
+  // dataLayer.push(arguments) pushes an Arguments object (not an array), which
+  // the GA4 tag parser specifically inspects. A rest parameter would break tracking.
   window.gtag = function gtag() {
     // eslint-disable-next-line prefer-rest-params
     window.dataLayer.push(arguments)
@@ -29,6 +32,10 @@ if (measurementId) {
 function isGtagReady(): boolean {
   return Boolean(measurementId) && typeof window.gtag === 'function'
 }
+
+// Basic PII guard: matches email-shaped strings (anything@anything.anything).
+// Prevents accidental email addresses in search queries being sent to GA4.
+const EMAIL_PATTERN = /\S+@\S+\.\S+/
 
 /**
  * Track a page view. No-op if VITE_GA_MEASUREMENT_ID is not set.
@@ -66,11 +73,13 @@ export function trackSwapRequested(): void {
 /**
  * Track a search query. Uses GA4's recommended 'search' event.
  * Only fires for queries of 3+ non-whitespace characters.
+ * Skips email-shaped queries to avoid sending PII to GA4.
  * No-op if VITE_GA_MEASUREMENT_ID is not set.
  */
 export function trackSearch(query: string): void {
   if (!isGtagReady()) return
   if (query.trim().length < 3) return
+  if (EMAIL_PATTERN.test(query)) return
   window.gtag!('event', 'search', {
     search_term: query,
     send_to: measurementId,
