@@ -16,6 +16,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { Modal } from '@/components/ui/Modal';
 import { SwapProposalForm } from '@/components/swaps/SwapProposalForm';
+import { UserPresence } from '@/components/ui/UserPresence'
 import { formatDate } from '@/utils/formatDate';
 import { trackSwapRequested } from '@/lib/analytics';
 
@@ -201,6 +202,9 @@ export function SkillDetailPage() {
                 {listingUser.firstName} {listingUser.lastName}
               </h3>
               <p className="text-sm text-slate-500">{listingUser.neighbourhood}</p>
+              <div className="mt-1 flex justify-center">
+                <UserPresence userId={listingUser.id} lastSeenAt={listingUser.lastSeenAt} />
+              </div>
             </div>
 
             <div className="mt-6 flex flex-col gap-3">
