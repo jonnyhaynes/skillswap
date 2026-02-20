@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { VerifiedBadge } from './VerifiedBadge'
 import { ReportUserButton } from '@/components/reports/ReportUserButton'
+import { UserPresence } from '@/components/ui/UserPresence'
 import { formatDate } from '@/utils/formatDate'
 import { getRatingColor } from '@/utils/ratingColors'
 
@@ -58,6 +59,9 @@ export function ProfileHeader({
           <p className="text-sm text-slate-500 mt-1">
             Member since {formatDate(user.joinedAt)}
           </p>
+          <div className="mt-1">
+            <UserPresence userId={user.id} lastSeenAt={user.lastSeenAt} />
+          </div>
 
           {isOwnProfile ? (
             <div className="mt-4">
