@@ -68,8 +68,8 @@ export function MobileNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200/50 bg-white/80 backdrop-blur-2xl backdrop-saturate-150 md:hidden" aria-label="Mobile navigation">
       <div className="flex items-center justify-around px-2 py-1.5 safe-area-bottom">
         {NAV_ITEMS.map((item) => {
-          const to = item.isDynamic && currentUser
-            ? `/profile/${currentUser.id}`
+          const to = item.isDynamic
+            ? currentUser ? `/profile/${currentUser.id}` : '/login'
             : item.to
           const active = isActive(to, item.exact)
 
