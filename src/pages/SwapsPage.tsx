@@ -1,17 +1,26 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
-import { useNavigate } from 'react-router';
+import { useEffect, useMemo, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useSwaps } from '@/hooks/useSwaps';
 import { Tabs } from '@/components/ui/Tabs';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { SwapCard } from '@/components/swaps/SwapCard';
 
+const VALID_TABS = ['incoming', 'outgoing', 'active', 'completed'] as const;
+type TabId = (typeof VALID_TABS)[number];
+
 export function SwapsPage() {
   const { currentUser, fetchUsersByIds, getUserById } = useAuth();
   const { getIncomingSwaps, getOutgoingSwaps, getActiveSwaps, getCompletedSwaps } = useSwaps();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [activeTab, setActiveTab] = useState('incoming');
+  const rawTab = searchParams.get('tab');
+  const activeTab: TabId = VALID_TABS.includes(rawTab as TabId) ? (rawTab as TabId) : 'incoming';
+
+  function setActiveTab(tab: string) {
+    setSearchParams({ tab }, { replace: true });
+  }
   const fetchedIdsRef = useRef<Set<string>>(new Set());
 
   const incoming = useMemo(
