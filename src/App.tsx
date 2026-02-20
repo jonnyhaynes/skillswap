@@ -1,4 +1,3 @@
-import { useState, useEffect, useCallback } from 'react'
 import { RouterProvider } from 'react-router'
 import { router } from './router'
 import { AuthProvider } from './context/AuthContext'
@@ -10,10 +9,16 @@ import { ToastProvider } from './context/ToastContext'
 import { CookieConsentProvider } from './context/CookieConsentContext'
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { createBugsnagErrorBoundary } from './lib/bugsnag'
-import type { ComponentType, ReactNode } from 'react'
 
-// Bugsnag boundary type returned by createErrorBoundary
-type BugsnagBoundaryType = ComponentType<{ children: ReactNode }>
+// Compute once at module load time — never changes after mount.
+// For returning users who previously accepted, CookieConsentContext will have
+// called initBugsnag() synchronously (its useState initialiser reads localStorage
+// and the useEffect fires before this renders in practice), so this returns the
+// real boundary. For first-time visitors Bugsnag is not started, so this is null.
+// We accept that the Bugsnag boundary is not active for a brand-new session until
+// the next page load after consent — the local ErrorBoundary catches errors in
+// the meantime. This avoids remounting RouterProvider when consent changes.
+const BugsnagErrorBoundary = createBugsnagErrorBoundary()
 
 function AppContent() {
   return (
@@ -38,30 +43,11 @@ function AppContent() {
 }
 
 export default function App() {
-  // Initialise with any existing boundary (returning user who previously accepted).
-  // useState lazy initialiser: pass a wrapper fn so React calls it once on mount.
-  // For first-time visitors createBugsnagErrorBoundary() returns null until consent.
-  const [BugsnagBoundary, setBugsnagBoundary] = useState<BugsnagBoundaryType | null>(
-    () => createBugsnagErrorBoundary() as BugsnagBoundaryType | null
-  )
-
-  const activateBugsnagBoundary = useCallback(() => {
-    const boundary = createBugsnagErrorBoundary()
-    if (boundary) setBugsnagBoundary(boundary as BugsnagBoundaryType)
-  }, [])
-
-  // Listen for consent being granted so we can activate Bugsnag boundary
-  // after initBugsnag() has been called by CookieConsentContext.
-  useEffect(() => {
-    window.addEventListener('skillswap:consent-accepted', activateBugsnagBoundary)
-    return () => window.removeEventListener('skillswap:consent-accepted', activateBugsnagBoundary)
-  }, [activateBugsnagBoundary])
-
-  if (BugsnagBoundary) {
+  if (BugsnagErrorBoundary) {
     return (
-      <BugsnagBoundary>
+      <BugsnagErrorBoundary>
         <AppContent />
-      </BugsnagBoundary>
+      </BugsnagErrorBoundary>
     )
   }
 

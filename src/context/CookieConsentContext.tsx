@@ -35,13 +35,11 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
   // Read from localStorage synchronously on mount so returning visitors never see the banner
   const [consentStatus, setConsentStatus] = useState<ConsentStatus>(readStoredConsent)
 
-  // When consent is accepted, initialise GA4 and Bugsnag, then notify App so
-  // it can activate the Bugsnag error boundary as a stable component in state.
+  // When consent is accepted, initialise GA4 and Bugsnag.
   useEffect(() => {
     if (consentStatus === 'accepted') {
       initGA4()
       initBugsnag()
-      window.dispatchEvent(new CustomEvent('skillswap:consent-accepted'))
     }
   }, [consentStatus])
 

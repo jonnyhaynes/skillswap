@@ -69,7 +69,13 @@
       "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap add src/components/auth/SignUpForm.tsx)",
       "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap commit -m \"$\\(cat <<''EOF''\nfeat: track sign_up event on successful registration\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap add src/pages/SkillDetailPage.tsx)",
-      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap commit -m \"$\\(cat <<''EOF''\nfeat: track swap_requested event on successful proposal\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap commit -m \"$\\(cat <<''EOF''\nfeat: track swap_requested event on successful proposal\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git check-ignore:*)",
+      "Bash(git worktree:*)",
+      "Bash(npm run:*)",
+      "Bash(git pull:*)",
+      "Bash(git merge:*)",
+      "Bash(git branch:*)"
     ]
   }
 }
