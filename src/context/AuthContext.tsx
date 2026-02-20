@@ -10,6 +10,7 @@ import type { Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { getProfile, updateProfile as updateProfileService, getProfilesByIds } from '@/services/profiles'
 import { getAuthErrorMessage } from '@/lib/errors'
+import { usePresence } from '@/hooks/usePresence'
 
 interface AuthState {
   currentUser: AppUser | null
@@ -115,6 +116,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     needsOnboarding: false,
     usersCache: new Map(),
   })
+
+  usePresence(state.currentUser?.id ?? null)
 
   // Initialize auth state and listen for changes
   useEffect(() => {
