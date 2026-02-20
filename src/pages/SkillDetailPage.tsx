@@ -17,6 +17,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { Modal } from '@/components/ui/Modal';
 import { SwapProposalForm } from '@/components/swaps/SwapProposalForm';
 import { formatDate } from '@/utils/formatDate';
+import { trackSwapRequested } from '@/lib/analytics'
 
 
 export function SkillDetailPage() {
@@ -79,6 +80,7 @@ export function SkillDetailPage() {
       message: data.message,
     });
     if (proposal) {
+      trackSwapRequested()
       addToast('Swap proposal sent successfully!', 'success');
       setShowSwapModal(false);
     } else {
