@@ -62,7 +62,14 @@
       "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap add src/components/layout/RootLayout.tsx)",
       "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap commit -m \"$\\(cat <<''EOF''\nfeat: fire GA4 page_view on every route change\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(printf:*)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap add src/lib/analytics.ts)",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap commit -m \"feat: add trackSignUp, trackSwapRequested, trackSearch helpers\")",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap commit -m \"$\\(cat <<''EOF''\nrefactor: extract isGtagReady helper, enforce 3-char min inside trackSearch\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap add src/components/auth/SignUpForm.tsx)",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap commit -m \"$\\(cat <<''EOF''\nfeat: track sign_up event on successful registration\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap add src/pages/SkillDetailPage.tsx)",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap commit -m \"$\\(cat <<''EOF''\nfeat: track swap_requested event on successful proposal\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
