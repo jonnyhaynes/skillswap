@@ -36,3 +36,38 @@ export function trackPageView(path: string): void {
     send_to: measurementId,
   })
 }
+
+/**
+ * Track a successful sign-up. Uses GA4's recommended 'sign_up' event.
+ * No-op if VITE_GA_MEASUREMENT_ID is not set.
+ */
+export function trackSignUp(): void {
+  if (!measurementId || typeof window.gtag !== 'function') return
+  window.gtag('event', 'sign_up', {
+    send_to: measurementId,
+  })
+}
+
+/**
+ * Track a successful swap proposal submission.
+ * No-op if VITE_GA_MEASUREMENT_ID is not set.
+ */
+export function trackSwapRequested(): void {
+  if (!measurementId || typeof window.gtag !== 'function') return
+  window.gtag('event', 'swap_requested', {
+    send_to: measurementId,
+  })
+}
+
+/**
+ * Track a search query. Uses GA4's recommended 'search' event.
+ * Only call this when query.length >= 3.
+ * No-op if VITE_GA_MEASUREMENT_ID is not set.
+ */
+export function trackSearch(query: string): void {
+  if (!measurementId || typeof window.gtag !== 'function') return
+  window.gtag('event', 'search', {
+    search_term: query,
+    send_to: measurementId,
+  })
+}
