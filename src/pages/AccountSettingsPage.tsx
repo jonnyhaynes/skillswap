@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import DeleteAccountFlow from '../components/account/DeleteAccountFlow'
 
-export default function AccountSettingsPage() {
+export function AccountSettingsPage() {
   const { currentUser } = useAuth()
 
   return (
