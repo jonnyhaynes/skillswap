@@ -29,6 +29,7 @@ A community skill-swapping platform that connects neighbours to exchange knowled
 - **OAuth + Email Auth** — Sign up with email/password or social providers (Google, GitHub, etc.) with an onboarding flow for new OAuth users
 - **Bot Protection** — Cloudflare Turnstile integration on auth forms
 - **Cookie Consent** — GDPR-compliant consent banner before enabling analytics/monitoring
+- **Account Deletion** — GDPR-compliant self-service account deletion with data export (UK GDPR Articles 17 & 20), review anonymisation, and active swap auto-cancellation
 - **Error Monitoring** — BugSnag integration (activated post-consent)
 - **Analytics** — Google Analytics 4
 - **User Presence** — Tracks `last_seen_at` on each profile
