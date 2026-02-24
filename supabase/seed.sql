@@ -158,6 +158,30 @@ INSERT INTO auth.users (
     '', '', '', '', '', 0, '', '', ''
   );
 
+-- E2E test user — used exclusively by Playwright (auth.setup.ts).
+-- Password: QWP8zen2qnu!pet*txw  →  set E2E_TEST_PASSWORD=QWP8zen2qnu!pet*txw in .env.local
+INSERT INTO auth.users (
+  id, instance_id, aud, role, email, encrypted_password,
+  email_confirmed_at, raw_user_meta_data, raw_app_meta_data,
+  created_at, updated_at,
+  confirmation_token, recovery_token, email_change,
+  email_change_token_new, email_change_token_current,
+  email_change_confirm_status, phone_change, phone_change_token,
+  reauthentication_token
+) VALUES (
+  '00000000-0000-0000-0000-000000000099',
+  '00000000-0000-0000-0000-000000000000',
+  'authenticated',
+  'authenticated',
+  'test@skillswap.test',
+  extensions.crypt('QWP8zen2qnu!pet*txw', extensions.gen_salt('bf')),
+  NOW(),
+  jsonb_build_object('first_name', 'Test', 'last_name', 'User', 'neighbourhood', 'Thurcroft', 'postcode', 'S66 9FE'),
+  jsonb_build_object('provider', 'email', 'providers', ARRAY['email']),
+  NOW(), NOW(),
+  '', '', '', '', '', 0, '', '', ''
+);
+
 -- Also insert into auth.identities (required by Supabase auth)
 INSERT INTO auth.identities (
   id,

@@ -1,4 +1,9 @@
 import { defineConfig, devices } from '@playwright/test'
+import dotenv from 'dotenv'
+
+// Load .env.local so E2E_TEST_PASSWORD and other local vars are available.
+// Playwright doesn't load Vite's .env files automatically.
+dotenv.config({ path: '.env.local' })
 
 export default defineConfig({
   testDir: './e2e',

@@ -29,7 +29,7 @@ setup('authenticate', async ({ page }) => {
   await page.locator('#login-password').fill(process.env.E2E_TEST_PASSWORD!)
 
   // Wait for Turnstile mock to fire (enables the submit button)
-  await page.getByRole('button', { name: /sign in/i }).waitFor({ state: 'enabled', timeout: 3000 })
+  await expect(page.getByRole('button', { name: /sign in/i })).toBeEnabled({ timeout: 3000 })
   await page.getByRole('button', { name: /sign in/i }).click()
 
   // Wait for redirect after successful login
