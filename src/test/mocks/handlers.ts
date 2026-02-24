@@ -103,4 +103,32 @@ export const handlers = [
     }
     return HttpResponse.json({ error: 'Invalid request' }, { status: 400 })
   }),
+  // Auth token (signInWithPassword re-auth)
+  http.post('https://test.supabase.co/auth/v1/token', async ({ request }) => {
+    const url = new URL(request.url)
+    if (url.searchParams.get('grant_type') === 'password') {
+      const body = await request.json() as { email?: string; password?: string }
+      if (body.password === 'wrongpassword') {
+        return HttpResponse.json(
+          { error: 'invalid_grant', error_description: 'Invalid login credentials' },
+          { status: 400 }
+        )
+      }
+      return HttpResponse.json({
+        access_token: 'test-access-token',
+        token_type: 'bearer',
+        user: { id: 'user-1', email: body.email },
+      })
+    }
+    return HttpResponse.json({}, { status: 400 })
+  }),
+
+  // Auth user update (updateUser)
+  http.put('https://test.supabase.co/auth/v1/user', async ({ request }) => {
+    const body = await request.json() as { email?: string; password?: string }
+    return HttpResponse.json({
+      id: 'user-1',
+      email: body.email ?? 'test@example.com',
+    })
+  }),
 ]

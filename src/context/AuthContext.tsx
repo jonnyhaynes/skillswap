@@ -50,6 +50,8 @@ export interface AuthContextType {
   signOut: () => Promise<void>
   resetPassword: (email: string, captchaToken?: string) => Promise<{ error?: string }>
   updateProfile: (data: Partial<AppUser>) => Promise<{ error?: string }>
+  updateEmail: (currentPassword: string, newEmail: string) => Promise<{ error?: string }>
+  updatePassword: (currentPassword: string, newPassword: string) => Promise<{ error?: string }>
   getUserById: (userId: string) => AppUser | undefined
   fetchUserById: (userId: string) => Promise<AppUser | null>
   fetchUsersByIds: (userIds: string[]) => Promise<AppUser[]>
@@ -312,6 +314,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [state.currentUser]
   )
 
+  const updateEmail = useCallback(
+    async (currentPassword: string, newEmail: string): Promise<{ error?: string }> => {
+      if (!state.currentUser || !state.session?.user.email) {
+        return { error: 'Not authenticated' }
+      }
+
+      // Verify current password by re-authenticating
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: state.session.user.email,
+        password: currentPassword,
+      })
+
+      if (signInError) {
+        return { error: 'Incorrect password. Please try again.' }
+      }
+
+      // Request email change — Supabase sends confirmation link to new email
+      const { error: updateError } = await supabase.auth.updateUser({ email: newEmail })
+
+      if (updateError) {
+        return { error: getAuthErrorMessage(updateError) }
+      }
+
+      return {}
+    },
+    [state.currentUser, state.session]
+  )
+
   const getUserById = useCallback(
     (userId: string): AppUser | undefined => {
       if (state.currentUser?.id === userId) {
@@ -390,6 +420,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signOut,
         resetPassword,
         updateProfile,
+        updateEmail,
         getUserById,
         fetchUserById,
         fetchUsersByIds,
