@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useSwaps } from '@/hooks/useSwaps'
 import { exportAccountData, deleteAccount, AccountServiceError } from '@/services/account'
@@ -15,7 +14,6 @@ export default function DeleteAccountFlow() {
 
   const { currentUser, signOut } = useAuth()
   const { getActiveSwaps } = useSwaps()
-  const navigate = useNavigate()
 
   const activeSwapCount = currentUser ? getActiveSwaps(currentUser.id).length : 0
 
@@ -47,7 +45,9 @@ export default function DeleteAccountFlow() {
     try {
       await deleteAccount(confirmation)
       await signOut()
-      navigate('/', { replace: true })
+      // Full reload clears all provider caches (SkillsContext, SwapsContext, etc.)
+      // so stale data from the deleted account never appears on /browse or elsewhere
+      window.location.replace('/')
     } catch (err) {
       setError(err instanceof AccountServiceError ? err.message : 'Deletion failed. Please try again.')
       setIsDeleting(false)
