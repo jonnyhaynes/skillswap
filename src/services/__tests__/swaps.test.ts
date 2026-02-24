@@ -41,7 +41,7 @@ describe('createProposal', () => {
       offeredSkillId: 'skill-1',
       requestedSkillId: 'skill-2',
       message: 'Want to swap?',
-      conversationId: null,
+      conversationId: 'conv-1',
     })
     expect(result.id).toBe('swap-1')
     expect(result.status).toBe('pending')
