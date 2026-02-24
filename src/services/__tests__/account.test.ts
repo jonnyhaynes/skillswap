@@ -6,7 +6,6 @@ import {
   deleteAccount,
   AccountServiceError,
 } from '../account'
-import { mockAccountExport } from '../../test/mocks/handlers'
 
 describe('exportAccountData', () => {
   it('returns a correctly shaped export object', async () => {

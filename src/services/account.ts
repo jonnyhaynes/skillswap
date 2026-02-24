@@ -12,12 +12,12 @@ export interface AccountExport {
 }
 
 export class AccountServiceError extends Error {
-  constructor(
-    message: string,
-    public readonly code?: string
-  ) {
+  code?: string
+
+  constructor(message: string, code?: string) {
     super(message)
     this.name = 'AccountServiceError'
+    this.code = code
   }
 }
 
