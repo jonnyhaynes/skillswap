@@ -87,7 +87,11 @@
       "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/.worktrees/add-testing/.gitignore:*)",
       "Bash(npx playwright install:*)",
       "Bash(npx playwright:*)",
-      "Bash(docker ps:*)"
+      "Bash(docker ps:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/supabase/migrations/014_account_deletion.sql:*)",
+      "Bash(git status:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/supabase/functions/delete-account/index.ts:*)",
+      "mcp__Claude_Preview__preview_start"
     ]
   }
 }
