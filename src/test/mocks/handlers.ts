@@ -1,6 +1,18 @@
 import { http, HttpResponse } from 'msw'
 
 const BASE = 'https://test.supabase.co/rest/v1'
+const FUNCTIONS_BASE = 'https://test.supabase.co/functions/v1'
+
+export const mockAccountExport = {
+  exported_at: '2024-01-01T00:00:00.000Z',
+  profile: { id: 'user-1', first_name: 'Test', email: 'test@example.com' },
+  skill_listings: [],
+  conversations: [],
+  messages: [],
+  swap_proposals: [],
+  reviews_written: [],
+  reviews_received: [],
+}
 
 // Reusable skill listing shape (matches SkillListingRow from database.ts)
 export const mockSkillRow = {
@@ -78,5 +90,17 @@ export const handlers = [
   }),
   http.post(`${BASE}/reviews`, () => {
     return HttpResponse.json([mockReviewRow], { status: 201 })
+  }),
+
+  // Account (Edge Function)
+  http.post(`${FUNCTIONS_BASE}/delete-account`, async ({ request }) => {
+    const body = await request.json() as { action?: string; confirmation?: string }
+    if (body.action === 'export') {
+      return HttpResponse.json(mockAccountExport)
+    }
+    if (body.action === 'delete' && body.confirmation === 'DELETE') {
+      return HttpResponse.json({ success: true })
+    }
+    return HttpResponse.json({ error: 'Invalid request' }, { status: 400 })
   }),
 ]
