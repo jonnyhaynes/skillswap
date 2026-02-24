@@ -35,3 +35,8 @@ docs
 .env.local
 .env.production
 .env*.local
+
+# Playwright
+/e2e/fixtures/.auth.json
+/playwright-report/
+/test-results/
