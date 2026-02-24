@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, Link } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/hooks/useToast'
 import { ProfileForm, type ProfileFormData } from '@/components/profile/ProfileForm'
@@ -59,7 +59,12 @@ export function EditProfilePage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Edit Profile</h1>
+      <div className="flex items-baseline justify-between mb-6">
+        <h1 className="text-2xl font-bold text-slate-900">Edit Profile</h1>
+        <Link to="/settings/account" className="text-sm text-gray-500 hover:text-gray-700 underline">
+          Account settings
+        </Link>
+      </div>
       <Card className="p-6">
         <ProfileForm
           user={currentUser}

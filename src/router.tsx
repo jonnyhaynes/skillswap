@@ -21,6 +21,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 import { TermsOfServicePage } from '@/pages/TermsOfServicePage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
 import { ContactPage } from '@/pages/ContactPage'
+import { AccountSettingsPage } from '@/pages/AccountSettingsPage'
 
 // Stable named wrappers — avoids remounting when search params change
 // (inline `element={<AuthGuard><Page /></AuthGuard>}` creates a new element each render)
@@ -34,6 +35,7 @@ const GuardedSwaps = () => <AuthGuard><SwapsPage /></AuthGuard>
 const GuardedSwapDetail = () => <AuthGuard><SwapDetailPage /></AuthGuard>
 const GuardedMessages = () => <AuthGuard><MessagesPage /></AuthGuard>
 const GuardedConversation = () => <AuthGuard><ConversationPage /></AuthGuard>
+const GuardedAccountSettings = () => <AuthGuard><AccountSettingsPage /></AuthGuard>
 
 function RouteErrorPage() {
   const error = useRouteError()
@@ -81,6 +83,7 @@ export const router = createBrowserRouter([
       { path: 'skills/new', Component: GuardedCreateListing },
       { path: 'skills/:skillId/edit', Component: GuardedEditListing },
       { path: 'profile/edit', Component: GuardedEditProfile },
+      { path: 'settings/account', Component: GuardedAccountSettings },
       { path: 'my-listings', Component: GuardedMyListings },
       { path: 'swaps', Component: GuardedSwaps },
       { path: 'swaps/:swapId', Component: GuardedSwapDetail },
