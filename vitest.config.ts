@@ -8,6 +8,7 @@ export default mergeConfig(
       environment: 'jsdom',
       globals: true,
       setupFiles: ['./src/test/setup.ts'],
+      include: ['src/**/*.{test,spec}.{ts,tsx}'],
       env: {
         VITE_SUPABASE_URL: 'https://test.supabase.co',
         VITE_SUPABASE_ANON_KEY: 'test-anon-key',
