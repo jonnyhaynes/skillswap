@@ -75,7 +75,19 @@
       "Bash(npm run:*)",
       "Bash(git pull:*)",
       "Bash(git merge:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/supabase/migrations/013_user_presence.sql << 'EOF'\n-- Add last_seen_at to track when a user last visited the application\nALTER TABLE public.profiles\n  ADD COLUMN IF NOT EXISTS last_seen_at TIMESTAMPTZ DEFAULT NULL;\nEOF)",
+      "Bash(git push:*)",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap check-ignore -q .worktrees)",
+      "Bash(node -e:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/.worktrees/add-testing/src/test/mocks/handlers.ts:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/.worktrees/add-testing/src/test/setup.ts:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/.worktrees/add-testing/src/utils/__tests__/formatDate.test.ts:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/.worktrees/add-testing/src/utils/__tests__/formatRelativeTime.test.ts:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/.worktrees/add-testing/.gitignore:*)",
+      "Bash(npx playwright install:*)",
+      "Bash(npx playwright:*)",
+      "Bash(docker ps:*)"
     ]
   }
 }
