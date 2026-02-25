@@ -342,6 +342,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [state.currentUser, state.session]
   )
 
+  const updatePassword = useCallback(
+    async (_currentPassword: string, _newPassword: string): Promise<{ error?: string }> => {
+      return { error: 'Not implemented' }
+    },
+    []
+  )
+
   const getUserById = useCallback(
     (userId: string): AppUser | undefined => {
       if (state.currentUser?.id === userId) {
@@ -421,6 +428,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         resetPassword,
         updateProfile,
         updateEmail,
+        updatePassword,
         getUserById,
         fetchUserById,
         fetchUsersByIds,

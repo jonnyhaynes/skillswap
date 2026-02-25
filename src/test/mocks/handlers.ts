@@ -116,6 +116,8 @@ export const handlers = [
       }
       return HttpResponse.json({
         access_token: 'test-access-token',
+        refresh_token: 'test-refresh-token',
+        expires_in: 3600,
         token_type: 'bearer',
         user: { id: 'user-1', email: body.email },
       })
