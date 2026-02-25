@@ -2,11 +2,11 @@ export interface User {
   id: string;
   firstName: string;
   lastName: string;
-  email: string;
+  email?: string;
   avatarUrl: string | null;
   bio: string;
   neighbourhood: string;
-  postcode: string;
+  postcode?: string;
   joinedAt: string;
   lastSeenAt: string | null;
   isVerifiedNeighbour: boolean;

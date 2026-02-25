@@ -97,12 +97,12 @@ export function ReportUserModal({
 
     try {
       await submitUserReport({
-        reporterId: currentUser.id,
         reportedUserId,
         reason,
         description: description.trim(),
         evidenceSwapId: evidenceSwapId ?? null,
         evidenceSkillId: evidenceSkillId ?? null,
+        turnstileToken: turnstileToken!,
       })
       setShowConfirmation(true)
     } catch (err) {

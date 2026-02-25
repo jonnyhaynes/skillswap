@@ -27,6 +27,23 @@ interface WebhookPayload {
 }
 
 Deno.serve(async (req) => {
+  // Verify the shared secret sent by the Supabase database webhook.
+  // The webhook must be configured with Authorization: Bearer <WEBHOOK_SECRET>.
+  const webhookSecret = Deno.env.get("WEBHOOK_SECRET");
+  if (!webhookSecret) {
+    console.error("WEBHOOK_SECRET env var is not set");
+    return new Response(JSON.stringify({ error: "Server misconfigured" }), {
+      status: 500,
+    });
+  }
+
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader || authHeader !== `Bearer ${webhookSecret}`) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+    });
+  }
+
   try {
     const payload: WebhookPayload = await req.json();
 

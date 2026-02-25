@@ -1,5 +1,4 @@
 import { supabase } from '@/lib/supabase'
-import { mapUserReportToDbInsert } from '@/lib/typeMappers'
 import type { ReportReason } from '@/types'
 
 export class ReportsServiceError extends Error {
@@ -13,28 +12,31 @@ export class ReportsServiceError extends Error {
 }
 
 export async function submitUserReport(data: {
-  reporterId: string
   reportedUserId: string
   reason: ReportReason
   description: string
   evidenceSwapId?: string | null
   evidenceSkillId?: string | null
+  turnstileToken: string
 }): Promise<void> {
-  const insert = mapUserReportToDbInsert({
-    reporterId: data.reporterId,
-    reportedUserId: data.reportedUserId,
-    reason: data.reason,
-    description: data.description,
-    evidenceSwapId: data.evidenceSwapId ?? null,
-    evidenceSkillId: data.evidenceSkillId ?? null,
+  const { error } = await supabase.functions.invoke('submit-report', {
+    body: {
+      reportedUserId: data.reportedUserId,
+      reason: data.reason,
+      description: data.description,
+      evidenceSwapId: data.evidenceSwapId ?? null,
+      evidenceSkillId: data.evidenceSkillId ?? null,
+      turnstileToken: data.turnstileToken,
+    },
   })
 
-  const { error } = await supabase.from('user_reports').insert(insert)
-
   if (error) {
-    throw new ReportsServiceError(
-      error.message || 'Failed to submit report',
-      error.code,
-    )
+    // Supabase wraps the function's error response in error.message as JSON
+    try {
+      const parsed = JSON.parse(error.message)
+      throw new ReportsServiceError(parsed.error || 'Failed to submit report')
+    } catch {
+      throw new ReportsServiceError(error.message || 'Failed to submit report')
+    }
   }
 }

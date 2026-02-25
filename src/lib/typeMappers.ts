@@ -35,16 +35,23 @@ import type {
 // Profile <-> User
 // ============================================
 
-export function mapProfileToUser(profile: ProfileRow): User {
+// A public profile row omits PII columns that are revoked from the
+// authenticated/anon roles (email, postcode, updated_at).
+type PublicProfileRow = Omit<ProfileRow, 'email' | 'postcode' | 'updated_at'> & {
+  email?: string | null
+  postcode?: string | null
+}
+
+export function mapProfileToUser(profile: ProfileRow | PublicProfileRow): User {
   return {
     id: profile.id,
     firstName: profile.first_name,
     lastName: profile.last_name,
-    email: profile.email,
+    email: profile.email ?? undefined,
     avatarUrl: profile.avatar_url,
     bio: profile.bio,
     neighbourhood: profile.neighbourhood,
-    postcode: profile.postcode,
+    postcode: profile.postcode ?? undefined,
     joinedAt: profile.joined_at,
     lastSeenAt: profile.last_seen_at ?? null,
     isVerifiedNeighbour: profile.is_verified_neighbour,
@@ -64,7 +71,6 @@ export function mapUserToProfileUpdate(user: Partial<User>): ProfileUpdate {
   if (user.bio !== undefined) update.bio = user.bio
   if (user.neighbourhood !== undefined) update.neighbourhood = user.neighbourhood
   if (user.postcode !== undefined) update.postcode = user.postcode
-  if (user.isVerifiedNeighbour !== undefined) update.is_verified_neighbour = user.isVerifiedNeighbour
 
   return update
 }

@@ -104,7 +104,11 @@
       "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/src/pages/AccountSettingsPage.tsx:*)",
       "Bash(open:*)",
       "Bash(docker info:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Skill(code-review:code-review)",
+      "Skill(code-review:code-review:*)",
+      "Bash(npm audit:*)",
+      "Bash(git remote get-url origin)"
     ]
   }
 }

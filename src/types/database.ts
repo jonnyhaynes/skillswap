@@ -422,7 +422,10 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_own_profile_pii: {
+        Args: Record<PropertyKey, never>
+        Returns: { email: string | null; postcode: string | null }[]
+      }
     }
     Enums: {
       skill_category: SkillCategoryDb

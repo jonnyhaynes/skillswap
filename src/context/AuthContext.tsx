@@ -8,7 +8,7 @@ import {
 import type { User as AppUser } from '@/types'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
-import { getProfile, updateProfile as updateProfileService, getProfilesByIds } from '@/services/profiles'
+import { getOwnProfile, getProfile, updateProfile as updateProfileService, getProfilesByIds } from '@/services/profiles'
 import { getAuthErrorMessage } from '@/lib/errors'
 import { usePresence } from '@/hooks/usePresence'
 
@@ -126,7 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Get initial session
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user) {
-        const profile = await getProfile(session.user.id)
+        const profile = await getOwnProfile(session.user.id)
         dispatch({ type: 'SET_SESSION', session, user: profile })
         // Check if user needs to complete onboarding
         if (profile && profile.neighbourhood === 'Unknown') {
@@ -145,7 +145,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
-        getProfile(session.user.id).then((profile) => {
+        getOwnProfile(session.user.id).then((profile) => {
           dispatch({ type: 'SET_SESSION', session, user: profile })
           // Check if OAuth user needs to complete onboarding
           if (profile && profile.neighbourhood === 'Unknown') {

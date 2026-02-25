@@ -22,6 +22,7 @@ import { TermsOfServicePage } from '@/pages/TermsOfServicePage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
 import { ContactPage } from '@/pages/ContactPage'
 import { AccountSettingsPage } from '@/pages/AccountSettingsPage'
+import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
 
 // Stable named wrappers — avoids remounting when search params change
 // (inline `element={<AuthGuard><Page /></AuthGuard>}` creates a new element each render)
@@ -75,6 +76,7 @@ export const router = createBrowserRouter([
       { path: 'login', Component: LoginPage },
       { path: 'signup', Component: SignUpPage },
       { path: 'forgot-password', Component: ForgotPasswordPage },
+      { path: 'reset-password', Component: ResetPasswordPage },
 
       // Onboarding for new OAuth users
       { path: 'onboarding', Component: GuardedOnboarding },
