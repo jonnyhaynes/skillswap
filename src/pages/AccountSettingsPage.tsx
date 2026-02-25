@@ -1,9 +1,14 @@
 import { Link } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import DeleteAccountFlow from '../components/account/DeleteAccountFlow'
+import ChangeEmailForm from '../components/account/ChangeEmailForm'
+import ChangePasswordForm from '../components/account/ChangePasswordForm'
 
 export function AccountSettingsPage() {
-  const { currentUser } = useAuth()
+  const { currentUser, session } = useAuth()
+
+  const isOAuthUser = session?.user?.app_metadata?.provider !== 'email'
+  const oauthProvider = session?.user?.app_metadata?.provider
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
@@ -23,10 +28,6 @@ export function AccountSettingsPage() {
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Account information</h2>
         <div className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-100">
           <div className="flex justify-between items-center px-4 py-3">
-            <span className="text-sm text-gray-500">Email</span>
-            <span className="text-sm text-gray-900">{currentUser?.email}</span>
-          </div>
-          <div className="flex justify-between items-center px-4 py-3">
             <span className="text-sm text-gray-500">Member since</span>
             <span className="text-sm text-gray-900">
               {currentUser?.joinedAt
@@ -39,6 +40,24 @@ export function AccountSettingsPage() {
             </span>
           </div>
         </div>
+      </section>
+
+      {/* Security */}
+      <section className="mb-10">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Security</h2>
+        {isOAuthUser ? (
+          <div className="bg-white border border-gray-200 rounded-lg px-4 py-3">
+            <p className="text-sm text-gray-500">
+              Your login credentials are managed by{' '}
+              {oauthProvider === 'google' ? 'Google' : 'Apple'}.
+            </p>
+          </div>
+        ) : (
+          <div className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-100">
+            <ChangeEmailForm />
+            <ChangePasswordForm />
+          </div>
+        )}
       </section>
 
       {/* Danger zone */}

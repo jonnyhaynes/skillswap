@@ -49,7 +49,7 @@ export default function ChangeEmailForm() {
   // ── Collapsed ──────────────────────────────────────────────────────────────
   if (!expanded) {
     return (
-      <div className="flex justify-between items-center px-4 py-3">
+      <div data-testid="email-row" className="flex justify-between items-center px-4 py-3">
         <div>
           <span className="text-sm text-gray-500">Email</span>
           <span className="text-sm text-gray-900 ml-4">{currentEmail}</span>
@@ -66,7 +66,7 @@ export default function ChangeEmailForm() {
 
   // ── Expanded ───────────────────────────────────────────────────────────────
   return (
-    <div className="px-4 py-4">
+    <div data-testid="email-row" className="px-4 py-4">
       <p className="text-sm font-medium text-gray-700 mb-3">Change email</p>
 
       {success && (
