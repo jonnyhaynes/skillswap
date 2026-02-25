@@ -51,3 +51,25 @@ describe('updateEmail auth flow (via Supabase client)', () => {
     expect(error).not.toBeNull()
   })
 })
+
+describe('updatePassword auth flow (via Supabase client)', () => {
+  it('updateUser with new password succeeds after sign in', async () => {
+    const { supabase } = await import('../../lib/supabase')
+    // Re-auth first
+    await supabase.auth.signInWithPassword({
+      email: 'test@example.com',
+      password: 'current123',
+    })
+    const { error } = await supabase.auth.updateUser({ password: 'newpassword123' })
+    expect(error).toBeNull()
+  })
+
+  it('signInWithPassword fails with wrong password (blocks updatePassword)', async () => {
+    const { supabase } = await import('../../lib/supabase')
+    const { error } = await supabase.auth.signInWithPassword({
+      email: 'test@example.com',
+      password: 'wrongpassword',
+    })
+    expect(error).not.toBeNull()
+  })
+})

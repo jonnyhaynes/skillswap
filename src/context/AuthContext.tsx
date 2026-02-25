@@ -343,10 +343,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const updatePassword = useCallback(
-    async (_currentPassword: string, _newPassword: string): Promise<{ error?: string }> => {
-      return { error: 'Not implemented' }
+    async (currentPassword: string, newPassword: string): Promise<{ error?: string }> => {
+      if (!state.currentUser || !state.session?.user.email) {
+        return { error: 'Not authenticated' }
+      }
+
+      // Verify current password by re-authenticating
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: state.session.user.email,
+        password: currentPassword,
+      })
+
+      if (signInError) {
+        return { error: 'Incorrect password. Please try again.' }
+      }
+
+      // Update password — takes effect immediately
+      const { error: updateError } = await supabase.auth.updateUser({ password: newPassword })
+
+      if (updateError) {
+        return { error: getAuthErrorMessage(updateError) }
+      }
+
+      return {}
     },
-    []
+    [state.currentUser, state.session]
   )
 
   const getUserById = useCallback(
