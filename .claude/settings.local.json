@@ -91,7 +91,20 @@
       "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/supabase/migrations/014_account_deletion.sql:*)",
       "Bash(git status:*)",
       "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/supabase/functions/delete-account/index.ts:*)",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/src/context/__tests__/AuthContext.updateEmail.test.ts:*)",
+      "Bash(npx vitest:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/src/components/account/__tests__/ChangeEmailForm.test.tsx:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/src/components/account/ChangeEmailForm.tsx:*)",
+      "Bash(git -C /Users/jonnyhaynes/Projects/claude/skillswap add:*)",
+      "Bash(git -C:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/src/components/account/__tests__/ChangePasswordForm.test.tsx:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/src/components/account/ChangePasswordForm.tsx:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/e2e/account-settings.spec.ts:*)",
+      "Bash(/Users/jonnyhaynes/Projects/claude/skillswap/src/pages/AccountSettingsPage.tsx:*)",
+      "Bash(open:*)",
+      "Bash(docker info:*)",
+      "Bash(git stash:*)"
     ]
   }
 }
