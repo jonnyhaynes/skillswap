@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import DeleteAccountFlow from '../components/account/DeleteAccountFlow'
@@ -6,6 +7,10 @@ import ChangePasswordForm from '../components/account/ChangePasswordForm'
 
 export function AccountSettingsPage() {
   const { currentUser, session } = useAuth()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const isOAuthUser = session?.user?.app_metadata?.provider !== 'email'
   const oauthProvider = session?.user?.app_metadata?.provider
