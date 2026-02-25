@@ -71,6 +71,7 @@ describe('ChangeEmailForm', () => {
     fireEvent.click(screen.getByRole('button', { name: /save/i }))
     await waitFor(() => {
       expect(screen.getByRole('status')).toHaveTextContent('Confirmation email sent')
+      expect(screen.getByRole('status')).toHaveTextContent('new@example.com')
     })
     expect(mockUpdateEmail).toHaveBeenCalledWith('mypassword', 'new@example.com')
   })

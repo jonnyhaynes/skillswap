@@ -8,6 +8,7 @@ export default function ChangeEmailForm() {
   const [expanded, setExpanded] = useState(false)
   const [currentPassword, setCurrentPassword] = useState('')
   const [newEmail, setNewEmail] = useState('')
+  const [submittedEmail, setSubmittedEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -16,6 +17,7 @@ export default function ChangeEmailForm() {
     setExpanded(false)
     setCurrentPassword('')
     setNewEmail('')
+    setSubmittedEmail('')
     setError(null)
     setSuccess(false)
   }
@@ -38,6 +40,7 @@ export default function ChangeEmailForm() {
       return
     }
 
+    setSubmittedEmail(newEmail)
     setSuccess(true)
     setCurrentPassword('')
     setNewEmail('')
@@ -68,7 +71,7 @@ export default function ChangeEmailForm() {
 
       {success && (
         <p role="status" className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mb-4">
-          Confirmation email sent to <strong>{newEmail || 'your new address'}</strong>. The change
+          Confirmation email sent to <strong>{submittedEmail}</strong>. The change
           takes effect once you click the link.
         </p>
       )}
