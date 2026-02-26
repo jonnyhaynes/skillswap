@@ -16,5 +16,5 @@ CREATE POLICY "Authenticated users can insert neighbourhoods"
   TO authenticated
   WITH CHECK (
     length(name) BETWEEN 1 AND 100
-    AND name ~ $$^[A-Za-z][A-Za-z' \-]*$$$
+    AND name ~ $re$^[A-Za-z][A-Za-z' \-]*$$re$
   );
