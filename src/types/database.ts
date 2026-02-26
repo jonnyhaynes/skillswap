@@ -88,7 +88,9 @@ export interface Database {
           neighbourhood?: string
           postcode?: string
           joined_at?: string
-          is_verified_neighbour?: boolean
+          // is_verified_neighbour is intentionally omitted — it is write-protected
+          // at the DB level (REVOKE UPDATE in migration 016) and must only be set
+          // by the recalculate_verified_neighbour() trigger function.
           updated_at?: string
           last_seen_at?: string | null
         }

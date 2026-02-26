@@ -248,7 +248,14 @@ export function subscribeToMessages(
 }
 
 /**
- * Subscribe to all conversations for a user (for notifications)
+ * Subscribe to all conversations for a user (for notifications).
+ *
+ * Server-side filter limitation: Supabase Realtime does not support array-
+ * contains filters, so we cannot filter messages by `participant_ids` or
+ * conversations by whether the user appears in `participant_ids`.  Supabase
+ * Realtime RLS (row-level security) already enforces that users only receive
+ * events for rows they are permitted to read, so these subscriptions are safe —
+ * no cross-user data leaks occur even though no explicit filter is set here.
  */
 export function subscribeToUserConversations(
   userId: string,
@@ -263,6 +270,8 @@ export function subscribeToUserConversations(
         event: 'INSERT',
         schema: 'public',
         table: 'messages',
+        // No server-side filter: messages table uses conversation_id, not user_id.
+        // Realtime RLS restricts events to conversations the user participates in.
       },
       (payload) => {
         onNewMessage(mapDbMessage(payload.new as Parameters<typeof mapDbMessage>[0]))
@@ -274,6 +283,8 @@ export function subscribeToUserConversations(
         event: 'UPDATE',
         schema: 'public',
         table: 'conversations',
+        // No server-side filter: participant_ids array column is not supported
+        // by Realtime filters.  Realtime RLS enforces row-level access control.
       },
       (payload) => {
         onConversationUpdate(

@@ -64,8 +64,8 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
       return
     }
 
-    if (formData.password.length < 6) {
-      setLocalError('Password must be at least 6 characters')
+    if (formData.password.length < 8) {
+      setLocalError('Password must be at least 8 characters')
       return
     }
 
@@ -242,7 +242,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           value={formData.password}
           onChange={handleChange}
           className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-          placeholder="At least 6 characters"
+          placeholder="At least 8 characters"
         />
       </div>
 

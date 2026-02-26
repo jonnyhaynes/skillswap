@@ -14,6 +14,13 @@ function getInitials(name: string): string {
   return (first + last).toUpperCase();
 }
 
+/** Only allow https:// URLs to prevent javascript: and data: URI injection. */
+function getSafeAvatarUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  if (!url.startsWith('https://')) return undefined;
+  return url;
+}
+
 export function AvatarLightbox({ isOpen, onClose, src, name }: AvatarLightboxProps) {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
@@ -76,9 +83,9 @@ export function AvatarLightbox({ isOpen, onClose, src, name }: AvatarLightboxPro
         </button>
         <div className="rounded-full p-1 bg-primary-500 shadow-2xl">
           <div className="rounded-full p-1 bg-white">
-            {src ? (
+            {getSafeAvatarUrl(src) ? (
               <img
-                src={src}
+                src={getSafeAvatarUrl(src)}
                 alt={name}
                 className="w-64 h-64 rounded-full object-cover"
               />

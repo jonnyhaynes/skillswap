@@ -159,7 +159,7 @@ INSERT INTO auth.users (
   );
 
 -- E2E test user — used exclusively by Playwright (auth.setup.ts).
--- Password: QWP8zen2qnu!pet*txw  →  set E2E_TEST_PASSWORD=QWP8zen2qnu!pet*txw in .env.local
+-- Set E2E_TEST_PASSWORD in .env.local; do NOT commit the plaintext password here.
 INSERT INTO auth.users (
   id, instance_id, aud, role, email, encrypted_password,
   email_confirmed_at, raw_user_meta_data, raw_app_meta_data,

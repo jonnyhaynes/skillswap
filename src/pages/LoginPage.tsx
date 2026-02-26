@@ -7,8 +7,10 @@ export function LoginPage() {
   const location = useLocation()
   const { currentUser, initialized, needsOnboarding } = useAuth()
 
-  // Get the redirect destination from location state, or default to home
-  const from = (location.state as { from?: Location })?.from?.pathname || '/'
+  // Get the redirect destination from location state, or default to home.
+  // Validate it is a relative path (starts with / but not //) to prevent open redirects.
+  const rawFrom = (location.state as { from?: Location })?.from?.pathname
+  const from = rawFrom && /^\/(?!\/)/.test(rawFrom) ? rawFrom : '/'
 
   // Redirect if already logged in
   if (initialized && currentUser) {

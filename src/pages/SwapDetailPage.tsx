@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router';
+import { Link, useParams, useNavigate, Navigate } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useSkills } from '@/hooks/useSkills';
 import { useSwaps } from '@/hooks/useSwaps';
@@ -63,6 +63,14 @@ export function SwapDetailPage() {
         }}
       />
     );
+  }
+
+  // Defence-in-depth: confirm the current user is actually a participant before
+  // rendering any swap content (RLS enforces this on the server, but an unfiltered
+  // Realtime event could theoretically surface a third-party swap in the cache).
+  const isParticipant = swap.proposerId === currentUser.id || swap.recipientId === currentUser.id
+  if (!isParticipant) {
+    return <Navigate to="/swaps" replace />
   }
 
   const otherUserId = swap.proposerId === currentUser.id ? swap.recipientId : swap.proposerId;

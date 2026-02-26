@@ -104,7 +104,9 @@ export async function createReview(
     .single()
 
   if (error) {
-    console.error('Review creation failed:', { message: error.message, code: error.code, details: error.details, hint: error.hint })
+    // Log only the error code — not the full message, details, or hint —
+    // to avoid exposing Postgres internals in browser devtools.
+    console.error('Review creation failed:', error.code)
     throw new ReviewsServiceError(error.message, error.code)
   }
 

@@ -91,3 +91,59 @@ describe('deleteSkillListing', () => {
     await expect(deleteSkillListing('skill-1')).resolves.toBeUndefined()
   })
 })
+
+describe('getSkillListings — searchQuery sanitisation (security)', () => {
+  it('strips PostgREST special characters from the search query', async () => {
+    let capturedUrl = ''
+    server.use(
+      http.get('https://test.supabase.co/rest/v1/skill_listings', ({ request }) => {
+        capturedUrl = decodeURIComponent(request.url)
+        return HttpResponse.json([mockSkillRow])
+      })
+    )
+
+    // Commas, parentheses, and backticks are PostgREST injection vectors
+    await getSkillListings({ searchQuery: 'guitar,extra(injected)`bad' })
+
+    expect(capturedUrl).toBeDefined()
+    // Safe characters must remain in the filter
+    expect(capturedUrl).toContain('guitar')
+    expect(capturedUrl).toContain('extra')
+    expect(capturedUrl).toContain('injected')
+    // Dangerous characters must be stripped
+    expect(capturedUrl).not.toContain(',extra')   // comma stripped
+    expect(capturedUrl).not.toContain('(injected') // paren stripped
+    expect(capturedUrl).not.toContain('`bad')       // backtick stripped
+  })
+
+  it('omits the or filter entirely when query contains only special characters', async () => {
+    let capturedUrl = ''
+    server.use(
+      http.get('https://test.supabase.co/rest/v1/skill_listings', ({ request }) => {
+        capturedUrl = request.url
+        return HttpResponse.json([])
+      })
+    )
+
+    await getSkillListings({ searchQuery: '()()(,,,)' })
+
+    // All chars stripped → empty safeQuery → no or filter added to the request
+    expect(capturedUrl).not.toContain('or=')
+  })
+
+  it('uses a safe query normally when no special characters are present', async () => {
+    let capturedUrl = ''
+    server.use(
+      http.get('https://test.supabase.co/rest/v1/skill_listings', ({ request }) => {
+        // Replace '+' (form-encoded space) with ' ' before asserting
+        capturedUrl = decodeURIComponent(request.url.replace(/\+/g, ' '))
+        return HttpResponse.json([mockSkillRow])
+      })
+    )
+
+    await getSkillListings({ searchQuery: 'piano lessons' })
+
+    expect(capturedUrl).toContain('or=')
+    expect(capturedUrl).toContain('piano lessons')
+  })
+})

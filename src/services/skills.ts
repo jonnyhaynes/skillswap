@@ -55,9 +55,15 @@ export async function getSkillListings(filters?: {
   }
 
   if (filters?.searchQuery) {
-    query = query.or(
-      `title.ilike.%${filters.searchQuery}%,description.ilike.%${filters.searchQuery}%`
-    )
+    // Strip characters that have special meaning in PostgREST filter strings
+    // (comma separates OR terms; parentheses are used in grouped expressions)
+    // before interpolating into the .or() call to prevent filter injection.
+    const safeQuery = filters.searchQuery.replace(/[(),`]/g, '')
+    if (safeQuery) {
+      query = query.or(
+        `title.ilike.%${safeQuery}%,description.ilike.%${safeQuery}%`
+      )
+    }
   }
 
   const { data, error } = await query

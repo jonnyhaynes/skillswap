@@ -28,11 +28,19 @@ function getInitials(name: string): string {
   return (first + last).toUpperCase();
 }
 
+/** Only allow https:// URLs to prevent javascript: and data: URI injection. */
+function getSafeAvatarUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  if (!url.startsWith('https://')) return undefined;
+  return url;
+}
+
 export function Avatar({ src, name, size = 'md', className }: AvatarProps) {
-  if (src) {
+  const safeSrc = getSafeAvatarUrl(src);
+  if (safeSrc) {
     return (
       <img
-        src={src}
+        src={safeSrc}
         alt={name}
         className={cn(
           'rounded-full object-cover',

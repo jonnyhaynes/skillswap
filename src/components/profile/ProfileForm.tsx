@@ -10,6 +10,31 @@ import { ensureNeighbourhoodExists } from '@/services/neighbourhoods'
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
 
+/**
+ * Verify an image file's magic bytes to confirm it is actually the declared
+ * type.  Relying solely on file.type is unsafe because the MIME type is derived
+ * from the file extension and can be trivially spoofed.
+ */
+async function checkImageMagicBytes(file: File): Promise<boolean> {
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onloadend = (e) => {
+      const arr = new Uint8Array(e.target?.result as ArrayBuffer)
+      // JPEG: FF D8 FF
+      if (arr[0] === 0xff && arr[1] === 0xd8 && arr[2] === 0xff) return resolve(true)
+      // PNG: 89 50 4E 47
+      if (arr[0] === 0x89 && arr[1] === 0x50 && arr[2] === 0x4e && arr[3] === 0x47) return resolve(true)
+      // WebP: 52 49 46 46 ?? ?? ?? ?? 57 45 42 50
+      if (
+        arr[0] === 0x52 && arr[1] === 0x49 && arr[2] === 0x46 && arr[3] === 0x46 &&
+        arr[8] === 0x57 && arr[9] === 0x45 && arr[10] === 0x42 && arr[11] === 0x50
+      ) return resolve(true)
+      resolve(false)
+    }
+    reader.readAsArrayBuffer(file.slice(0, 12))
+  })
+}
+
 export interface ProfileFormData {
   fields: Partial<User>
   avatarFile?: File | null
@@ -45,7 +70,7 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
     }
   }, [avatarPreview])
 
-  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     setFileError(null)
 
@@ -58,6 +83,14 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
 
     if (file.size > MAX_FILE_SIZE) {
       setFileError('Image must be smaller than 2MB.')
+      return
+    }
+
+    // Validate actual file content via magic bytes — the MIME type from
+    // file.type is derived from the extension and can be spoofed.
+    const isValidImage = await checkImageMagicBytes(file)
+    if (!isValidImage) {
+      setFileError('Please select a valid image file (PNG, JPEG, or WebP).')
       return
     }
 
@@ -181,12 +214,14 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
           required
+          maxLength={100}
         />
         <Input
           label="Last Name"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
           required
+          maxLength={100}
         />
       </div>
 
@@ -195,6 +230,7 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
         value={bio}
         onChange={(e) => setBio(e.target.value)}
         rows={4}
+        maxLength={500}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -212,6 +248,7 @@ export function ProfileForm({ user, onSubmit, onCancel, submitting = false }: Pr
           label="Postcode"
           value={postcode}
           onChange={(e) => setPostcode(e.target.value)}
+          maxLength={10}
         />
       </div>
 

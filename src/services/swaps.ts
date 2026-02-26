@@ -122,41 +122,36 @@ export async function updateSwapStatus(
 }
 
 /**
- * Mark a swap as complete for one party
+ * Mark a swap as complete for one party.
+ *
+ * The DB trigger `auto_complete_swap` (migration 027) atomically sets
+ * status='completed' and completed_at when both completion flags become true,
+ * eliminating the read-modify-write race that existed in the previous
+ * implementation.  We still need a minimal read to determine whether the
+ * caller is the proposer or recipient — proposer_id is immutable so this read
+ * is safe and does not introduce a TOCTOU window.
  */
 export async function markSwapComplete(
   id: string,
   userId: string
 ): Promise<SwapProposal> {
-  // First get the current swap to check who's marking complete
-  const { data: current, error: fetchError } = await supabase
+  // Read only the immutable proposer_id to determine the caller's role.
+  const { data: role, error: roleError } = await supabase
     .from('swap_proposals')
-    .select('*')
+    .select('proposer_id')
     .eq('id', id)
     .single()
 
-  if (fetchError) {
-    throw new SwapsServiceError(fetchError.message, fetchError.code)
+  if (roleError) {
+    throw new SwapsServiceError(roleError.message, roleError.code)
   }
 
-  const isProposer = current.proposer_id === userId
-  const updates: SwapProposalUpdate = {}
-
-  if (isProposer) {
-    updates.proposer_completed = true
-  } else {
-    updates.recipient_completed = true
-  }
-
-  // If both will be complete after this update, also set status to completed
-  const willBothComplete =
-    (isProposer && current.recipient_completed) ||
-    (!isProposer && current.proposer_completed)
-
-  if (willBothComplete) {
-    updates.status = 'completed'
-    updates.completed_at = new Date().toISOString()
-  }
+  // Set only the caller's completion flag.  The auto_complete_swap trigger
+  // will transition status → 'completed' atomically if both flags are now true.
+  const updates: SwapProposalUpdate =
+    role.proposer_id === userId
+      ? { proposer_completed: true }
+      : { recipient_completed: true }
 
   const { data, error } = await supabase
     .from('swap_proposals')
@@ -234,13 +229,21 @@ export async function getOutgoingProposals(
 }
 
 /**
- * Subscribe to swap proposal changes for a user (as proposer or recipient)
+ * Subscribe to swap proposal changes for a user (as proposer or recipient).
+ *
+ * Supabase Realtime does not support OR filters in a single .on() call, so we
+ * register four separate listeners — one per (event × role) combination — each
+ * with a server-side equality filter.  This moves filtering to the server and
+ * avoids broadcasting all users' swap events to every connected client.
  */
 export function subscribeToSwapProposals(
   userId: string,
   onInsert: (proposal: SwapProposal) => void,
   onUpdate: (proposal: SwapProposal) => void
 ): RealtimeChannel {
+  const map = (payload: { new: unknown }) =>
+    mapDbSwapProposal(payload.new as Parameters<typeof mapDbSwapProposal>[0])
+
   return supabase
     .channel(`user:${userId}:swaps`)
     .on(
@@ -249,16 +252,19 @@ export function subscribeToSwapProposals(
         event: 'INSERT',
         schema: 'public',
         table: 'swap_proposals',
+        filter: `proposer_id=eq.${userId}`,
       },
-      (payload) => {
-        const proposal = mapDbSwapProposal(
-          payload.new as Parameters<typeof mapDbSwapProposal>[0]
-        )
-        // Only process if the user is involved
-        if (proposal.proposerId === userId || proposal.recipientId === userId) {
-          onInsert(proposal)
-        }
-      }
+      (payload) => onInsert(map(payload))
+    )
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'swap_proposals',
+        filter: `recipient_id=eq.${userId}`,
+      },
+      (payload) => onInsert(map(payload))
     )
     .on(
       'postgres_changes',
@@ -266,16 +272,19 @@ export function subscribeToSwapProposals(
         event: 'UPDATE',
         schema: 'public',
         table: 'swap_proposals',
+        filter: `proposer_id=eq.${userId}`,
       },
-      (payload) => {
-        const proposal = mapDbSwapProposal(
-          payload.new as Parameters<typeof mapDbSwapProposal>[0]
-        )
-        // Only process if the user is involved
-        if (proposal.proposerId === userId || proposal.recipientId === userId) {
-          onUpdate(proposal)
-        }
-      }
+      (payload) => onUpdate(map(payload))
+    )
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'swap_proposals',
+        filter: `recipient_id=eq.${userId}`,
+      },
+      (payload) => onUpdate(map(payload))
     )
     .subscribe()
 }

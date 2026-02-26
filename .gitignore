@@ -40,3 +40,6 @@ docs
 /e2e/fixtures/.auth.json
 /playwright-report/
 /test-results/
+
+# Supabase local temp files (contain project ref and DB connection strings)
+supabase/.temp/

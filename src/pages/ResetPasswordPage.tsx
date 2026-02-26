@@ -25,10 +25,17 @@ export function ResetPasswordPage() {
       }
     })
 
+    // Only use getSession() to detect the case where the PASSWORD_RECOVERY
+    // event fired before this component mounted (e.g. hard refresh on the link).
+    // Never promote a regular authenticated session to 'ready' — that would
+    // show the reset form to any logged-in user who navigates to this URL.
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setStatus((current) => current === 'loading' ? 'ready' : current)
+      if (!session) {
+        // No session at all — don't wait for the full 3s timeout
+        setStatus((current) => current === 'loading' ? 'invalid' : current)
       }
+      // If there is a session, defer to the onAuthStateChange PASSWORD_RECOVERY
+      // event to set 'ready'. A regular (non-recovery) session is not sufficient.
     })
 
     // If no recovery session is detected within 3 seconds the link has

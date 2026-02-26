@@ -8,7 +8,31 @@ const SMTP_PORT = Number(Deno.env.get("SMTP_PORT") || "2525");
 const SMTP_USERNAME = Deno.env.get("SMTP_USERNAME") || "";
 const SMTP_PASSWORD = Deno.env.get("SMTP_PASSWORD") || "";
 const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "noreply@skillswap.local";
-const SITE_URL = Deno.env.get("SITE_URL") || "http://127.0.0.1:5173";
+// TLS defaults to true (secure). Set SMTP_TLS=false only in local dev (e.g. Mailtrap sandbox).
+const SMTP_TLS = Deno.env.get("SMTP_TLS") !== "false";
+const SITE_URL = Deno.env.get("SITE_URL") ?? (() => {
+  console.warn("SITE_URL is not set — email links will point to localhost");
+  return "http://127.0.0.1:5173";
+})();
+
+/** Escape user-controlled values before interpolating into HTML. */
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
+/** Timing-safe string comparison to prevent secret brute-forcing via timing. */
+async function timingSafeEqual(a: string, b: string): Promise<boolean> {
+  const encoder = new TextEncoder();
+  const aBytes = encoder.encode(a);
+  const bBytes = encoder.encode(b);
+  if (aBytes.length !== bBytes.length) return false;
+  return crypto.subtle.timingSafeEqual(aBytes, bBytes);
+}
 
 interface WebhookPayload {
   type: "INSERT";
@@ -38,7 +62,7 @@ Deno.serve(async (req) => {
   }
 
   const authHeader = req.headers.get("Authorization");
-  if (!authHeader || authHeader !== `Bearer ${webhookSecret}`) {
+  if (!authHeader || !(await timingSafeEqual(authHeader, `Bearer ${webhookSecret}`))) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
     });
@@ -93,10 +117,13 @@ Deno.serve(async (req) => {
       );
     }
 
-    const proposerName = `${proposerResult.data.first_name} ${proposerResult.data.last_name}`;
-    const recipientName = recipientResult.data.first_name;
+    // Escape all user-controlled values before inserting into HTML
+    const proposerName = escapeHtml(
+      `${proposerResult.data.first_name} ${proposerResult.data.last_name}`
+    );
+    const recipientName = escapeHtml(recipientResult.data.first_name);
     const recipientEmail = recipientResult.data.email;
-    const skillTitle = offeredSkillResult.data?.title || "a skill";
+    const skillTitle = escapeHtml(offeredSkillResult.data?.title || "a skill");
     const swapUrl = `${SITE_URL}/swaps/${record.id}`;
 
     // Build the email
@@ -117,7 +144,7 @@ Deno.serve(async (req) => {
         ${record.message ? `
         <div style="background-color: #f8fafc; border-left: 4px solid #6366f1; padding: 12px 16px; margin: 16px 0; border-radius: 0 8px 8px 0;">
           <p style="color: #64748b; font-size: 14px; margin: 0 0 4px 0;">Their message:</p>
-          <p style="color: #334155; font-size: 15px; margin: 0;">"${record.message}"</p>
+          <p style="color: #334155; font-size: 15px; margin: 0;">&ldquo;${escapeHtml(record.message)}&rdquo;</p>
         </div>
         ` : ""}
 
@@ -142,7 +169,7 @@ Deno.serve(async (req) => {
       connection: {
         hostname: SMTP_HOSTNAME,
         port: SMTP_PORT,
-        tls: false,
+        tls: SMTP_TLS,
         auth: {
           username: SMTP_USERNAME,
           password: SMTP_PASSWORD,
@@ -162,13 +189,13 @@ Deno.serve(async (req) => {
     console.log(`Swap notification email sent to ${recipientEmail}`);
 
     return new Response(
-      JSON.stringify({ message: "Notification sent", to: recipientEmail }),
+      JSON.stringify({ message: "Notification sent" }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
     console.error("Error sending swap notification:", error);
     return new Response(
-      JSON.stringify({ error: (error as Error).message }),
+      JSON.stringify({ error: "Internal server error" }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

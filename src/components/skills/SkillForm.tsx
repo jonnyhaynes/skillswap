@@ -87,6 +87,7 @@ export function SkillForm({ initialData, onSubmit, onCancel }: SkillFormProps) {
         placeholder="e.g. Intro to Web Development"
         error={errors.title}
         required
+        maxLength={100}
       />
 
       <Textarea
@@ -97,6 +98,7 @@ export function SkillForm({ initialData, onSubmit, onCancel }: SkillFormProps) {
         error={errors.description}
         rows={5}
         required
+        maxLength={2000}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -172,6 +174,7 @@ export function SkillForm({ initialData, onSubmit, onCancel }: SkillFormProps) {
         value={availability}
         onChange={(e) => setAvailability(e.target.value)}
         placeholder="e.g. Weekday evenings, Saturday mornings"
+        maxLength={200}
       />
 
       <fieldset>
@@ -226,6 +229,7 @@ export function SkillForm({ initialData, onSubmit, onCancel }: SkillFormProps) {
         value={tagsInput}
         onChange={(e) => setTagsInput(e.target.value)}
         placeholder="e.g. web, coding, javascript"
+        maxLength={200}
       />
 
       <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
