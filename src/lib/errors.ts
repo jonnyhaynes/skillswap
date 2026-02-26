@@ -35,8 +35,9 @@ export function getPostgrestErrorMessage(error: PostgrestError): string {
     case '22P02':
       return 'Invalid data format provided.'
     default:
-      // Return a generic message but log the actual error
-      console.error('Database error:', error)
+      // Log only safe fields — omit `details` and `hint` which may contain
+      // schema information or problematic values visible in browser dev tools.
+      console.error('Database error:', { code: error.code, message: error.message })
       if (Bugsnag.isStarted()) {
         Bugsnag.notify(new Error(error.message), (event) => {
           event.addMetadata('supabase', { code: error.code, details: error.details, hint: error.hint })
