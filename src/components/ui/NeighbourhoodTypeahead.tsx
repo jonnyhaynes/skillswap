@@ -36,7 +36,11 @@ export function NeighbourhoodTypeahead({
 
   // Load fallback neighbourhoods list once (used when API key is missing or API fails)
   useEffect(() => {
-    getNeighbourhoods().then(setFallbackResults)
+    getNeighbourhoods()
+      .then(setFallbackResults)
+      .catch((err) => {
+        console.error('getNeighbourhoods failed:', err)
+      })
   }, [])
 
   // Sync query with external value changes (e.g. form reset)

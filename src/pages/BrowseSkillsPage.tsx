@@ -54,7 +54,9 @@ export function BrowseSkillsPage() {
       .then((coords) => {
         if (!cancelled) setNeighbourhoodCoordsMap(coords)
       })
-      .catch(() => {})
+      .catch(() => {
+        // Distance sorting degrades gracefully when coords are unavailable — no action needed
+      })
     return () => { cancelled = true }
   }, [])
 

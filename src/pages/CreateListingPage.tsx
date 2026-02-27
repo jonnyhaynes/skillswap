@@ -21,7 +21,8 @@ export function CreateListingPage() {
       } else {
         addToast('Failed to create listing. Please try again.', 'error')
       }
-    } catch {
+    } catch (err) {
+      console.error('addListing threw unexpectedly:', err)
       addToast('Failed to create listing. Please try again.', 'error')
     }
   }

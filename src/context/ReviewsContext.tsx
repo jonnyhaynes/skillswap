@@ -103,7 +103,7 @@ export function ReviewsProvider({ children }: { children: ReactNode }) {
         dispatch({ type: 'ADD_REVIEW', review })
         return review
       } catch (err) {
-        console.error('addReview error:', err)
+        console.error('addReview error:', { code: (err as { code?: string }).code })
         const message = err instanceof Error ? err.message : 'Failed to create review'
         dispatch({ type: 'SET_ERROR', error: message })
         return null
@@ -133,7 +133,8 @@ export function ReviewsProvider({ children }: { children: ReactNode }) {
     async (userId: string): Promise<Review[]> => {
       try {
         return await getReviewsByUserService(userId)
-      } catch {
+      } catch (err) {
+        console.error('fetchReviewsByUser failed:', { code: (err as { code?: string }).code })
         return []
       }
     },
@@ -148,7 +149,8 @@ export function ReviewsProvider({ children }: { children: ReactNode }) {
           dispatch({ type: 'ADD_REVIEW', review })
         }
         return review
-      } catch {
+      } catch (err) {
+        console.error('fetchReviewForSwap failed:', { code: (err as { code?: string }).code })
         return null
       }
     },
@@ -190,7 +192,8 @@ export function ReviewsProvider({ children }: { children: ReactNode }) {
     async (userId: string): Promise<{ average: number; count: number }> => {
       try {
         return await getUserAverageRating(userId)
-      } catch {
+      } catch (err) {
+        console.error('fetchAverageRating failed:', { code: (err as { code?: string }).code })
         return { average: 0, count: 0 }
       }
     },

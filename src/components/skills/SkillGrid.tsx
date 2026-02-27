@@ -37,13 +37,18 @@ export function SkillGrid({ listings, staggerReveal, preloadedUsers, onLoadMore,
     let cancelled = false
     const userIds = [...new Set(listings.map((l) => l.userId))]
 
-    fetchUsersByIds(userIds).then((fetchedUsers) => {
-      if (cancelled) return
-      const userMap = new Map<string, User>()
-      fetchedUsers.forEach((user) => userMap.set(user.id, user))
-      setUsers(userMap)
-      setLoading(false)
-    })
+    fetchUsersByIds(userIds)
+      .then((fetchedUsers) => {
+        if (cancelled) return
+        const userMap = new Map<string, User>()
+        fetchedUsers.forEach((user) => userMap.set(user.id, user))
+        setUsers(userMap)
+        setLoading(false)
+      })
+      .catch((err) => {
+        console.error('fetchUsersByIds failed in SkillGrid:', err)
+        if (!cancelled) setLoading(false)
+      })
 
     return () => {
       cancelled = true

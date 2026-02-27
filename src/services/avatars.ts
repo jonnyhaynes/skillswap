@@ -1,4 +1,12 @@
 import { supabase } from '@/lib/supabase'
+import { AppError } from '@/lib/errors'
+
+export class AvatarServiceError extends AppError {
+  constructor(message: string, code?: string) {
+    super(message, code)
+    this.name = 'AvatarServiceError'
+  }
+}
 
 const BUCKET = 'avatars'
 
@@ -15,7 +23,7 @@ export async function uploadAvatar(userId: string, file: File): Promise<string> 
     .upload(path, file, { upsert: true })
 
   if (error) {
-    throw new Error(`Failed to upload avatar: ${error.message}`)
+    throw new AvatarServiceError(`Failed to upload avatar: ${error.message}`)
   }
 
   const { data: urlData } = supabase.storage
@@ -35,7 +43,7 @@ export async function deleteAvatar(userId: string): Promise<void> {
     .list(userId)
 
   if (listError) {
-    throw new Error(`Failed to list avatar files: ${listError.message}`)
+    throw new AvatarServiceError(`Failed to list avatar files: ${listError.message}`)
   }
 
   if (files && files.length > 0) {
@@ -45,7 +53,7 @@ export async function deleteAvatar(userId: string): Promise<void> {
       .remove(paths)
 
     if (removeError) {
-      throw new Error(`Failed to delete avatar: ${removeError.message}`)
+      throw new AvatarServiceError(`Failed to delete avatar: ${removeError.message}`)
     }
   }
 }

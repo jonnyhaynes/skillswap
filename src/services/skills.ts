@@ -29,6 +29,28 @@ export async function getSkillListings(filters?: {
   isInPerson?: boolean
   searchQuery?: string
 }): Promise<SkillListing[]> {
+  // When a search term is present, use a parameterised RPC function so the
+  // value is bound as a SQL parameter ($1) and never touches the PostgREST
+  // filter-string parser. This eliminates the class of PostgREST filter
+  // injection that a blacklist approach can only partially mitigate.
+  // Additional equality filters are safe to chain on RPC results via the
+  // standard Supabase filter builder.
+  if (filters?.searchQuery) {
+    let rpcQuery = supabase
+      .rpc('search_skill_listings', { search_query: filters.searchQuery })
+
+    if (filters.category) rpcQuery = rpcQuery.eq('category', filters.category)
+    if (filters.listingType) rpcQuery = rpcQuery.eq('listing_type', filters.listingType)
+    if (filters.userId) rpcQuery = rpcQuery.eq('user_id', filters.userId)
+    if (filters.isRemote !== undefined) rpcQuery = rpcQuery.eq('is_remote', filters.isRemote)
+    if (filters.isInPerson !== undefined) rpcQuery = rpcQuery.eq('is_in_person', filters.isInPerson)
+
+    const { data, error } = await rpcQuery
+    if (error) throw new SkillsServiceError(error.message, error.code)
+    return (data ?? []).map(mapDbSkillToListing)
+  }
+
+  // No search term: use the standard table query builder.
   let query = supabase
     .from('skill_listings')
     .select('*')
@@ -52,18 +74,6 @@ export async function getSkillListings(filters?: {
 
   if (filters?.isInPerson !== undefined) {
     query = query.eq('is_in_person', filters.isInPerson)
-  }
-
-  if (filters?.searchQuery) {
-    // Strip characters that have special meaning in PostgREST filter strings
-    // (comma separates OR terms; parentheses are used in grouped expressions)
-    // before interpolating into the .or() call to prevent filter injection.
-    const safeQuery = filters.searchQuery.replace(/[(),`]/g, '')
-    if (safeQuery) {
-      query = query.or(
-        `title.ilike.%${safeQuery}%,description.ilike.%${safeQuery}%`
-      )
-    }
   }
 
   const { data, error } = await query

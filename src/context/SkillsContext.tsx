@@ -213,7 +213,8 @@ export function SkillsProvider({ children }: { children: ReactNode }) {
 
       try {
         return await getSkillByIdService(id)
-      } catch {
+      } catch (err) {
+        console.error('fetchListingById failed:', { code: (err as { code?: string }).code })
         return null
       }
     },
@@ -230,7 +231,8 @@ export function SkillsProvider({ children }: { children: ReactNode }) {
     async (userId: string): Promise<SkillListing[]> => {
       try {
         return await getSkillsByUserService(userId)
-      } catch {
+      } catch (err) {
+        console.error('fetchListingsByUser failed:', { code: (err as { code?: string }).code })
         return []
       }
     },

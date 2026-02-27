@@ -36,13 +36,18 @@ export function ConversationList({
     let cancelled = false
     const uniqueIds = [...new Set(otherUserIds)]
 
-    fetchUsersByIds(uniqueIds).then((users) => {
-      if (cancelled) return
-      const userMap = new Map<string, User>()
-      users.forEach((user) => userMap.set(user.id, user))
-      setOtherUsers(userMap)
-      setLoading(false)
-    })
+    fetchUsersByIds(uniqueIds)
+      .then((users) => {
+        if (cancelled) return
+        const userMap = new Map<string, User>()
+        users.forEach((user) => userMap.set(user.id, user))
+        setOtherUsers(userMap)
+        setLoading(false)
+      })
+      .catch((err) => {
+        console.error('fetchUsersByIds failed in ConversationList:', err)
+        if (!cancelled) setLoading(false)
+      })
 
     return () => {
       cancelled = true

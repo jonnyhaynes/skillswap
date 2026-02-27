@@ -262,8 +262,9 @@ export function MessagesProvider({ children }: { children: ReactNode }) {
       try {
         await markAsReadService(conversationId, userId)
         dispatch({ type: 'MARK_AS_READ', conversationId, userId })
-      } catch {
-        // Silently fail for mark as read
+      } catch (err) {
+        // Silently fail for mark as read — non-critical operation
+        if (import.meta.env.DEV) console.warn('markAsRead failed:', err)
       }
     },
     []

@@ -271,7 +271,8 @@ export function SwapsProvider({ children }: { children: ReactNode }) {
 
       try {
         return await getSwapByIdService(id)
-      } catch {
+      } catch (err) {
+        console.error('fetchSwapById failed:', { code: (err as { code?: string }).code })
         return null
       }
     },

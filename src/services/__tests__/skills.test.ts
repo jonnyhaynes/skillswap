@@ -92,58 +92,63 @@ describe('deleteSkillListing', () => {
   })
 })
 
-describe('getSkillListings — searchQuery sanitisation (security)', () => {
-  it('strips PostgREST special characters from the search query', async () => {
-    let capturedUrl = ''
+describe('getSkillListings — searchQuery security (RPC-based)', () => {
+  it('routes search queries through the RPC function, not filter-string interpolation', async () => {
+    let rpcCalled = false
+    let directTableCalled = false
     server.use(
-      http.get('https://test.supabase.co/rest/v1/skill_listings', ({ request }) => {
-        capturedUrl = decodeURIComponent(request.url)
+      http.post('https://test.supabase.co/rest/v1/rpc/search_skill_listings', () => {
+        rpcCalled = true
         return HttpResponse.json([mockSkillRow])
-      })
-    )
-
-    // Commas, parentheses, and backticks are PostgREST injection vectors
-    await getSkillListings({ searchQuery: 'guitar,extra(injected)`bad' })
-
-    expect(capturedUrl).toBeDefined()
-    // Safe characters must remain in the filter
-    expect(capturedUrl).toContain('guitar')
-    expect(capturedUrl).toContain('extra')
-    expect(capturedUrl).toContain('injected')
-    // Dangerous characters must be stripped
-    expect(capturedUrl).not.toContain(',extra')   // comma stripped
-    expect(capturedUrl).not.toContain('(injected') // paren stripped
-    expect(capturedUrl).not.toContain('`bad')       // backtick stripped
-  })
-
-  it('omits the or filter entirely when query contains only special characters', async () => {
-    let capturedUrl = ''
-    server.use(
+      }),
       http.get('https://test.supabase.co/rest/v1/skill_listings', ({ request }) => {
-        capturedUrl = request.url
-        return HttpResponse.json([])
-      })
-    )
-
-    await getSkillListings({ searchQuery: '()()(,,,)' })
-
-    // All chars stripped → empty safeQuery → no or filter added to the request
-    expect(capturedUrl).not.toContain('or=')
-  })
-
-  it('uses a safe query normally when no special characters are present', async () => {
-    let capturedUrl = ''
-    server.use(
-      http.get('https://test.supabase.co/rest/v1/skill_listings', ({ request }) => {
-        // Replace '+' (form-encoded space) with ' ' before asserting
-        capturedUrl = decodeURIComponent(request.url.replace(/\+/g, ' '))
+        // Any or= on the direct table endpoint would indicate the old blacklist path
+        if (request.url.includes('or=')) directTableCalled = true
         return HttpResponse.json([mockSkillRow])
       })
     )
 
     await getSkillListings({ searchQuery: 'piano lessons' })
 
-    expect(capturedUrl).toContain('or=')
-    expect(capturedUrl).toContain('piano lessons')
+    expect(rpcCalled).toBe(true)
+    expect(directTableCalled).toBe(false)
+  })
+
+  it('sends the raw search term as a bound JSON parameter to the RPC endpoint', async () => {
+    let capturedBody: Record<string, unknown> = {}
+    server.use(
+      http.post('https://test.supabase.co/rest/v1/rpc/search_skill_listings', async ({ request }) => {
+        capturedBody = await request.json() as Record<string, unknown>
+        return HttpResponse.json([mockSkillRow])
+      })
+    )
+
+    // These characters are PostgREST filter-string injection vectors.
+    // With RPC they are transmitted as a bound SQL parameter, not interpolated
+    // into a filter string, so no sanitisation of the user value is needed.
+    const rawInput = 'guitar,extra(injected)`bad'
+    await getSkillListings({ searchQuery: rawInput })
+
+    expect(capturedBody.search_query).toBe(rawInput)
+  })
+
+  it('uses the direct table query (no RPC) when no search query is provided', async () => {
+    let rpcCalled = false
+    let tableCalled = false
+    server.use(
+      http.post('https://test.supabase.co/rest/v1/rpc/search_skill_listings', () => {
+        rpcCalled = true
+        return HttpResponse.json([])
+      }),
+      http.get('https://test.supabase.co/rest/v1/skill_listings', () => {
+        tableCalled = true
+        return HttpResponse.json([mockSkillRow])
+      })
+    )
+
+    await getSkillListings()
+
+    expect(tableCalled).toBe(true)
+    expect(rpcCalled).toBe(false)
   })
 })

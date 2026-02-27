@@ -136,6 +136,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         dispatch({ type: 'SET_SESSION', session: null, user: null })
       }
       dispatch({ type: 'SET_INITIALIZED' })
+    }).catch((err) => {
+      console.error('getSession failed on startup:', err)
+      dispatch({ type: 'SET_SESSION', session: null, user: null })
+      dispatch({ type: 'SET_INITIALIZED' })
     })
 
     // Listen for auth changes
@@ -151,6 +155,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (profile && profile.neighbourhood === 'Unknown') {
             dispatch({ type: 'SET_NEEDS_ONBOARDING', needsOnboarding: true })
           }
+        }).catch((err) => {
+          console.error('getOwnProfile failed on SIGNED_IN event:', err)
         })
       } else if (event === 'SIGNED_OUT') {
         dispatch({ type: 'LOGOUT' })

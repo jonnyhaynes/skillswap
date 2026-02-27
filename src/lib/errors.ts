@@ -40,7 +40,7 @@ export function getPostgrestErrorMessage(error: PostgrestError): string {
       console.error('Database error:', { code: error.code, message: error.message })
       if (Bugsnag.isStarted()) {
         Bugsnag.notify(new Error(error.message), (event) => {
-          event.addMetadata('supabase', { code: error.code, details: error.details, hint: error.hint })
+          event.addMetadata('supabase', { code: error.code })
         })
       }
       return error.message || 'An unexpected database error occurred.'
@@ -86,8 +86,14 @@ export function getAuthErrorMessage(error: AuthError): string {
     return 'There was a problem signing in with your account. Please try again.'
   }
 
-  // Return the original message if no specific handling
-  return error.message
+  // Log unrecognised auth errors so novel failures are visible in production monitoring
+  console.error('Unrecognised auth error:', { status: error.status })
+  if (Bugsnag.isStarted()) {
+    Bugsnag.notify(new Error('Unrecognised auth error'), (event) => {
+      event.addMetadata('auth', { status: error.status })
+    })
+  }
+  return 'Something went wrong. Please try again.'
 }
 
 /**

@@ -76,7 +76,8 @@ export function ContactForm() {
         message: formData.message.trim(),
       })
       setShowConfirmation(true)
-    } catch {
+    } catch (err) {
+      console.error('submitContactEnquiry failed:', err)
       setError('Something went wrong. Please try again later.')
     } finally {
       setLoading(false)
