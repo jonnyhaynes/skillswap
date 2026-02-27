@@ -3,44 +3,14 @@ import { Link, useNavigate } from 'react-router'
 import type { SkillListing } from '@/types'
 import { useAuth } from '@/hooks/useAuth'
 import { useSkills } from '@/hooks/useSkills'
-import { useCountUp } from '@/hooks/useCountUp'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { SkillGrid } from '@/components/skills/SkillGrid'
-
-function TargetIcon({ className = 'w-5 h-5' }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <circle cx="12" cy="12" r="10" />
-      <circle cx="12" cy="12" r="6" />
-      <circle cx="12" cy="12" r="2" fill="currentColor" />
-    </svg>
-  )
-}
 
 function SearchIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.3-4.3" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function ListIcon({ className = 'w-5 h-5' }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" d="M9 5h11M9 12h11M9 19h11M5 5h.01M5 12h.01M5 19h.01" />
-    </svg>
-  )
-}
-
-function GridIcon({ className = 'w-5 h-5' }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <rect x="3" y="3" width="7" height="7" rx="1" />
-      <rect x="14" y="3" width="7" height="7" rx="1" />
-      <rect x="3" y="14" width="7" height="7" rx="1" />
-      <rect x="14" y="14" width="7" height="7" rx="1" />
     </svg>
   )
 }
@@ -66,35 +36,6 @@ function SparkleIcon() {
     <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
     </svg>
-  )
-}
-
-const STATS_CONFIG = [
-  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon },
-  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon },
-  { label: 'Total Listings', key: 'total' as const, icon: ListIcon },
-  { label: 'Categories', key: 'categories' as const, icon: GridIcon },
-]
-
-function AnimatedStat({ value, label, icon: Icon }: { value: number | string; label: string; icon: React.ComponentType<{ className?: string }> }) {
-  const numericValue = typeof value === 'number' ? value : 0
-  const isLoading = typeof value === 'string'
-  const { count, ref, finished } = useCountUp(numericValue)
-
-  return (
-    <div ref={ref} className="hero-stat group flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3.5 sm:py-4 rounded-2xl transition-all duration-300">
-      {/* Icon */}
-      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/[0.12] flex items-center justify-center shrink-0 ring-1 ring-white/[0.08] group-hover:bg-white/[0.18] transition-colors">
-        <Icon className="w-5 h-5 text-white/90" />
-      </div>
-      {/* Text */}
-      <div className="min-w-0">
-        <div className={`text-2xl sm:text-3xl font-extrabold text-white font-display tabular-nums leading-none tracking-tight${finished ? ' stat-pop' : ''}`}>
-          {isLoading ? '...' : count}
-        </div>
-        <div className="text-[11px] sm:text-xs text-white/60 font-medium mt-1 tracking-wide uppercase">{label}</div>
-      </div>
-    </div>
   )
 }
 
@@ -179,7 +120,7 @@ function HowItWorks() {
 
 export function HomePage() {
   const { currentUser } = useAuth()
-  const { listings, loading } = useSkills()
+  const { listings } = useSkills()
   const navigate = useNavigate()
   const [heroSearch, setHeroSearch] = useState('')
 
@@ -189,16 +130,6 @@ export function HomePage() {
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 6)
   }, [listings, currentUser])
-
-  const offeredCount = listings.filter((l) => l.listingType === 'offered').length
-  const wantedCount = listings.filter((l) => l.listingType === 'wanted').length
-
-  const statValues: Record<string, number | string> = {
-    offered: loading ? '...' : offeredCount,
-    wanted: loading ? '...' : wantedCount,
-    total: loading ? '...' : listings.length,
-    categories: 12,
-  }
 
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -302,18 +233,6 @@ export function HomePage() {
                 </Link>
               </>
             )}
-          </div>
-        </div>
-
-        {/* Stats — integrated into the banner */}
-        <div className="relative z-10 px-4 sm:px-8 pb-6 sm:pb-8 pt-4">
-          <div className="mx-auto max-w-4xl">
-            <div className="hero-stats-divider mb-6" />
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-              {STATS_CONFIG.map((stat) => (
-                <AnimatedStat key={stat.label} value={statValues[stat.key]} label={stat.label} icon={stat.icon} />
-              ))}
-            </div>
           </div>
         </div>
       </div>
