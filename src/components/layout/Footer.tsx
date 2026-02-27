@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Link } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useSkills } from '@/hooks/useSkills'
@@ -30,18 +31,27 @@ function CommunityStat({ value, label }: { value: number | string; label: string
 export function Footer() {
   const { currentUser } = useAuth()
   const { listings, loading } = useSkills()
-  const offeredCount = listings.filter((l) => l.listingType === 'offered').length
-  const wantedCount = listings.filter((l) => l.listingType === 'wanted').length
-
-  const statValues: Record<string, number | string> = {
-    offered: loading ? '...' : offeredCount,
-    wanted: loading ? '...' : wantedCount,
-    total: loading ? '...' : listings.length,
-    categories: 12,
-  }
+  const offeredCount = useMemo(
+    () => listings.filter((l) => l.listingType === 'offered').length,
+    [listings],
+  )
+  const wantedCount = useMemo(
+    () => listings.filter((l) => l.listingType === 'wanted').length,
+    [listings],
+  )
+  const statValues = useMemo<Record<'offered' | 'wanted' | 'total' | 'categories', number | string>>(
+    () => ({
+      offered: loading ? '...' : offeredCount,
+      wanted: loading ? '...' : wantedCount,
+      total: loading ? '...' : listings.length,
+      // 12 = number of skill categories defined in src/data/categories.ts
+      categories: 12,
+    }),
+    [loading, offeredCount, wantedCount, listings.length],
+  )
 
   return (
-    <footer className="relative">
+    <footer className="relative" aria-label="Site footer">
       {/* Organic wave divider */}
       <div className="bg-transparent" aria-hidden="true">
         <svg
@@ -149,7 +159,7 @@ export function Footer() {
                   to="/signup"
                   className="mt-5 inline-flex items-center text-sm font-semibold text-teal-400 hover:text-teal-300 transition-colors"
                 >
-                  Get started →
+                  Get started <span aria-hidden="true">→</span>
                 </Link>
               )}
             </div>
