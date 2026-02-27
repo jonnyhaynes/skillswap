@@ -1,8 +1,98 @@
 import { Link } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
+import { useSkills } from '@/hooks/useSkills'
+import { useCountUp } from '@/hooks/useCountUp'
+
+function TargetIcon({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" fill="currentColor" />
+    </svg>
+  )
+}
+
+function SearchIcon({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function ListIcon({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" d="M9 5h11M9 12h11M9 19h11M5 5h.01M5 12h.01M5 19h.01" />
+    </svg>
+  )
+}
+
+function GridIcon({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+    </svg>
+  )
+}
+
+const STATS_CONFIG = [
+  { label: 'Skills Available', key: 'offered' as const, icon: TargetIcon },
+  { label: 'Skills Wanted', key: 'wanted' as const, icon: SearchIcon },
+  { label: 'Total Listings', key: 'total' as const, icon: ListIcon },
+  { label: 'Categories', key: 'categories' as const, icon: GridIcon },
+]
+
+function FooterStat({
+  value,
+  label,
+  icon: Icon,
+  isLast,
+}: {
+  value: number | string
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+  isLast: boolean
+}) {
+  const numericValue = typeof value === 'number' ? value : 0
+  const isLoading = typeof value === 'string'
+  const { count, ref, finished } = useCountUp(numericValue)
+
+  return (
+    <div
+      ref={ref}
+      className={`flex flex-col items-center gap-1.5 py-6 px-4 flex-1${!isLast ? ' border-r border-slate-800' : ''}`}
+    >
+      <Icon className="w-4 h-4 text-teal-500 mb-1" />
+      <div
+        className={`text-3xl sm:text-4xl font-extrabold text-white font-display tabular-nums leading-none tracking-tight${finished ? ' stat-pop' : ''}`}
+      >
+        {isLoading ? '—' : count}
+      </div>
+      <div className="text-[11px] text-slate-500 font-medium tracking-widest uppercase mt-0.5">
+        {label}
+      </div>
+    </div>
+  )
+}
 
 export function Footer() {
   const { currentUser } = useAuth()
+  const { listings, loading } = useSkills()
+  const offeredCount = listings.filter((l) => l.listingType === 'offered').length
+  const wantedCount = listings.filter((l) => l.listingType === 'wanted').length
+
+  const statValues: Record<string, number | string> = {
+    offered: loading ? '...' : offeredCount,
+    wanted: loading ? '...' : wantedCount,
+    total: loading ? '...' : listings.length,
+    categories: 12,
+  }
 
   return (
     <footer className="relative">
@@ -19,6 +109,23 @@ export function Footer() {
       </div>
 
       <div className="bg-slate-900 text-slate-300 relative overflow-hidden pb-16 md:pb-0">
+        {/* Stats band */}
+        <div className="border-b border-slate-800 relative">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex">
+              {STATS_CONFIG.map((stat, index) => (
+                <FooterStat
+                  key={stat.label}
+                  value={statValues[stat.key]}
+                  label={stat.label}
+                  icon={stat.icon}
+                  isLast={index === STATS_CONFIG.length - 1}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Topographic pattern overlay */}
         <div
           className="absolute inset-0 opacity-[0.03] pointer-events-none"
