@@ -114,29 +114,6 @@ body {
     linear-gradient(145deg, #0c3d36 0%, #0f4f46 20%, #116b5e 45%, #148573 70%, #21a68d 100%);
 }
 
-/* Hero stats integrated into banner */
-.hero-stat {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.hero-stat:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.14);
-}
-
-.hero-stats-divider {
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.15) 20%,
-    rgba(255, 255, 255, 0.15) 80%,
-    transparent
-  );
-}
 
 /* Subtle decorative drift */
 @keyframes drift {
