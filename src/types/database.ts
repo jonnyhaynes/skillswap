@@ -428,6 +428,24 @@ export interface Database {
         Args: Record<PropertyKey, never>
         Returns: { email: string | null; postcode: string | null }[]
       }
+      search_skill_listings: {
+        Args: { search_query: string }
+        Returns: {
+          id: string
+          user_id: string
+          title: string
+          description: string
+          category: SkillCategoryDb
+          level: SkillLevelDb
+          listing_type: ListingTypeDb
+          availability: string
+          is_remote: boolean
+          is_in_person: boolean
+          tags: string[]
+          created_at: string
+          updated_at: string
+        }[]
+      }
     }
     Enums: {
       skill_category: SkillCategoryDb
