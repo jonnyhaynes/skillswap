@@ -12,6 +12,10 @@ export function RootLayout() {
   const { consentStatus } = useCookieConsent()
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
+  useEffect(() => {
     // Only track page views after the user has accepted cookies
     if (consentStatus === 'accepted') {
       trackPageView(pathname)

@@ -21,6 +21,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 import { TermsOfServicePage } from '@/pages/TermsOfServicePage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
 import { ContactPage } from '@/pages/ContactPage'
+import { FAQPage } from '@/pages/FAQPage'
 import { AccountSettingsPage } from '@/pages/AccountSettingsPage'
 import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
 
@@ -96,6 +97,7 @@ export const router = createBrowserRouter([
       { path: 'terms', Component: TermsOfServicePage },
       { path: 'privacy', Component: PrivacyPolicyPage },
       { path: 'contact', Component: ContactPage },
+      { path: 'faq', Component: FAQPage },
 
       // 404
       { path: '*', Component: NotFoundPage },

@@ -132,10 +132,10 @@ export function Footer() {
           )}
 
           {/* Main columns: Brand, Explore, Legal, Get started */}
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-6">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
 
             {/* Brand */}
-            <div className="lg:col-span-2">
+            <div>
               <div className="flex items-center gap-2.5">
                 <svg
                   className="h-7 w-7"
@@ -213,20 +213,20 @@ export function Footer() {
 
             {/* Explore */}
             <div>
-              <h3 className="text-sm font-semibold text-white mb-3">Explore</h3>
-              <nav className="flex flex-col gap-2 text-sm" aria-label="Explore links">
+              <nav className="flex flex-col gap-2 text-sm mb-4" aria-label="Explore links">
                 <Link to="/browse" className="text-slate-400 hover:text-white transition-colors">
                   Browse Skills
                 </Link>
                 <Link to="/skills/new" className="text-slate-400 hover:text-white transition-colors">
                   Post a Skill
                 </Link>
+                <Link to="/faq" className="text-slate-400 hover:text-white transition-colors">
+                  FAQ
+                </Link>
+                <Link to="/contact" className="text-slate-400 hover:text-white transition-colors">
+                  Contact Us
+                </Link>
               </nav>
-            </div>
-
-            {/* Legal */}
-            <div>
-              <h3 className="text-sm font-semibold text-white mb-3">Legal</h3>
               <nav className="flex flex-col gap-2 text-sm" aria-label="Legal links">
                 <Link to="/terms" className="text-slate-400 hover:text-white transition-colors">
                   Terms of Service
@@ -234,14 +234,11 @@ export function Footer() {
                 <Link to="/privacy" className="text-slate-400 hover:text-white transition-colors">
                   Privacy Policy
                 </Link>
-                <Link to="/contact" className="text-slate-400 hover:text-white transition-colors">
-                  Contact Us
-                </Link>
               </nav>
             </div>
 
             {/* Get started + mailing list */}
-            <div className="lg:col-span-2">
+            <div>
               <h3 className="text-sm font-semibold text-white mb-1">Stay in the loop</h3>
               <p className="text-xs text-slate-500 mb-3 leading-relaxed">
                 New skills, local events, community updates.
@@ -308,7 +305,7 @@ export function Footer() {
               >
                 Colouring Code
               </a>{' '}
-              design and build. Made in Rotherham.
+              design and build. Made with ♥ in Rotherham.
             </p>
           </div>
         </div>
