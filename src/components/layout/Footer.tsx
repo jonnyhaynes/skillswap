@@ -19,11 +19,11 @@ function CommunityStat({ value, label }: { value: number | string; label: string
   return (
     <div ref={ref} className="flex items-baseline gap-2">
       <span
-        className={`text-xl font-bold text-white font-display tabular-nums leading-none${finished ? ' stat-pop' : ''}`}
+        className={`text-sm font-semibold text-white tabular-nums leading-none${finished ? ' stat-pop' : ''}`}
       >
         {isLoading ? '—' : count}
       </span>
-      <span className="text-xs text-slate-400">{label}</span>
+      <span className="text-sm text-slate-500">{label}</span>
     </div>
   )
 }
@@ -77,7 +77,9 @@ export function Footer() {
 
         {/* Footer Content */}
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 relative">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+
+          {/* Main columns: Brand, Explore, Legal */}
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
 
             {/* Brand */}
             <div>
@@ -154,12 +156,21 @@ export function Footer() {
                   </svg>
                 </a>
               </div>
+
+              {/* Get started CTA — shown to logged-out visitors only */}
               {!currentUser && (
                 <Link
                   to="/signup"
-                  className="mt-5 inline-flex items-center text-sm font-semibold text-teal-400 hover:text-teal-300 transition-colors"
+                  className="mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-all hover:scale-[1.03] hover:shadow-lg hover:shadow-primary-900/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                  style={{
+                    background: 'linear-gradient(135deg, #43c1a6 0%, #6366f1 100%)',
+                    boxShadow: '0 4px 16px rgba(67, 193, 166, 0.25)',
+                  }}
                 >
-                  Get started <span aria-hidden="true">→</span>
+                  Get started
+                  <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M3 8h10M9 4l4 4-4 4" />
+                  </svg>
                 </Link>
               )}
             </div>
@@ -193,23 +204,23 @@ export function Footer() {
               </nav>
             </div>
 
-            {/* Community stats */}
-            <div>
-              <h3 className="text-sm font-semibold text-white mb-3">Community</h3>
-              <div className="flex flex-col gap-2.5">
-                {COMMUNITY_STATS.map((stat) => (
-                  <CommunityStat
-                    key={stat.label}
-                    value={statValues[stat.key]}
-                    label={stat.label}
-                  />
-                ))}
-              </div>
-            </div>
-
           </div>
 
-          <div className="mt-12 border-t border-slate-800 pt-8 text-center">
+          {/* Community stats band */}
+          <div className="mt-10 border-t border-slate-800 pt-8">
+            <div className="flex flex-wrap justify-center gap-x-10 gap-y-3">
+              {COMMUNITY_STATS.map((stat) => (
+                <CommunityStat
+                  key={stat.label}
+                  value={statValues[stat.key]}
+                  label={stat.label}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Copyright */}
+          <div className="mt-8 border-t border-slate-800 pt-8 text-center">
             <p className="text-xs text-slate-500">
               &copy; {new Date().getFullYear()} SkillSwap. A{' '}
               <a
