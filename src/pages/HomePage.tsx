@@ -147,40 +147,57 @@ export function HomePage() {
         {/* Dot grid pattern */}
         <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
 
-        {/* Mesh gradient blobs */}
-        <div className="absolute -top-24 -left-24 w-[500px] h-[500px] bg-gradient-to-br from-emerald-400/30 to-transparent rounded-full blur-3xl animate-[drift_20s_ease-in-out_infinite]" />
-        <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-gradient-to-tl from-indigo-400/25 to-transparent rounded-full blur-3xl animate-[drift_25s_ease-in-out_infinite_reverse]" />
-        <div className="absolute top-1/3 right-[10%] w-56 h-56 bg-gradient-to-br from-violet-400/15 to-transparent rounded-full blur-2xl" />
-        <div className="absolute top-[15%] left-[20%] w-40 h-40 bg-gradient-to-tr from-sky-400/10 to-transparent rounded-full blur-xl" />
+        {/* Mesh gradient blobs — vivid + animated */}
+        <div className="absolute -top-24 -left-24 w-[520px] h-[520px] bg-gradient-to-br from-emerald-400/45 to-transparent rounded-full blur-3xl animate-[drift-a_18s_ease-in-out_infinite]" />
+        <div className="absolute -bottom-20 -right-20 w-[420px] h-[420px] bg-gradient-to-tl from-indigo-500/35 to-transparent rounded-full blur-3xl animate-[drift-b_22s_ease-in-out_infinite]" />
+        <div className="absolute top-1/3 right-[10%] w-56 h-56 bg-gradient-to-br from-violet-400/25 to-transparent rounded-full blur-2xl animate-[drift-a_28s_ease-in-out_infinite] [animation-delay:1s]" />
+        <div className="absolute top-[15%] left-[20%] w-44 h-44 bg-gradient-to-tr from-sky-400/18 to-transparent rounded-full blur-xl animate-[drift-b_32s_ease-in-out_infinite] [animation-delay:2s]" />
+        <div className="absolute bottom-[8%] left-[38%] w-72 h-72 bg-gradient-to-tr from-teal-300/18 to-transparent rounded-full blur-2xl animate-[drift-a_24s_ease-in-out_infinite] [animation-delay:4s]" />
 
-        {/* Accent ring decorations */}
-        <div className="absolute top-16 right-[8%] w-24 h-24 rounded-full border border-white/[0.08] hidden sm:block" />
-        <div className="absolute top-10 right-[12%] w-10 h-10 rounded-full border border-white/[0.06] hidden sm:block" />
-        <div className="absolute bottom-28 left-[6%] w-16 h-16 rounded-full border border-white/[0.06] hidden sm:block" />
+        {/* Accent ring decorations — breathing */}
+        <div className="absolute top-16 right-[8%] w-24 h-24 rounded-full border border-white/[0.1] hidden sm:block ring-breathe" />
+        <div className="absolute top-10 right-[12%] w-10 h-10 rounded-full border border-white/[0.08] hidden sm:block ring-breathe [animation-delay:1.5s]" />
+        <div className="absolute bottom-28 left-[6%] w-16 h-16 rounded-full border border-white/[0.08] hidden sm:block ring-breathe [animation-delay:3s]" />
+        <div className="absolute top-[40%] left-[3%] w-8 h-8 rounded-full border border-white/[0.06] hidden xl:block ring-breathe [animation-delay:2s]" />
 
-        {/* Floating plus shapes */}
-        <div className="absolute top-20 left-[15%] text-white/[0.06] text-4xl font-light hidden lg:block select-none" aria-hidden="true">+</div>
-        <div className="absolute bottom-32 right-[18%] text-white/[0.05] text-2xl font-light hidden lg:block select-none" aria-hidden="true">+</div>
+        {/* Floating decorative glyphs */}
+        <div className="absolute top-20 left-[15%] text-white/[0.09] text-4xl font-light hidden lg:block select-none float-glyph" aria-hidden="true">+</div>
+        <div className="absolute bottom-32 right-[18%] text-white/[0.07] text-2xl font-light hidden lg:block select-none float-glyph [animation-delay:2.5s]" aria-hidden="true">+</div>
+        <div className="absolute top-1/2 left-[5%] text-white/[0.05] text-xl font-light hidden xl:block select-none float-glyph [animation-delay:1.2s]" aria-hidden="true">×</div>
+        <div className="absolute top-[30%] right-[4%] text-white/[0.05] text-3xl font-light hidden xl:block select-none float-glyph [animation-delay:3.8s]" aria-hidden="true">◦</div>
 
         {/* Hero content */}
         <div className="relative z-10 text-center pt-16 sm:pt-24 px-6 pb-8">
+          {/* Live indicator badge — logged-out visitors only */}
+          {!currentUser && (
+            <div className="hero-enter mb-6 inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.08] ring-1 ring-white/[0.15] text-white/70 text-xs font-medium tracking-wide" style={{ animationDelay: '0s' }}>
+              <span className="relative flex h-2 w-2 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              </span>
+              Skills available in your neighbourhood
+            </div>
+          )}
+
           {currentUser ? (
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-[1.1] tracking-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-[1.1] tracking-tight hero-enter" style={{ animationDelay: '0.05s' }}>
               Welcome back, {currentUser.firstName}!
             </h1>
           ) : (
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display leading-[1.1] tracking-tight">
-              Learn what you need.
-              <br />
-              <span className="bg-gradient-to-r from-emerald-200 via-teal-200 to-indigo-200 bg-clip-text text-transparent">Teach what you know.</span>
+              <span className="block hero-enter" style={{ animationDelay: '0.1s' }}>Learn what you need.</span>
+              <span className="block hero-enter" style={{ animationDelay: '0.26s' }}>
+                <span className="text-gradient-flow">Teach what you know.</span>
+              </span>
             </h1>
           )}
-          <p className="mt-6 text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
+
+          <p className="mt-6 text-lg text-white/80 max-w-2xl mx-auto leading-relaxed hero-enter" style={{ animationDelay: currentUser ? '0.2s' : '0.42s' }}>
             Swap skills with your neighbours — no money, just knowledge and time.
           </p>
 
           {/* Floating glass search bar */}
-          <form onSubmit={handleHeroSearch} className="mt-10 max-w-xl mx-auto" role="search" aria-label="Search skills">
+          <form onSubmit={handleHeroSearch} className="mt-10 max-w-xl mx-auto hero-enter" role="search" aria-label="Search skills" style={{ animationDelay: currentUser ? '0.35s' : '0.58s' }}>
             <label htmlFor="hero-search" className="sr-only">Search skills</label>
             <div className="glass-dark rounded-2xl flex items-center gap-3 px-5 py-3.5 ring-1 ring-white/[0.12] shadow-xl shadow-black/10">
               <SearchIcon className="w-5 h-5 text-white/40 shrink-0" />
@@ -201,7 +218,7 @@ export function HomePage() {
             </div>
           </form>
 
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 hero-enter" style={{ animationDelay: currentUser ? '0.5s' : '0.74s' }}>
             {currentUser ? (
               <>
                 <Link
