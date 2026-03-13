@@ -30,6 +30,7 @@ A community skill-swapping platform that connects neighbours to exchange knowled
 - **Bot Protection** — Cloudflare Turnstile integration on auth forms
 - **Cookie Consent** — GDPR-compliant consent banner before enabling analytics/monitoring
 - **Account Deletion** — GDPR-compliant self-service account deletion with data export (UK GDPR Articles 17 & 20), review anonymisation, and active swap auto-cancellation
+- **Mailing List** — Email newsletter subscription in footer
 - **Error Monitoring** — BugSnag integration (activated post-consent)
 - **Analytics** — Google Analytics 4
 - **User Presence** — Tracks `last_seen_at` on each profile
@@ -72,16 +73,27 @@ skillswap/
 │   ├── context/           # React Contexts: Auth, Skills, Swaps, Messages, Reviews, Toast, CookieConsent
 │   ├── data/              # Frontend mock/seed data (not used by Supabase)
 │   ├── hooks/             # Custom hooks: useAuth, useSkills, useSwaps, useMessages, useReviews, etc.
-│   ├── lib/               # Supabase client, BugSnag setup, error helpers
+│   ├── lib/               # Supabase client, BugSnag setup, error helpers, analytics
 │   ├── pages/             # Route-level page components
 │   ├── services/          # Supabase data access layer (profiles, skills, swaps, messages, reviews, etc.)
 │   ├── types/             # TypeScript types (User, Skill, Swap, Message, Review, etc.)
 │   └── utils/             # Helpers: cn, distance, filterSkills, sortSkills, formatRelativeTime, etc.
 ├── supabase/
-│   ├── migrations/        # Ordered SQL migrations (001–013)
+│   ├── functions/         # Edge Functions (notify-swap-proposal, delete-account, submit-report)
+│   ├── migrations/        # Ordered SQL migrations (001–032)
 │   └── seed.sql           # Database seed data
 └── e2e/                   # Playwright end-to-end tests
 ```
+
+### Architecture Notes
+
+**Path Alias**: The project uses `@/` as an alias for the `src/` directory (configured in `vite.config.ts`):
+```ts
+import { supabase } from '@/lib/supabase'
+import type { User } from '@/types/user'
+```
+
+**Services Layer**: All Supabase database interactions go through `src/services/`. Never call the `supabase` client directly from components — always use the appropriate service function. This provides a consistent data access layer and makes testing easier.
 
 ---
 
@@ -129,7 +141,7 @@ supabase db reset
 npm run dev
 ```
 
-The app runs at `http://localhost:5173`.
+The app runs at `http://localhost:5173` (configurable via `PORT` environment variable).
 
 ---
 
@@ -168,26 +180,29 @@ Copy `.env.example` to `.env.local` and set the following:
 | `neighbourhoods` | Neighbourhood reference data with coordinates |
 | `contact_enquiries` | Public contact form submissions |
 | `user_reports` | User-submitted reports for moderation |
+| `mailing_list_subscribers` | Email newsletter subscriptions |
 
 ### Migrations
 
-Migrations live in `supabase/migrations/` and are applied in order by `supabase db reset`:
+Migrations live in `supabase/migrations/` and are applied in order by `supabase db reset`. There are 32 migrations covering schema, security, and features:
 
-| Migration | Description |
-|---|---|
-| `001_schema.sql` | Core tables, RLS policies, triggers, Realtime |
-| `002_neighbourhoods.sql` | Neighbourhoods reference table |
-| `003_swap_realtime.sql` | Enable Realtime for swap proposals |
-| `004_swap_notification_webhook.sql` | Webhook for swap notifications |
-| `005_avatar_storage.sql` | Supabase Storage bucket for avatars |
-| `006_contact_enquiries.sql` | Contact form table |
-| `007_reviews_allow_cancelled_swaps.sql` | Allow reviews on cancelled swaps |
-| `008_user_reports.sql` | User reporting system |
-| `009_neighbourhood_insert_policy.sql` | RLS policy for neighbourhood inserts |
-| `010_neighbourhood_coordinates.sql` | Add coordinates to neighbourhoods |
-| `011_verified_neighbour_trigger.sql` | Auto-calculate Verified Neighbour status |
-| `012_remove_accepted_status.sql` | Remove `accepted` swap status |
-| `013_user_presence.sql` | Add `last_seen_at` to profiles |
+**Key migrations:**
+- `001_schema.sql` — Core tables, RLS policies, triggers, Realtime
+- `002_neighbourhoods.sql` — Neighbourhoods reference table
+- `005_avatar_storage.sql` — Supabase Storage bucket for avatars
+- `008_user_reports.sql` — User reporting system
+- `011_verified_neighbour_trigger.sql` — Auto-calculate Verified Neighbour status
+- `012_remove_accepted_status.sql` — Remove `accepted` swap status
+- `013_user_presence.sql` — Add `last_seen_at` to profiles
+- `014_account_deletion.sql` — Account deletion Edge Function support
+- `018_profile_pii_access_control.sql` — PII access controls
+- `020_security_definer_search_path.sql` — Security definer search path hardening
+- `022-024_*.sql` — RLS policy fixes for messages, conversations, reviews
+- `027_auto_complete_swap.sql` — Auto-complete swap when both parties confirm
+- `031_search_skill_listings_rpc.sql` — Full-text search RPC function
+- `032_mailing_list_subscribers.sql` — Mailing list subscribers table
+
+Run `ls supabase/migrations/` to see all migrations.
 
 ### Seed data
 
@@ -201,6 +216,18 @@ Migrations live in `supabase/migrations/` and are applied in order by `supabase 
 - Reviews: `50000000-...`
 
 > **Note:** `src/data/*.ts` files contain frontend-only mock data used during initial development. The Supabase database uses `supabase/seed.sql` exclusively. If you modify seed data, update both.
+
+### Edge Functions
+
+Supabase Edge Functions (Deno runtime) in `supabase/functions/`:
+
+| Function | Purpose |
+|---|---|
+| `notify-swap-proposal` | Sends email notifications when new swap proposals are created (triggered via database webhook) |
+| `delete-account` | GDPR-compliant account deletion with data export, review anonymisation, and swap cancellation |
+| `submit-report` | Server-side Cloudflare Turnstile verification for user reports (prevents API bypass) |
+
+Edge Functions require environment variables set in Supabase dashboard or `supabase/.env` for local development.
 
 ---
 
@@ -230,6 +257,8 @@ E2E specs cover:
 - `profile.spec.ts` — edit profile, avatar upload
 - `skills.spec.ts` — create, edit, browse listings
 - `swaps.spec.ts` — propose, accept, complete swaps
+- `account-settings.spec.ts` — change email, change password
+- `account-deletion.spec.ts` — GDPR-compliant account deletion flow
 
 Requires `E2E_TEST_PASSWORD` to be set and the dev server running.
 
