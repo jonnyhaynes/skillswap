@@ -343,6 +343,24 @@ export interface Database {
         }
         Relationships: []
       }
+      mailing_list_subscribers: {
+        Row: {
+          id: string
+          email: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       contact_enquiries: {
         Row: {
           id: string
@@ -490,6 +508,8 @@ export type NeighbourhoodRow = Database['public']['Tables']['neighbourhoods']['R
 
 export type ContactEnquiryRow = Database['public']['Tables']['contact_enquiries']['Row']
 export type ContactEnquiryInsert = Database['public']['Tables']['contact_enquiries']['Insert']
+
+export type MailingListSubscriberInsert = Database['public']['Tables']['mailing_list_subscribers']['Insert']
 
 export type UserReportRow = Database['public']['Tables']['user_reports']['Row']
 export type UserReportInsert = Database['public']['Tables']['user_reports']['Insert']

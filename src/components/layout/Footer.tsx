@@ -1,8 +1,9 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useSkills } from '@/hooks/useSkills'
 import { useCountUp } from '@/hooks/useCountUp'
+import { supabase } from '@/lib/supabase'
 
 const COMMUNITY_STATS = [
   { label: 'Skills Available', key: 'offered' as const },
@@ -31,6 +32,10 @@ function CommunityStat({ value, label }: { value: number | string; label: string
 export function Footer() {
   const { currentUser } = useAuth()
   const { listings, loading } = useSkills()
+  const [email, setEmail] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
   const offeredCount = useMemo(
     () => listings.filter((l) => l.listingType === 'offered').length,
     [listings],
@@ -49,6 +54,21 @@ export function Footer() {
     }),
     [loading, offeredCount, wantedCount, listings.length],
   )
+
+  async function handleMailingList(e: React.FormEvent) {
+    e.preventDefault()
+    setSubmitError(null)
+    const { error } = await supabase
+      .from('mailing_list_subscribers')
+      .insert({ email: email.trim() })
+    if (error) {
+      // 23505 = unique_violation — already subscribed
+      setSubmitError(error.code === '23505' ? 'You\'re already subscribed.' : 'Something went wrong. Please try again.')
+      return
+    }
+    setSubmitted(true)
+    setEmail('')
+  }
 
   return (
     <footer className="relative" aria-label="Site footer">
@@ -78,11 +98,44 @@ export function Footer() {
         {/* Footer Content */}
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 relative">
 
-          {/* Main columns: Brand, Explore, Legal */}
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+          {/* Get started CTA — logged-out visitors only */}
+          {!currentUser && (
+            <div className="mb-12 pb-12 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div>
+                <p className="text-xs font-semibold text-primary-400 uppercase tracking-widest mb-1">Free to join</p>
+                <h2 className="text-xl font-extrabold text-white font-display leading-snug">
+                  Start swapping skills with<br className="hidden sm:block" /> your neighbours today.
+                </h2>
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white transition-all hover:scale-[1.03] hover:shadow-xl hover:shadow-primary-900/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                  style={{
+                    background: 'linear-gradient(135deg, #43c1a6 0%, #6366f1 100%)',
+                    boxShadow: '0 4px 20px rgba(67, 193, 166, 0.25)',
+                  }}
+                >
+                  Create a free account
+                  <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M3 8h10M9 4l4 4-4 4" />
+                  </svg>
+                </Link>
+                <Link
+                  to="/browse"
+                  className="text-sm font-semibold text-slate-400 hover:text-white transition-colors"
+                >
+                  Browse first
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {/* Main columns: Brand, Explore, Legal, Get started */}
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-6">
 
             {/* Brand */}
-            <div>
+            <div className="lg:col-span-2">
               <div className="flex items-center gap-2.5">
                 <svg
                   className="h-7 w-7"
@@ -156,23 +209,6 @@ export function Footer() {
                   </svg>
                 </a>
               </div>
-
-              {/* Get started CTA — shown to logged-out visitors only */}
-              {!currentUser && (
-                <Link
-                  to="/signup"
-                  className="mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-all hover:scale-[1.03] hover:shadow-lg hover:shadow-primary-900/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-                  style={{
-                    background: 'linear-gradient(135deg, #43c1a6 0%, #6366f1 100%)',
-                    boxShadow: '0 4px 16px rgba(67, 193, 166, 0.25)',
-                  }}
-                >
-                  Get started
-                  <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M3 8h10M9 4l4 4-4 4" />
-                  </svg>
-                </Link>
-              )}
             </div>
 
             {/* Explore */}
@@ -204,11 +240,52 @@ export function Footer() {
               </nav>
             </div>
 
+            {/* Get started + mailing list */}
+            <div className="lg:col-span-2">
+              <h3 className="text-sm font-semibold text-white mb-1">Stay in the loop</h3>
+              <p className="text-xs text-slate-500 mb-3 leading-relaxed">
+                New skills, local events, community updates.
+              </p>
+              {submitted ? (
+                <p className="text-sm text-primary-400 font-medium">
+                  Thanks — you're on the list.
+                </p>
+              ) : (
+                <form onSubmit={handleMailingList} aria-label="Mailing list sign up">
+                  <label htmlFor="footer-email" className="sr-only">Email address</label>
+                  <div className="flex gap-2">
+                    <input
+                      id="footer-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      required
+                      className="min-w-0 flex-1 rounded-xl bg-slate-800 border border-slate-700 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-primary-500 transition-colors"
+                    />
+                    <button
+                      type="submit"
+                      className="shrink-0 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-primary-900/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                      style={{
+                        background: 'linear-gradient(135deg, #43c1a6 0%, #6366f1 100%)',
+                        boxShadow: '0 4px 14px rgba(67, 193, 166, 0.2)',
+                      }}
+                    >
+                      Subscribe
+                    </button>
+                  </div>
+                  {submitError && (
+                    <p className="mt-1.5 text-xs text-red-400">{submitError}</p>
+                  )}
+                </form>
+              )}
+            </div>
+
           </div>
 
           {/* Community stats band */}
           <div className="mt-10 border-t border-slate-800 pt-8">
-            <div className="flex flex-wrap justify-center gap-x-10 gap-y-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-10">
               {COMMUNITY_STATS.map((stat) => (
                 <CommunityStat
                   key={stat.label}
