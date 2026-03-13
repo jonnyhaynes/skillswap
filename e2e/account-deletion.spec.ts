@@ -25,6 +25,20 @@ test.describe('Account deletion', () => {
   })
 
   test('Download your data button triggers a file download', async ({ page }) => {
+    const mockExport = {
+      exported_at: new Date().toISOString(),
+      profile: {},
+      skill_listings: [],
+      conversations: [],
+      messages: [],
+      swap_proposals: [],
+      reviews_written: [],
+      reviews_received: [],
+    }
+    await page.route('**/functions/v1/delete-account', route =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(mockExport) })
+    )
+
     await page.goto('/settings/account')
     await page.getByRole('button', { name: 'Delete account' }).click()
 

@@ -4,7 +4,7 @@ test.describe('Account settings — Security section', () => {
   test('shows Security section with Email and Password rows', async ({ page }) => {
     await page.goto('/settings/account')
     await expect(page.getByRole('heading', { name: 'Security' })).toBeVisible()
-    await expect(page.getByText('Email')).toBeVisible()
+    await expect(page.getByTestId('email-row').getByText('Email')).toBeVisible()
     await expect(page.getByText('Password')).toBeVisible()
   })
 
