@@ -1,11 +1,13 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useSkills } from '@/hooks/useSkills'
 import { useCountUp } from '@/hooks/useCountUp'
 import { supabase } from '@/lib/supabase'
+import { getUserCount } from '@/services/profiles'
 
 const COMMUNITY_STATS = [
+  { label: 'Members', key: 'members' as const },
   { label: 'Skills Available', key: 'offered' as const },
   { label: 'Skills Wanted', key: 'wanted' as const },
   { label: 'Total Listings', key: 'total' as const },
@@ -35,6 +37,7 @@ export function Footer() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [userCount, setUserCount] = useState<number | null>(null)
 
   const offeredCount = useMemo(
     () => listings.filter((l) => l.listingType === 'offered').length,
@@ -44,16 +47,26 @@ export function Footer() {
     () => listings.filter((l) => l.listingType === 'wanted').length,
     [listings],
   )
-  const statValues = useMemo<Record<'offered' | 'wanted' | 'total' | 'categories', number | string>>(
+  const statValues = useMemo<Record<'offered' | 'wanted' | 'total' | 'members' | 'categories', number | string>>(
     () => ({
+      members: userCount === null ? '...' : userCount,
       offered: loading ? '...' : offeredCount,
       wanted: loading ? '...' : wantedCount,
       total: loading ? '...' : listings.length,
       // 12 = number of skill categories defined in src/data/categories.ts
       categories: 12,
     }),
-    [loading, offeredCount, wantedCount, listings.length],
+    [loading, offeredCount, wantedCount, listings.length, userCount],
   )
+
+  useEffect(() => {
+    getUserCount()
+      .then(setUserCount)
+      .catch((err) => {
+        console.error('Failed to fetch user count:', err)
+        setUserCount(0)
+      })
+  }, [])
 
   async function handleMailingList(e: React.FormEvent) {
     e.preventDefault()

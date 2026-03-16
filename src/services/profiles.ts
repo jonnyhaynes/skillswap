@@ -151,3 +151,18 @@ export async function getAllProfiles(): Promise<User[]> {
 
   return data.map(mapProfileToUser)
 }
+
+/**
+ * Get the total count of users/profiles.
+ */
+export async function getUserCount(): Promise<number> {
+  const { count, error } = await supabase
+    .from('profiles')
+    .select('*', { count: 'exact', head: true })
+
+  if (error) {
+    throw new ProfileServiceError(error.message, error.code)
+  }
+
+  return count ?? 0
+}
