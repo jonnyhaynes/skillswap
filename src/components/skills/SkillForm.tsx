@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
+import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import { cn } from '@/utils/cn';
 
 interface SkillFormProps {
@@ -19,6 +20,13 @@ const LEVEL_OPTIONS: { value: SkillLevel; label: string }[] = [
   { value: 'advanced', label: 'Advanced' },
   { value: 'expert', label: 'Expert' },
 ];
+
+export const LEVEL_DESCRIPTIONS: Record<SkillLevel, string> = {
+  beginner: 'Just starting out, learning the fundamentals',
+  intermediate: 'Comfortable with the basics, some hands-on experience',
+  advanced: 'Highly proficient, can handle complex tasks independently',
+  expert: 'Deep mastery — could comfortably teach or mentor others',
+};
 
 const CATEGORY_OPTIONS = CATEGORIES.map((c) => ({
   value: c.id,
@@ -111,6 +119,17 @@ export function SkillForm({ initialData, onSubmit, onCancel }: SkillFormProps) {
 
         <Select
           label="Level"
+          labelAddon={
+            <InfoTooltip label="About skill levels">
+              <ul className="space-y-1.5">
+                {(Object.entries(LEVEL_DESCRIPTIONS) as [SkillLevel, string][]).map(([lvl, desc]) => (
+                  <li key={lvl}>
+                    <span className="font-semibold capitalize">{lvl}:</span> {desc}
+                  </li>
+                ))}
+              </ul>
+            </InfoTooltip>
+          }
           options={LEVEL_OPTIONS}
           value={level}
           onChange={(e) => setLevel(e.target.value as SkillLevel)}

@@ -3,12 +3,13 @@ import { cn } from '@/utils/cn';
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
+  labelAddon?: React.ReactNode;
   options: { value: string; label: string }[];
   error?: string;
 }
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, options, error, className, id, ...props }, ref) => {
+  ({ label, labelAddon, options, error, className, id, ...props }, ref) => {
     const selectId = id || label.toLowerCase().replace(/\s+/g, '-');
     const errorId = error ? `${selectId}-error` : undefined;
 
@@ -16,10 +17,11 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       <div className="w-full">
         <label
           htmlFor={selectId}
-          className="block text-sm font-semibold text-slate-700 mb-1.5"
+          className="flex items-center gap-1.5 text-sm font-semibold text-slate-700 mb-1.5"
         >
           {label}
           {props.required && <span className="text-red-600 ml-0.5" aria-hidden="true">*</span>}
+          {labelAddon}
         </label>
         <select
           ref={ref}

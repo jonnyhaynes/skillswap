@@ -38,6 +38,10 @@ const FAQ_SECTIONS = [
         a: 'Almost anything! Popular categories include cooking & food, music, languages, technology, gardening, arts & crafts, fitness, and home & DIY. If you\'re unsure, have a look at what others have posted — you might be surprised what\'s out there.',
       },
       {
+        q: 'What do the skill levels mean?',
+        a: 'Levels help set expectations for everyone involved. Beginner: just starting out, learning the fundamentals. Intermediate: comfortable with the basics and some hands-on experience. Advanced: highly proficient, able to handle complex tasks independently. Expert: deep mastery — could comfortably teach or mentor others. Choose the level that honestly reflects where you are; there\'s no judgment either way.',
+      },
+      {
         q: 'Can I edit or remove a listing?',
         a: 'Yes. Go to "My Listings" in your account and you can edit the details or delete any listing at any time.',
       },

@@ -17,6 +17,8 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { Modal } from '@/components/ui/Modal';
 import { SwapProposalForm } from '@/components/swaps/SwapProposalForm';
 import { UserPresence } from '@/components/ui/UserPresence'
+import { InfoTooltip } from '@/components/ui/InfoTooltip';
+import { LEVEL_DESCRIPTIONS } from '@/components/skills/SkillForm';
 import { formatDate } from '@/utils/formatDate';
 import { trackSwapRequested } from '@/lib/analytics';
 
@@ -120,7 +122,18 @@ export function SkillDetailPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <h3 className="text-sm font-medium text-slate-500">Level</h3>
+              <div className="flex items-center gap-1.5">
+                <h3 className="text-sm font-medium text-slate-500">Level</h3>
+                <InfoTooltip label="About skill levels">
+                  <ul className="space-y-1.5">
+                    {(Object.entries(LEVEL_DESCRIPTIONS) as [string, string][]).map(([lvl, desc]) => (
+                      <li key={lvl}>
+                        <span className="font-semibold capitalize">{lvl}:</span> {desc}
+                      </li>
+                    ))}
+                  </ul>
+                </InfoTooltip>
+              </div>
               <p className="text-sm text-slate-900 capitalize">{listing.level}</p>
             </div>
 
