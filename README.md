@@ -1,5 +1,9 @@
 # SkillSwap
 
+![Status: Alpha](https://img.shields.io/badge/status-alpha-orange)
+
+> ⚠️ **Alpha** — this project is in active early development. Features, APIs, and the database schema may change without notice, and it is not yet recommended for production use.
+
 A community skill-swapping platform that connects neighbours to exchange knowledge and services. Users can offer skills, request skills, propose swaps, and communicate via real-time messaging — all within their local community.
 
 ## Table of Contents
