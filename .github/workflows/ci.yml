@@ -29,6 +29,17 @@ jobs:
   e2e-tests:
     name: E2E Tests
     runs-on: ubuntu-latest
+    # Cloudflare's official test credentials — the local Supabase stack is
+    # configured (config.toml [auth.captcha]) to verify Turnstile tokens with
+    # this secret, so auth.setup.ts's dummy token always passes.
+    env:
+      # Local Supabase fixed dev credentials (identical for every `supabase start`).
+      VITE_SUPABASE_URL: http://127.0.0.1:54321
+      VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      VITE_CLOUDFLARE_TURNSTILE_SITEKEY: 1x00000000000000000000AA
+      CLOUDFLARE_TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA
+      # Must match the password seeded for test@skillswap.test in supabase/seed.sql.
+      E2E_TEST_PASSWORD: In*3Fj%HGIy3W3prWUi#HgOU
     steps:
       - uses: actions/checkout@v4
 
@@ -42,23 +53,17 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Start local Supabase
+        run: npx supabase start
+
+      - name: Apply migrations and seed
+        run: npx supabase db reset
+
       - name: Build app
         run: npm run build
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          VITE_BUGSNAG_API_KEY: ${{ secrets.VITE_BUGSNAG_API_KEY }}
-          VITE_CLOUDFLARE_TURNSTILE_SITEKEY: 1x00000000000000000000AA
-          VITE_OS_NAMES_API_KEY: ${{ secrets.VITE_OS_NAMES_API_KEY }}
-          VITE_GA_MEASUREMENT_ID: ${{ secrets.VITE_GA_MEASUREMENT_ID }}
 
       - name: Run Playwright tests
         run: npm run test:e2e
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          VITE_CLOUDFLARE_TURNSTILE_SITEKEY: 1x00000000000000000000AA
-          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
 
       - name: Upload test results on failure
         if: failure()

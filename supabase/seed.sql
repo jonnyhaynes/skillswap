@@ -159,7 +159,10 @@ INSERT INTO auth.users (
   );
 
 -- E2E test user — used exclusively by Playwright (auth.setup.ts).
--- Set E2E_TEST_PASSWORD in .env.local; do NOT commit the plaintext password here.
+-- This password is LOCAL-ONLY test data: it authenticates against the ephemeral
+-- local Supabase stack that CI and `supabase db reset` create. It is NOT a real
+-- credential and is never used against production. The matching E2E_TEST_PASSWORD
+-- (CI env / .env.local) must equal this value.
 INSERT INTO auth.users (
   id, instance_id, aud, role, email, encrypted_password,
   email_confirmed_at, raw_user_meta_data, raw_app_meta_data,
@@ -174,7 +177,7 @@ INSERT INTO auth.users (
   'authenticated',
   'authenticated',
   'test@skillswap.test',
-  extensions.crypt('QWP8zen2qnu!pet*txw', extensions.gen_salt('bf')),
+  extensions.crypt('In*3Fj%HGIy3W3prWUi#HgOU', extensions.gen_salt('bf')),
   NOW(),
   jsonb_build_object('first_name', 'Test', 'last_name', 'User', 'neighbourhood', 'Thurcroft', 'postcode', 'S66 9FE'),
   jsonb_build_object('provider', 'email', 'providers', ARRAY['email']),
@@ -200,7 +203,9 @@ INSERT INTO auth.identities (
   ('00000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000005', jsonb_build_object('sub', '00000000-0000-0000-0000-000000000005', 'email', 'tom.williams@email.com'), 'email', NOW(), '2025-12-05T16:45:00Z', '2025-12-05T16:45:00Z'),
   ('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000006', jsonb_build_object('sub', '00000000-0000-0000-0000-000000000006', 'email', 'lena.fischer@email.com'), 'email', NOW(), '2025-12-10T10:00:00Z', '2025-12-10T10:00:00Z'),
   ('00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000007', jsonb_build_object('sub', '00000000-0000-0000-0000-000000000007', 'email', 'david.kim@email.com'), 'email', NOW(), '2025-12-15T13:20:00Z', '2025-12-15T13:20:00Z'),
-  ('00000000-0000-0000-0000-000000000008', '00000000-0000-0000-0000-000000000008', '00000000-0000-0000-0000-000000000008', jsonb_build_object('sub', '00000000-0000-0000-0000-000000000008', 'email', 'sarah.johnson@email.com'), 'email', NOW(), '2025-12-20T09:30:00Z', '2025-12-20T09:30:00Z');
+  ('00000000-0000-0000-0000-000000000008', '00000000-0000-0000-0000-000000000008', '00000000-0000-0000-0000-000000000008', jsonb_build_object('sub', '00000000-0000-0000-0000-000000000008', 'email', 'sarah.johnson@email.com'), 'email', NOW(), '2025-12-20T09:30:00Z', '2025-12-20T09:30:00Z'),
+  -- E2E test user identity — required for GoTrue email/password login to succeed.
+  ('00000000-0000-0000-0000-000000000099', '00000000-0000-0000-0000-000000000099', '00000000-0000-0000-0000-000000000099', jsonb_build_object('sub', '00000000-0000-0000-0000-000000000099', 'email', 'test@skillswap.test'), 'email', NOW(), NOW(), NOW());
 
 -- ============================================
 -- 2. UPDATE PROFILES
