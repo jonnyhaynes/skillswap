@@ -1,0 +1,1 @@
+Auditing every Supabase RLS policy to close a profile-PII leak, without breaking cross-user features like messaging and the verified-neighbour badge.
