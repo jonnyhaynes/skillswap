@@ -14,12 +14,32 @@ export class ProfileServiceError extends Error {
   }
 }
 
-// Columns safe to return to any authenticated caller.
+// Columns readable by ANY client role, including anon.
 // email and postcode are intentionally excluded — they are PII accessible only
 // to the profile owner via the get_own_profile_pii() RPC function
 // (see migration 018_profile_pii_access_control.sql).
+// last_seen_at is intentionally excluded here — migration 034 grants SELECT on
+// it to `authenticated` only, so requesting it as anon fails the whole query
+// with "permission denied for table profiles". Use PROFILE_COLUMNS() which adds
+// it back only when the caller is authenticated.
 const PUBLIC_PROFILE_COLUMNS =
-  'id, first_name, last_name, avatar_url, bio, neighbourhood, is_verified_neighbour, joined_at, last_seen_at'
+  'id, first_name, last_name, avatar_url, bio, neighbourhood, is_verified_neighbour, joined_at' as const
+
+// last_seen_at is granted to `authenticated` only (migration 034), so it must be
+// appended for authenticated callers only. Kept as a separate literal (not a
+// computed string) so supabase-js can infer the row type from .select() — a
+// widened `string` collapses inference to GenericStringError and fails the build.
+const AUTH_PROFILE_COLUMNS =
+  `${PUBLIC_PROFILE_COLUMNS}, last_seen_at` as const
+
+// True when a session exists; anon callers must omit last_seen_at or the
+// column-level privilege check rejects the entire request.
+async function isAuthenticated(): Promise<boolean> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+  return session !== null
+}
 
 /**
  * Merge the authenticated user's own email and postcode into a User object.
@@ -40,11 +60,17 @@ async function mergeOwnPii(user: User): Promise<User> {
  * Use getOwnProfile() when fetching the currently authenticated user's profile.
  */
 export async function getProfile(userId: string): Promise<User | null> {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select(PUBLIC_PROFILE_COLUMNS)
-    .eq('id', userId)
-    .single()
+  const { data, error } = (await isAuthenticated())
+    ? await supabase
+        .from('profiles')
+        .select(AUTH_PROFILE_COLUMNS)
+        .eq('id', userId)
+        .single()
+    : await supabase
+        .from('profiles')
+        .select(PUBLIC_PROFILE_COLUMNS)
+        .eq('id', userId)
+        .single()
 
   if (error) {
     if (error.code === 'PGRST116') {
@@ -61,9 +87,10 @@ export async function getProfile(userId: string): Promise<User | null> {
  * Should only be called for the currently logged-in user.
  */
 export async function getOwnProfile(userId: string): Promise<User | null> {
+  // Always called for the logged-in user, so last_seen_at is always granted.
   const { data, error } = await supabase
     .from('profiles')
-    .select(PUBLIC_PROFILE_COLUMNS)
+    .select(AUTH_PROFILE_COLUMNS)
     .eq('id', userId)
     .single()
 
@@ -83,10 +110,15 @@ export async function getOwnProfile(userId: string): Promise<User | null> {
 export async function getProfilesByIds(userIds: string[]): Promise<User[]> {
   if (userIds.length === 0) return []
 
-  const { data, error } = await supabase
-    .from('profiles')
-    .select(PUBLIC_PROFILE_COLUMNS)
-    .in('id', userIds)
+  const { data, error } = (await isAuthenticated())
+    ? await supabase
+        .from('profiles')
+        .select(AUTH_PROFILE_COLUMNS)
+        .in('id', userIds)
+    : await supabase
+        .from('profiles')
+        .select(PUBLIC_PROFILE_COLUMNS)
+        .in('id', userIds)
 
   if (error) {
     throw new ProfileServiceError(error.message, error.code)
@@ -108,7 +140,7 @@ export async function updateProfile(
     .from('profiles')
     .update(dbUpdates)
     .eq('id', userId)
-    .select(PUBLIC_PROFILE_COLUMNS)
+    .select(AUTH_PROFILE_COLUMNS)
     .single()
 
   if (error) {
@@ -124,10 +156,15 @@ export async function updateProfile(
 export async function getProfilesByNeighbourhood(
   neighbourhood: string
 ): Promise<User[]> {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select(PUBLIC_PROFILE_COLUMNS)
-    .ilike('neighbourhood', `%${neighbourhood}%`)
+  const { data, error } = (await isAuthenticated())
+    ? await supabase
+        .from('profiles')
+        .select(AUTH_PROFILE_COLUMNS)
+        .ilike('neighbourhood', `%${neighbourhood}%`)
+    : await supabase
+        .from('profiles')
+        .select(PUBLIC_PROFILE_COLUMNS)
+        .ilike('neighbourhood', `%${neighbourhood}%`)
 
   if (error) {
     throw new ProfileServiceError(error.message, error.code)
@@ -140,10 +177,15 @@ export async function getProfilesByNeighbourhood(
  * Get all profiles (public columns only — no PII).
  */
 export async function getAllProfiles(): Promise<User[]> {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select(PUBLIC_PROFILE_COLUMNS)
-    .order('joined_at', { ascending: false })
+  const { data, error } = (await isAuthenticated())
+    ? await supabase
+        .from('profiles')
+        .select(AUTH_PROFILE_COLUMNS)
+        .order('joined_at', { ascending: false })
+    : await supabase
+        .from('profiles')
+        .select(PUBLIC_PROFILE_COLUMNS)
+        .order('joined_at', { ascending: false })
 
   if (error) {
     throw new ProfileServiceError(error.message, error.code)
