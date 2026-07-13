@@ -14,12 +14,28 @@ export class ProfileServiceError extends Error {
   }
 }
 
-// Columns safe to return to any authenticated caller.
+// Columns readable by ANY client role, including anon.
 // email and postcode are intentionally excluded — they are PII accessible only
 // to the profile owner via the get_own_profile_pii() RPC function
 // (see migration 018_profile_pii_access_control.sql).
+// last_seen_at is intentionally excluded here — migration 034 grants SELECT on
+// it to `authenticated` only, so requesting it as anon fails the whole query
+// with "permission denied for table profiles". Use PROFILE_COLUMNS() which adds
+// it back only when the caller is authenticated.
 const PUBLIC_PROFILE_COLUMNS =
-  'id, first_name, last_name, avatar_url, bio, neighbourhood, is_verified_neighbour, joined_at, last_seen_at'
+  'id, first_name, last_name, avatar_url, bio, neighbourhood, is_verified_neighbour, joined_at'
+
+// last_seen_at is granted to `authenticated` only (migration 034). Include it in
+// the select only for authenticated callers; anon callers must omit it or the
+// column-level privilege check rejects the entire request.
+async function profileColumns(): Promise<string> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+  return session
+    ? `${PUBLIC_PROFILE_COLUMNS}, last_seen_at`
+    : PUBLIC_PROFILE_COLUMNS
+}
 
 /**
  * Merge the authenticated user's own email and postcode into a User object.
@@ -42,7 +58,7 @@ async function mergeOwnPii(user: User): Promise<User> {
 export async function getProfile(userId: string): Promise<User | null> {
   const { data, error } = await supabase
     .from('profiles')
-    .select(PUBLIC_PROFILE_COLUMNS)
+    .select(await profileColumns())
     .eq('id', userId)
     .single()
 
@@ -63,7 +79,7 @@ export async function getProfile(userId: string): Promise<User | null> {
 export async function getOwnProfile(userId: string): Promise<User | null> {
   const { data, error } = await supabase
     .from('profiles')
-    .select(PUBLIC_PROFILE_COLUMNS)
+    .select(await profileColumns())
     .eq('id', userId)
     .single()
 
@@ -85,7 +101,7 @@ export async function getProfilesByIds(userIds: string[]): Promise<User[]> {
 
   const { data, error } = await supabase
     .from('profiles')
-    .select(PUBLIC_PROFILE_COLUMNS)
+    .select(await profileColumns())
     .in('id', userIds)
 
   if (error) {
@@ -108,7 +124,7 @@ export async function updateProfile(
     .from('profiles')
     .update(dbUpdates)
     .eq('id', userId)
-    .select(PUBLIC_PROFILE_COLUMNS)
+    .select(await profileColumns())
     .single()
 
   if (error) {
@@ -126,7 +142,7 @@ export async function getProfilesByNeighbourhood(
 ): Promise<User[]> {
   const { data, error } = await supabase
     .from('profiles')
-    .select(PUBLIC_PROFILE_COLUMNS)
+    .select(await profileColumns())
     .ilike('neighbourhood', `%${neighbourhood}%`)
 
   if (error) {
@@ -142,7 +158,7 @@ export async function getProfilesByNeighbourhood(
 export async function getAllProfiles(): Promise<User[]> {
   const { data, error } = await supabase
     .from('profiles')
-    .select(PUBLIC_PROFILE_COLUMNS)
+    .select(await profileColumns())
     .order('joined_at', { ascending: false })
 
   if (error) {
