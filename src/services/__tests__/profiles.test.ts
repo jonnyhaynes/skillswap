@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
-import { http, HttpResponse } from 'msw'
+import { http, HttpResponse, type JsonBodyType } from 'msw'
 import { server } from '@/test/setup'
 import { supabase } from '@/lib/supabase'
 import { getProfile, getProfilesByIds, ProfileServiceError } from '../profiles'
@@ -39,7 +39,7 @@ function mockSession(hasSession: boolean) {
  * Register a profiles GET handler that captures the request URL so tests can
  * assert on the PostgREST `select=` column list.
  */
-function captureProfilesGet(responseBody: unknown) {
+function captureProfilesGet(responseBody: JsonBodyType) {
   let capturedUrl = ''
   server.use(
     http.get(`${BASE}/profiles`, ({ request }) => {
