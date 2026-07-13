@@ -36,10 +36,16 @@ import type {
 // ============================================
 
 // A public profile row omits PII columns that are revoked from the
-// authenticated/anon roles (email, postcode, updated_at).
-type PublicProfileRow = Omit<ProfileRow, 'email' | 'postcode' | 'updated_at'> & {
+// authenticated/anon roles (email, postcode, updated_at). last_seen_at is
+// optional because it is granted to `authenticated` only (migration 034), so
+// anon reads omit it from the select entirely (see src/services/profiles.ts).
+type PublicProfileRow = Omit<
+  ProfileRow,
+  'email' | 'postcode' | 'updated_at' | 'last_seen_at'
+> & {
   email?: string | null
   postcode?: string | null
+  last_seen_at?: string | null
 }
 
 export function mapProfileToUser(profile: ProfileRow | PublicProfileRow): User {
