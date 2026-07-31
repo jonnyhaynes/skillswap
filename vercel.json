@@ -1,4 +1,5 @@
 {
+  "installCommand": "bash scripts/install-chromium-deps.sh && npm install",
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/browse", "destination": "/browse.html" },
