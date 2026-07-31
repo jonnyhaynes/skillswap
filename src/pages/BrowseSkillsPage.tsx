@@ -4,6 +4,8 @@ import type { SkillCategory, ListingType, User } from '@/types'
 import { useSkills } from '@/hooks/useSkills'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useAuth } from '@/hooks/useAuth'
+import { useSeo } from '@/hooks/useSeo'
+import { breadcrumbSchema, graph } from '@/lib/structuredData'
 import { filterSkills } from '@/utils/filterSkills'
 import { sortSkills, type SortOption } from '@/utils/sortSkills'
 import { SkillGrid } from '@/components/skills/SkillGrid'
@@ -37,6 +39,21 @@ export function BrowseSkillsPage() {
   const [neighbourhoodCoordsMap, setNeighbourhoodCoordsMap] = useState<Map<string, NeighbourhoodCoords>>(new Map())
 
   const debouncedQuery = useDebounce(searchQuery, 300)
+
+  // Filters live in state and search params, which would otherwise generate an
+  // unbounded set of near-duplicate URLs — canonical always points at /browse.
+  useSeo({
+    title: 'Browse Skills',
+    description:
+      'Browse skills your neighbours are offering and looking for — from DIY and gardening to languages, music and tech. Search by category, location or keyword.',
+    canonical: '/browse',
+    jsonLd: graph(
+      breadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: 'Browse Skills', path: '/browse' },
+      ])
+    ),
+  })
 
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 

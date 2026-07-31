@@ -10,6 +10,8 @@ import { ReportUserButton } from '@/components/reports/ReportUserButton'
 import { UserPresence } from '@/components/ui/UserPresence'
 import { formatDate } from '@/utils/formatDate'
 import { getRatingColor } from '@/utils/ratingColors'
+import { displayName as toDisplayName, fullName as toFullName } from '@/utils/displayName'
+import { useAuth } from '@/hooks/useAuth'
 
 interface ProfileHeaderProps {
   user: User
@@ -26,7 +28,10 @@ export function ProfileHeader({
   totalSwapsCompleted,
   isOwnProfile,
 }: ProfileHeaderProps) {
-  const fullName = `${user.firstName} ${user.lastName}`
+  const { currentUser } = useAuth()
+  const isAuthenticated = !!currentUser
+  // Profiles are publicly viewable, so anonymous visitors only get "Alex C."
+  const fullName = toDisplayName(user, isAuthenticated)
   const [showAvatarLightbox, setShowAvatarLightbox] = useState(false)
 
   return (
@@ -60,7 +65,8 @@ export function ProfileHeader({
             Member since {formatDate(user.joinedAt)}
           </p>
           <div className="mt-1">
-            {!isOwnProfile && (
+            {/* last_seen_at is granted to authenticated only — anon has nothing to show */}
+            {!isOwnProfile && isAuthenticated && (
               <UserPresence userId={user.id} lastSeenAt={user.lastSeenAt} />
             )}
           </div>
@@ -74,12 +80,14 @@ export function ProfileHeader({
               </Link>
             </div>
           ) : (
-            <div className="mt-4">
-              <ReportUserButton
-                reportedUserId={user.id}
-                reportedUserName={fullName}
-              />
-            </div>
+            isAuthenticated && (
+              <div className="mt-4">
+                <ReportUserButton
+                  reportedUserId={user.id}
+                  reportedUserName={toFullName(user)}
+                />
+              </div>
+            )
           )}
         </div>
       </div>

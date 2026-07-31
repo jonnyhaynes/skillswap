@@ -1,5 +1,7 @@
 import { Link } from 'react-router'
 import { ContactForm } from '@/components/contact/ContactForm'
+import { useSeo } from '@/hooks/useSeo'
+import { breadcrumbSchema, graph } from '@/lib/structuredData'
 
 function ClockIcon() {
   return (
@@ -44,6 +46,19 @@ const INFO_ITEMS = [
 ]
 
 export function ContactPage() {
+  useSeo({
+    title: 'Contact Us',
+    description:
+      'Get in touch with the SkillSwap team — questions about swaps, account help, safety concerns, press and partnership enquiries.',
+    canonical: '/contact',
+    jsonLd: graph(
+      breadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: 'Contact', path: '/contact' },
+      ])
+    ),
+  })
+
   return (
     <div className="animate-fade-in">
       {/* Header */}

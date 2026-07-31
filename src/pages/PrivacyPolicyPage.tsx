@@ -1,6 +1,14 @@
 import { Link } from 'react-router'
+import { useSeo } from '@/hooks/useSeo'
 
 export function PrivacyPolicyPage() {
+  useSeo({
+    title: 'Privacy Policy',
+    description:
+      'How SkillSwap collects, uses and protects your personal data, your GDPR rights, cookies, and how to delete your account.',
+    canonical: '/privacy',
+  })
+
   return (
     <div className="mx-auto max-w-3xl animate-fade-in">
       <div className="mb-8">

@@ -1,9 +1,12 @@
 {
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/browse", "destination": "/browse.html" },
+    { "source": "/faq", "destination": "/faq.html" },
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/(.*)", "destination": "/app.html" }
   ],
   "headers": [
     {
@@ -49,7 +52,7 @@
       ]
     },
     {
-      "source": "/(favicon\\.svg|robots\\.txt|sitemap\\.xml)",
+      "source": "/(favicon\\.svg|og-image\\.png|robots\\.txt|sitemap\\.xml)",
       "headers": [
         {
           "key": "Cache-Control",

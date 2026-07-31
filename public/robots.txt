@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Authenticated app surfaces — no public content, nothing to index.
+Disallow: /login
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /onboarding
+Disallow: /settings/
+Disallow: /my-listings
+Disallow: /swaps
+Disallow: /messages
+Disallow: /profile/edit
+Disallow: /skills/new
+Disallow: /*/edit
+
+# Filter permutations of /browse are canonicalised to /browse — don't crawl them.
+Disallow: /browse?
+
+Sitemap: https://skillswap.colouringcode.com/sitemap.xml

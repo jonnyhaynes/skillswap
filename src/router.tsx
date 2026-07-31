@@ -27,7 +27,6 @@ import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
 
 // Stable named wrappers — avoids remounting when search params change
 // (inline `element={<AuthGuard><Page /></AuthGuard>}` creates a new element each render)
-const GuardedSkillDetail = () => <AuthGuard><SkillDetailPage /></AuthGuard>
 const GuardedOnboarding = () => <AuthGuard><OnboardingPage /></AuthGuard>
 const GuardedCreateListing = () => <AuthGuard><CreateListingPage /></AuthGuard>
 const GuardedEditListing = () => <AuthGuard><EditListingPage /></AuthGuard>
@@ -70,7 +69,9 @@ export const router = createBrowserRouter([
       // Public routes
       { index: true, Component: HomePage },
       { path: 'browse', Component: BrowseSkillsPage },
-      { path: 'skills/:skillId', Component: GuardedSkillDetail },
+      // Public so listings are indexable and shareable; the swap/report actions
+      // inside the page are gated on auth instead.
+      { path: 'skills/:skillId', Component: SkillDetailPage },
       { path: 'profile/:userId', Component: ProfilePage },
 
       // Auth routes (public, redirect if logged in)

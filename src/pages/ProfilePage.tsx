@@ -11,6 +11,10 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { ReviewSummary } from '@/components/reviews/ReviewSummary'
 import { ReviewList } from '@/components/reviews/ReviewList'
 import { getCategoryInfo } from '@/data/categories'
+import { useSeo } from '@/hooks/useSeo'
+import { truncateDescription } from '@/lib/seo'
+import { graph, personSchema } from '@/lib/structuredData'
+import { shortName } from '@/utils/displayName'
 
 export function ProfilePage() {
   const { userId } = useParams()
@@ -38,6 +42,39 @@ export function ProfilePage() {
       fetchReviewsForUser(userId)
     }
   }, [userId, fetchReviewsForUser])
+
+  const publicName = user ? shortName(user) : ''
+  const profileRating = user ? getAverageRating(user.id) : 0
+  const profileReviews = user ? getTotalReviews(user.id) : 0
+
+  useSeo(
+    user
+      ? {
+          title: `${publicName} — ${user.neighbourhood ?? 'SkillSwap member'}`,
+          description: truncateDescription(
+            user.bio ||
+              `${publicName} is a SkillSwap member${user.neighbourhood ? ` in ${user.neighbourhood}` : ''}. See the skills they offer and are looking for.`
+          ),
+          canonical: `/profile/${user.id}`,
+          type: 'profile',
+          jsonLd: graph(
+            personSchema({
+              id: user.id,
+              name: publicName,
+              bio: user.bio,
+              avatarUrl: user.avatarUrl,
+              neighbourhood: user.neighbourhood,
+              averageRating: profileRating,
+              totalReviews: profileReviews,
+            })
+          ),
+        }
+      : {
+          title: fetchAttempted ? 'Member Not Found' : 'Member Profile',
+          canonical: userId ? `/profile/${userId}` : '/browse',
+          noindex: fetchAttempted,
+        }
+  )
 
   if (loading || (!user && !fetchAttempted)) {
     return (

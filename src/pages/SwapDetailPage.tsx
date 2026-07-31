@@ -5,6 +5,7 @@ import { useSkills } from '@/hooks/useSkills';
 import { useSwaps } from '@/hooks/useSwaps';
 import { useReviews } from '@/hooks/useReviews';
 import { useToast } from '@/hooks/useToast';
+import { useSeo } from '@/hooks/useSeo';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -18,6 +19,12 @@ import { VerifiedBadge } from '@/components/profile/VerifiedBadge';
 import { ReportUserButton } from '@/components/reports/ReportUserButton';
 
 export function SwapDetailPage() {
+  useSeo({
+    title: 'Swap Details',
+    description: 'View the details and progress of this skill swap.',
+    noindex: true,
+  });
+
   const { swapId } = useParams();
   const navigate = useNavigate();
   const { currentUser, getUserById } = useAuth();

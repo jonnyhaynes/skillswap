@@ -6,8 +6,15 @@ import { ProfileForm, type ProfileFormData } from '@/components/profile/ProfileF
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { uploadAvatar, deleteAvatar } from '@/services/avatars'
+import { useSeo } from '@/hooks/useSeo'
 
 export function EditProfilePage() {
+  useSeo({
+    title: 'Edit Profile',
+    description: 'Update your SkillSwap profile details.',
+    noindex: true,
+  })
+
   const { currentUser, updateProfile } = useAuth()
   const { addToast } = useToast()
   const navigate = useNavigate()

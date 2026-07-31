@@ -1,8 +1,16 @@
 import { useNavigate, useLocation, Navigate } from 'react-router'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { useAuth } from '@/hooks/useAuth'
+import { useSeo } from '@/hooks/useSeo'
 
 export function LoginPage() {
+  useSeo({
+    title: 'Sign In',
+    description:
+      'Sign in to your SkillSwap account to propose swaps, message neighbours and manage your listings.',
+    noindex: true,
+  })
+
   const navigate = useNavigate()
   const location = useLocation()
   const { currentUser, initialized, needsOnboarding } = useAuth()
