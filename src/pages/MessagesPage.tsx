@@ -1,10 +1,17 @@
 import { useAuth } from '@/hooks/useAuth'
 import { useMessages } from '@/hooks/useMessages'
+import { useSeo } from '@/hooks/useSeo'
 import { Card } from '@/components/ui/Card'
 import { ConversationList } from '@/components/messages/ConversationList'
 import { EmptyInbox } from '@/components/messages/EmptyInbox'
 
 export function MessagesPage() {
+  useSeo({
+    title: 'Messages',
+    description: 'Your SkillSwap conversations with neighbours.',
+    noindex: true,
+  })
+
   const { currentUser } = useAuth()
   const { getConversationsForUser } = useMessages()
 

@@ -2,11 +2,18 @@ import { useParams, useNavigate, Navigate } from 'react-router'
 import { useSkills } from '@/hooks/useSkills'
 import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/hooks/useToast'
+import { useSeo } from '@/hooks/useSeo'
 import { SkillForm } from '@/components/skills/SkillForm'
 import { EmptyState } from '@/components/ui/EmptyState'
 import type { SkillListing } from '@/types'
 
 export function EditListingPage() {
+  useSeo({
+    title: 'Edit Listing',
+    description: 'Update your SkillSwap skill listing.',
+    noindex: true,
+  })
+
   const { skillId } = useParams()
   const navigate = useNavigate()
   const { getListingById, updateListing } = useSkills()

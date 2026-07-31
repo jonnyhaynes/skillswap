@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { Link, useParams, useNavigate, useLocation } from 'react-router';
+import type { SkillListing, User } from '@/types';
 import { useSkills } from '@/hooks/useSkills';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
@@ -21,13 +22,27 @@ import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import { LEVEL_DESCRIPTIONS } from '@/components/skills/SkillForm';
 import { formatDate } from '@/utils/formatDate';
 import { trackSwapRequested } from '@/lib/analytics';
+import { useSeo } from '@/hooks/useSeo';
+import { truncateDescription } from '@/lib/seo';
+import { breadcrumbSchema, graph, skillListingSchema } from '@/lib/structuredData';
+import { getCategoryInfo } from '@/data/categories';
+import {
+  displayName as toDisplayName,
+  fullName as toFullName,
+  shortName,
+} from '@/utils/displayName';
 
+
+// A one-shot fetch result, tagged with the id it was fetched for so a route
+// change invalidates it without needing a reset effect.
+type Resolved<T> = { id: string; value: T | null } | null;
 
 export function SkillDetailPage() {
   const { skillId } = useParams();
   const navigate = useNavigate();
-  const { getListingById, deleteListing } = useSkills();
-  const { currentUser, getUserById } = useAuth();
+  const location = useLocation();
+  const { getListingById, fetchListingById, deleteListing } = useSkills();
+  const { currentUser, getUserById, fetchUserById } = useAuth();
   const { addToast } = useToast();
   const { createProposal } = useSwaps();
 
@@ -35,8 +50,94 @@ export function SkillDetailPage() {
   const [showSwapModal, setShowSwapModal] = useState(false);
   const [showAvatarLightbox, setShowAvatarLightbox] = useState(false);
 
-  const listing = skillId ? getListingById(skillId) : undefined;
-  const listingUser = listing ? getUserById(listing.userId) : undefined;
+  // The route is public, so a cold direct load (search engine, shared link) hits
+  // this page with both caches empty. Fall back to fetching by id rather than
+  // rendering "not found" while the caches are still filling.
+  const [fetchedListing, setFetchedListing] = useState<Resolved<SkillListing>>(null);
+  const [fetchedUser, setFetchedUser] = useState<Resolved<User>>(null);
+
+  const cachedListing = skillId ? getListingById(skillId) : undefined;
+  const listing =
+    cachedListing ?? (fetchedListing && fetchedListing.id === skillId ? fetchedListing.value : null) ?? undefined;
+
+  const ownerId = listing?.userId;
+  const cachedUser = ownerId ? getUserById(ownerId) : undefined;
+  const listingUser =
+    cachedUser ?? (fetchedUser && fetchedUser.id === ownerId ? fetchedUser.value : null) ?? undefined;
+
+  useEffect(() => {
+    if (!skillId || cachedListing || fetchedListing?.id === skillId) return;
+    let cancelled = false;
+    fetchListingById(skillId).then((value) => {
+      if (!cancelled) setFetchedListing({ id: skillId, value });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [skillId, cachedListing, fetchedListing, fetchListingById]);
+
+  useEffect(() => {
+    if (!ownerId || cachedUser || fetchedUser?.id === ownerId) return;
+    let cancelled = false;
+    fetchUserById(ownerId).then((value) => {
+      if (!cancelled) setFetchedUser({ id: ownerId, value });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [ownerId, cachedUser, fetchedUser, fetchUserById]);
+
+  const listingPending = !listing && fetchedListing?.id !== skillId;
+  const userPending = !!listing && !listingUser && fetchedUser?.id !== ownerId;
+  const notFound = !listingPending && !userPending && (!listing || !listingUser);
+
+  // Meta always uses the anonymous form of the owner's name — crawlers and
+  // social scrapers are never signed in.
+  const publicOwnerName = listingUser ? shortName(listingUser) : '';
+
+  useSeo(
+    listing && listingUser
+      ? {
+          title: listing.title,
+          description: truncateDescription(
+            `${publicOwnerName} is ${listing.listingType === 'offered' ? 'offering' : 'looking for'} ${listing.title}` +
+              `${listingUser.neighbourhood ? ` in ${listingUser.neighbourhood}` : ''}. ${listing.description}`
+          ),
+          canonical: `/skills/${listing.id}`,
+          type: 'article',
+          jsonLd: graph(
+            breadcrumbSchema([
+              { name: 'Home', path: '/' },
+              { name: 'Browse Skills', path: '/browse' },
+              { name: listing.title, path: `/skills/${listing.id}` },
+            ]),
+            skillListingSchema({
+              id: listing.id,
+              title: listing.title,
+              description: listing.description,
+              categoryLabel: getCategoryInfo(listing.category).label,
+              listingType: listing.listingType,
+              isRemote: listing.isRemote,
+              providerName: publicOwnerName,
+              providerId: listingUser.id,
+              neighbourhood: listingUser.neighbourhood,
+            })
+          ),
+        }
+      : {
+          title: notFound ? 'Listing Not Found' : 'Skill Listing',
+          canonical: skillId ? `/skills/${skillId}` : '/browse',
+          noindex: notFound,
+        }
+  );
+
+  if (listingPending || userPending) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent" />
+      </div>
+    );
+  }
 
   if (!listing || !listingUser) {
     return (
@@ -62,6 +163,12 @@ export function SkillDetailPage() {
   }
 
   const isOwner = currentUser?.id === listing.userId;
+  const isAuthenticated = !!currentUser;
+
+  // Surnames are only shown to signed-in members. Anonymous visitors (and
+  // crawlers) see the same shortened form as the browse cards.
+  const fullName = toFullName(listingUser);
+  const displayName = toDisplayName(listingUser, isAuthenticated);
 
   const handleDelete = () => {
     deleteListing(listing.id);
@@ -195,12 +302,12 @@ export function SkillDetailPage() {
                   type="button"
                   onClick={() => setShowAvatarLightbox(true)}
                   className="rounded-full p-0.5 bg-primary-500 cursor-pointer hover:shadow-lg hover:shadow-primary-500/25 transition-shadow"
-                  aria-label={`View ${listingUser.firstName} ${listingUser.lastName}'s avatar`}
+                  aria-label={`View ${displayName}'s avatar`}
                 >
                   <div className="rounded-full p-0.5 bg-white">
                     <Avatar
                       src={listingUser.avatarUrl}
-                      name={`${listingUser.firstName} ${listingUser.lastName}`}
+                      name={displayName}
                       size="lg"
                     />
                   </div>
@@ -212,12 +319,15 @@ export function SkillDetailPage() {
                 )}
               </div>
               <h3 className="mt-3 text-lg font-semibold text-slate-900">
-                {listingUser.firstName} {listingUser.lastName}
+                {displayName}
               </h3>
               <p className="text-sm text-slate-500">{listingUser.neighbourhood}</p>
-              <div className="mt-1 flex justify-center">
-                <UserPresence userId={listingUser.id} lastSeenAt={listingUser.lastSeenAt} />
-              </div>
+              {/* last_seen_at is granted to authenticated only, so anon has nothing to show */}
+              {isAuthenticated && (
+                <div className="mt-1 flex justify-center">
+                  <UserPresence userId={listingUser.id} lastSeenAt={listingUser.lastSeenAt} />
+                </div>
+              )}
             </div>
 
             <div className="mt-6 flex flex-col gap-3">
@@ -227,17 +337,34 @@ export function SkillDetailPage() {
                 </Button>
               </Link>
 
-              {!isOwner && (
+              {!isAuthenticated && (
+                <>
+                  <Link to="/login" state={{ from: location }}>
+                    <Button variant="primary" className="w-full">
+                      Sign in to propose a swap
+                    </Button>
+                  </Link>
+                  <p className="text-center text-xs text-slate-500">
+                    Free to join —{' '}
+                    <Link to="/signup" className="font-medium text-primary-600 hover:underline">
+                      create an account
+                    </Link>{' '}
+                    to swap skills with {listingUser.firstName}.
+                  </p>
+                </>
+              )}
+
+              {isAuthenticated && !isOwner && (
                 <Button variant="primary" className="w-full" onClick={handleProposeSwap}>
                   Propose a Swap
                 </Button>
               )}
 
-              {!isOwner && (
+              {isAuthenticated && !isOwner && (
                 <div className="flex justify-center">
                   <ReportUserButton
                     reportedUserId={listingUser.id}
-                    reportedUserName={`${listingUser.firstName} ${listingUser.lastName}`}
+                    reportedUserName={fullName}
                     evidenceSkillId={listing.id}
                   />
                 </div>
@@ -277,7 +404,7 @@ export function SkillDetailPage() {
         onCancel={() => setShowDeleteDialog(false)}
       />
 
-      {!isOwner && listing && (
+      {isAuthenticated && !isOwner && (
         <Modal
           isOpen={showSwapModal}
           onClose={() => setShowSwapModal(false)}
@@ -296,7 +423,7 @@ export function SkillDetailPage() {
         isOpen={showAvatarLightbox}
         onClose={() => setShowAvatarLightbox(false)}
         src={listingUser.avatarUrl}
-        name={`${listingUser.firstName} ${listingUser.lastName}`}
+        name={displayName}
       />
     </div>
   );

@@ -1,9 +1,17 @@
 import { Navigate } from 'react-router'
 import { SignUpForm } from '@/components/auth/SignUpForm'
 import { useAuth } from '@/hooks/useAuth'
+import { useSeo } from '@/hooks/useSeo'
 
 export function SignUpPage() {
   const { currentUser, initialized, needsOnboarding } = useAuth()
+
+  useSeo({
+    title: 'Join SkillSwap — Free Sign Up',
+    description:
+      'Create a free SkillSwap account to offer your skills, find neighbours who can teach you something new, and swap time instead of money.',
+    canonical: '/signup',
+  })
 
   // Redirect if already logged in
   if (initialized && currentUser) {

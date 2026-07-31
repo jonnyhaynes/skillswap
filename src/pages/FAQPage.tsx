@@ -1,4 +1,6 @@
 import { Link } from 'react-router'
+import { useSeo } from '@/hooks/useSeo'
+import { breadcrumbSchema, faqSchema, graph } from '@/lib/structuredData'
 
 const FAQ_SECTIONS = [
   {
@@ -138,6 +140,20 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 }
 
 export function FAQPage() {
+  useSeo({
+    title: 'Frequently Asked Questions',
+    description:
+      'How SkillSwap works — posting listings, proposing swaps, skill levels, reviews, the Verified Neighbour badge, safety and your privacy.',
+    canonical: '/faq',
+    jsonLd: graph(
+      faqSchema(FAQ_SECTIONS.flatMap((section) => section.items)),
+      breadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: 'FAQ', path: '/faq' },
+      ])
+    ),
+  })
+
   return (
     <div className="animate-fade-in">
       {/* Header */}

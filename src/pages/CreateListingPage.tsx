@@ -2,10 +2,17 @@ import { useNavigate } from 'react-router'
 import { useSkills } from '@/hooks/useSkills'
 import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/hooks/useToast'
+import { useSeo } from '@/hooks/useSeo'
 import { SkillForm } from '@/components/skills/SkillForm'
 import type { SkillListing } from '@/types'
 
 export function CreateListingPage() {
+  useSeo({
+    title: 'Post a Skill',
+    description: 'Create a new skill listing to offer or request a skill in your neighbourhood.',
+    noindex: true,
+  })
+
   const navigate = useNavigate()
   const { addListing } = useSkills()
   const { currentUser } = useAuth()

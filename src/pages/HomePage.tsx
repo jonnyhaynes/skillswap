@@ -4,6 +4,8 @@ import type { SkillListing } from '@/types'
 import { useAuth } from '@/hooks/useAuth'
 import { useSkills } from '@/hooks/useSkills'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
+import { useSeo } from '@/hooks/useSeo'
+import { graph, organizationSchema, webSiteSchema } from '@/lib/structuredData'
 import { SkillGrid } from '@/components/skills/SkillGrid'
 
 function SearchIcon({ className = 'w-5 h-5' }: { className?: string }) {
@@ -123,6 +125,11 @@ export function HomePage() {
   const { listings } = useSkills()
   const navigate = useNavigate()
   const [heroSearch, setHeroSearch] = useState('')
+
+  useSeo({
+    canonical: '/',
+    jsonLd: graph(organizationSchema(), webSiteSchema()),
+  })
 
   const featuredSkills = useMemo(() => {
     return listings

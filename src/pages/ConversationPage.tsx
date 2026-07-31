@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { useMessages } from '@/hooks/useMessages'
+import { useSeo } from '@/hooks/useSeo'
 import { Avatar } from '@/components/ui/Avatar'
 import { VerifiedBadge } from '@/components/profile/VerifiedBadge'
 import { ReportUserButton } from '@/components/reports/ReportUserButton'
@@ -11,6 +12,12 @@ import { MessageInput } from '@/components/messages/MessageInput'
 import { Skeleton } from '@/components/ui/Skeleton'
 
 export function ConversationPage() {
+  useSeo({
+    title: 'Conversation',
+    description: 'Your SkillSwap conversation.',
+    noindex: true,
+  })
+
   const { conversationId } = useParams<{ conversationId: string }>()
   const { currentUser, getUserById, fetchUserById } = useAuth()
   const {

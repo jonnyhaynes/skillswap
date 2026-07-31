@@ -4,8 +4,15 @@ import { Button } from '@/components/ui/Button'
 import { NeighbourhoodTypeahead } from '@/components/ui/NeighbourhoodTypeahead'
 import { useAuth } from '@/hooks/useAuth'
 import { ensureNeighbourhoodExists } from '@/services/neighbourhoods'
+import { useSeo } from '@/hooks/useSeo'
 
 export function OnboardingPage() {
+  useSeo({
+    title: 'Complete Your Profile',
+    description: 'Finish setting up your SkillSwap profile.',
+    noindex: true,
+  })
+
   const navigate = useNavigate()
   const { currentUser, updateProfile } = useAuth()
   const [neighbourhood, setNeighbourhood] = useState('')

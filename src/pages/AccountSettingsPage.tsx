@@ -1,11 +1,18 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
+import { useSeo } from '@/hooks/useSeo'
 import DeleteAccountFlow from '../components/account/DeleteAccountFlow'
 import ChangeEmailForm from '../components/account/ChangeEmailForm'
 import ChangePasswordForm from '../components/account/ChangePasswordForm'
 
 export function AccountSettingsPage() {
+  useSeo({
+    title: 'Account Settings',
+    description: 'Manage your SkillSwap email, password and account.',
+    noindex: true,
+  })
+
   const { currentUser, session } = useAuth()
 
   useEffect(() => {

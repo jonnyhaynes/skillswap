@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useSwaps } from '@/hooks/useSwaps';
+import { useSeo } from '@/hooks/useSeo';
 import { Tabs } from '@/components/ui/Tabs';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { SwapCard } from '@/components/swaps/SwapCard';
@@ -10,6 +11,12 @@ const VALID_TABS = ['incoming', 'outgoing', 'active', 'completed'] as const;
 type TabId = (typeof VALID_TABS)[number];
 
 export function SwapsPage() {
+  useSeo({
+    title: 'My Swaps',
+    description: 'Track your incoming, outgoing, active and completed skill swaps.',
+    noindex: true,
+  });
+
   const { currentUser, fetchUsersByIds, getUserById } = useAuth();
   const { getIncomingSwaps, getOutgoingSwaps, getActiveSwaps, getCompletedSwaps } = useSwaps();
   const navigate = useNavigate();

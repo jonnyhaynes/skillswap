@@ -1,8 +1,15 @@
 import { Navigate } from 'react-router'
 import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm'
 import { useAuth } from '@/hooks/useAuth'
+import { useSeo } from '@/hooks/useSeo'
 
 export function ForgotPasswordPage() {
+  useSeo({
+    title: 'Reset Your Password',
+    description: 'Request a password reset link for your SkillSwap account.',
+    noindex: true,
+  })
+
   const { currentUser, initialized } = useAuth()
 
   // Redirect if already logged in

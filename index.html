@@ -1,13 +1,48 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Defaults only. `useSeo` overwrites every tag below on each route, and
+         `scripts/prerender.mjs` bakes the per-route values into the built HTML.
+         Keep these in sync with the DEFAULT_* values in src/lib/seo.ts. -->
+    <title>SkillSwap — Swap Skills With Your Neighbours</title>
+    <meta
+      name="description"
+      content="SkillSwap is a neighbourhood skill exchange. Offer what you know, learn what you need, and swap skills with people nearby — no money, just knowledge and time."
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://skillswap.colouringcode.com/" />
+
+    <meta property="og:site_name" content="SkillSwap" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="SkillSwap — Swap Skills With Your Neighbours" />
+    <meta
+      property="og:description"
+      content="SkillSwap is a neighbourhood skill exchange. Offer what you know, learn what you need, and swap skills with people nearby — no money, just knowledge and time."
+    />
+    <meta property="og:url" content="https://skillswap.colouringcode.com/" />
+    <meta property="og:image" content="https://skillswap.colouringcode.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="SkillSwap — learn what you need, teach what you know." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SkillSwap — Swap Skills With Your Neighbours" />
+    <meta
+      name="twitter:description"
+      content="SkillSwap is a neighbourhood skill exchange. Offer what you know, learn what you need, and swap skills with people nearby — no money, just knowledge and time."
+    />
+    <meta name="twitter:image" content="https://skillswap.colouringcode.com/og-image.png" />
+
+    <meta name="theme-color" content="#11554c" />
+
     <link rel="preconnect" href="https://fonts.bunny.net" />
     <link href="https://fonts.bunny.net/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.bunny.net/css?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <title>SkillSwap — Neighbourhood Skill Exchange</title>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   </head>
   <body>

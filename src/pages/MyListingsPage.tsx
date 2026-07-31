@@ -6,8 +6,15 @@ import { SkillGrid } from '@/components/skills/SkillGrid'
 import { Tabs } from '@/components/ui/Tabs'
 import { Button } from '@/components/ui/Button'
 import { SkeletonGrid } from '@/components/ui/Skeleton'
+import { useSeo } from '@/hooks/useSeo'
 
 export function MyListingsPage() {
+  useSeo({
+    title: 'My Listings',
+    description: 'View and manage the skills you have offered and requested.',
+    noindex: true,
+  })
+
   const { getListingsByUser, loading } = useSkills()
   const { currentUser } = useAuth()
   const navigate = useNavigate()

@@ -1,6 +1,13 @@
 import { Link } from 'react-router'
+import { useSeo } from '@/hooks/useSeo'
 
 export function NotFoundPage() {
+  useSeo({
+    title: 'Page Not Found',
+    description: "The page you're looking for doesn't exist or has been moved.",
+    noindex: true,
+  })
+
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center">
       <h1 className="text-6xl font-bold text-slate-300">404</h1>

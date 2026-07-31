@@ -3,10 +3,17 @@ import { Link, useNavigate } from 'react-router'
 import { supabase } from '@/lib/supabase'
 import { getAuthErrorMessage } from '@/lib/errors'
 import { Button } from '@/components/ui/Button'
+import { useSeo } from '@/hooks/useSeo'
 
 type PageStatus = 'loading' | 'ready' | 'invalid' | 'success'
 
 export function ResetPasswordPage() {
+  useSeo({
+    title: 'Choose a New Password',
+    description: 'Set a new password for your SkillSwap account.',
+    noindex: true,
+  })
+
   const navigate = useNavigate()
   const [status, setStatus] = useState<PageStatus>('loading')
   const [password, setPassword] = useState('')

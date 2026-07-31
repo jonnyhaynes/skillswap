@@ -198,9 +198,12 @@ export async function getAllProfiles(): Promise<User[]> {
  * Get the total count of users/profiles.
  */
 export async function getUserCount(): Promise<number> {
+  // Must name a granted column: migration 034 revoked table-wide SELECT on
+  // profiles from both anon and authenticated, so `select('*')` 401s for
+  // everyone. `id` is in the column-scoped grant.
   const { count, error } = await supabase
     .from('profiles')
-    .select('*', { count: 'exact', head: true })
+    .select('id', { count: 'exact', head: true })
 
   if (error) {
     throw new ProfileServiceError(error.message, error.code)

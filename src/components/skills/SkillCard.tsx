@@ -6,6 +6,7 @@ import { Avatar } from '@/components/ui/Avatar';
 import { getCategoryInfo } from '@/data/categories';
 import { VerifiedBadge } from '@/components/profile/VerifiedBadge';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
+import { shortName } from '@/utils/displayName';
 
 interface SkillCardProps {
   listing: SkillListing;
@@ -14,6 +15,9 @@ interface SkillCardProps {
 
 export function SkillCard({ listing, user }: SkillCardProps) {
   const category = getCategoryInfo(listing.category);
+  // Cards appear on public, prerendered pages, so never the full surname —
+  // not in the visible label and not in the avatar's alt text either.
+  const cardName = shortName(user);
 
   return (
     <Link to={`/skills/${listing.id}`} className="block group h-full" data-testid="skill-card">
@@ -46,7 +50,7 @@ export function SkillCard({ listing, user }: SkillCardProps) {
                 <div className="rounded-full p-0.5 bg-white">
                   <Avatar
                     src={user.avatarUrl}
-                    name={`${user.firstName} ${user.lastName}`}
+                    name={cardName}
                     size="sm"
                   />
                 </div>
@@ -59,7 +63,7 @@ export function SkillCard({ listing, user }: SkillCardProps) {
             </div>
             <div className="min-w-0 flex-1">
               <div className="font-medium text-slate-600 truncate">
-                {user.firstName} {user.lastName.charAt(0)}.
+                {cardName}
               </div>
               <div className="text-xs text-slate-400 truncate">{user.neighbourhood}</div>
             </div>

@@ -1,6 +1,14 @@
 import { Link } from 'react-router'
+import { useSeo } from '@/hooks/useSeo'
 
 export function TermsOfServicePage() {
+  useSeo({
+    title: 'Terms of Service',
+    description:
+      'The terms that govern your use of SkillSwap — member conduct, listings, swaps, liability and account termination.',
+    canonical: '/terms',
+  })
+
   return (
     <div className="mx-auto max-w-3xl animate-fade-in">
       <div className="mb-8">

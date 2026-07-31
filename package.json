@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run build:bundle && npm run prerender && npm run sitemap",
+    "build:bundle": "tsc -b && vite build",
+    "prerender": "node scripts/prerender.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "og-image": "node scripts/generate-og-image.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
