@@ -24,13 +24,29 @@ const ORIGIN = `http://localhost:${PORT}`
 
 // Only routes whose content is the same for every visitor. Anything behind
 // auth, or personalised, stays client-rendered.
+//
+// `waitFor` is a selector that only appears once the route's data has arrived.
+// Routes that render from Supabase need it, or the snapshot can capture the
+// loading state; static-content routes are ready as soon as React mounts.
 const ROUTES = [
-  { path: '/', out: 'index.html' },
-  { path: '/browse', out: 'browse.html' },
+  { path: '/', out: 'index.html', waitFor: '[data-testid="skill-card"]' },
+  { path: '/browse', out: 'browse.html', waitFor: '[data-testid="skill-card"]' },
   { path: '/faq', out: 'faq.html' },
   { path: '/contact', out: 'contact.html' },
   { path: '/terms', out: 'terms.html' },
   { path: '/privacy', out: 'privacy.html' },
+]
+
+// Third-party assets contribute nothing to a snapshot — the <link> and <script>
+// tags are serialised from the DOM either way — but they do make the run depend
+// on external hosts being reachable. A stalled request here is what broke
+// prerendering in CI, so block them and keep the build hermetic.
+const BLOCKED_HOSTS = [
+  'fonts.bunny.net',
+  'challenges.cloudflare.com',
+  'www.googletagmanager.com',
+  'notify.bugsnag.com',
+  'sessions.bugsnag.com',
 ]
 
 const dist = (file) => resolve('dist', file)
@@ -83,7 +99,7 @@ function startPreviewServer() {
  * matching the route we asked for proves React mounted and this page's SEO
  * effect ran — a far more reliable signal than a fixed timeout.
  */
-async function waitForRoute(page, path) {
+async function waitForRoute(page, route) {
   await page.waitForFunction(
     (expected) => {
       const root = document.getElementById('root')
@@ -94,9 +110,13 @@ async function waitForRoute(page, path) {
       const pathname = href.replace(/^https?:\/\/[^/]+/, '') || '/'
       return pathname === expected
     },
-    path,
+    route.path,
     { timeout: 20_000 }
   )
+
+  if (route.waitFor) {
+    await page.locator(route.waitFor).first().waitFor({ state: 'attached', timeout: 20_000 })
+  }
 }
 
 async function main() {
@@ -127,13 +147,20 @@ async function main() {
     await waitForServer()
     browser = await chromium.launch()
     const context = await browser.newContext({ viewport: { width: 1280, height: 900 } })
+    await context.route('**/*', (route) => {
+      const { hostname } = new URL(route.request().url())
+      return BLOCKED_HOSTS.includes(hostname) ? route.abort() : route.continue()
+    })
     const page = await context.newPage()
 
     for (const route of ROUTES) {
-      await page.goto(`${ORIGIN}${route.path}`, { waitUntil: 'networkidle', timeout: 30_000 })
+      // Playwright marks `networkidle` as discouraged, and it is genuinely
+      // unreachable on a page that holds a connection open. The assertions in
+      // waitForRoute are the real readiness signal.
+      await page.goto(`${ORIGIN}${route.path}`, { waitUntil: 'domcontentloaded', timeout: 30_000 })
 
       try {
-        await waitForRoute(page, route.path)
+        await waitForRoute(page, route)
       } catch {
         // A route that never settles would otherwise be written as an empty
         // shell, which is worse than shipping the plain SPA fallback.
@@ -149,10 +176,15 @@ async function main() {
     server.kill('SIGTERM')
   }
 
-  // Cheap guard against silently shipping empty shells.
+  // Cheap guards against silently shipping empty shells.
   const home = await readFile(dist('index.html'), 'utf8')
   if (!home.includes('Teach what you know')) {
     throw new Error('home page snapshot is missing its hero copy — prerender produced an empty shell')
+  }
+
+  const browse = await readFile(dist('browse.html'), 'utf8')
+  if (!browse.includes('data-testid="skill-card"')) {
+    throw new Error('browse snapshot has no listings — prerender captured the loading state')
   }
 }
 
